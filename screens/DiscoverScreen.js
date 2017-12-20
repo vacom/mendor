@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 
 class DiscoverScreen extends React.Component {
   static navigationOptions = {
@@ -10,6 +10,7 @@ class DiscoverScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Text>Ecrã de descobrir</Text>
+        <Button onPress={() => this.props.navigation.navigate('Profile')} title="Perfil"/>
       </View>
     );
   }

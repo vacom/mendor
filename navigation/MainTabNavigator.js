@@ -27,7 +27,8 @@ export default TabNavigator(
     },
     Chat: {
       screen: ChatScreen
-    }
+    },
+
   },
   {
     navigationOptions: ({ navigation }) => ({
