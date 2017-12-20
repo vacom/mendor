@@ -16,6 +16,7 @@ const RootStackNavigator = StackNavigator(
       }
   },
   {
+      initialRouteName: "Profile",
     navigationOptions: () => ({
       headerTitleStyle: {
         fontWeight: 'normal',
