@@ -3,14 +3,20 @@ import { Content, Thumbnail } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { LinearGradient } from 'expo';
 import styled from "styled-components/native";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 //Components
 import Label from "../components/Label";
 
 class ProfileScreen extends React.Component {
     static navigationOptions = {
-        title: "Profile"
+        title: "Profile",
+        headerRight: <MaterialIcons
+            name="more-vert"
+            size={24}
+            color="white"
+            style={{ marginRight: 20}}
+        />,
     };
 
     render() {
@@ -18,7 +24,7 @@ class ProfileScreen extends React.Component {
             <Container>
                 <Content>
                     <Grid>
-                        <LinearGradient colors={['#3F54AF' , '#B39DDB']}>
+                        <LinearGradient colors={['#3f51b5' , '#B39DDB']}>
                             <AboutContainer>
                                 <Row style={{ height: 48 }}>
                                     <Col style={{ width: 68 }}>
@@ -46,7 +52,7 @@ class ProfileScreen extends React.Component {
                             </AboutContainer>
                         </LinearGradient>
 
-                        <LinearGradient colors={['#3F54AF' , '#B39DDB']}>
+                        <LinearGradient colors={['#3f51b5' , '#B39DDB']}>
                             <Row style={{ marginBottom: 1 }}>
                                 <Col>
                                     <NumberContainer>
@@ -125,7 +131,7 @@ class ProfileScreen extends React.Component {
                             <PortfolioContainer>
                                 <Span style={{ color: '#757575' }}>{'projetos'.toUpperCase()}</Span>
                                 <ProjectContainer>
-                                    <P style={{ color: '#000000', marginBottom: 4 }}>Bevolum - Plataforma de Voluntariado</P>
+                                    <P style={{ color: '#000000', marginBottom: 4 }}>Bevolum Plataforma de Voluntariado</P>
                                     <Span style={{ color: '#9E9E9E', lineHeight: 22 }}>
                                         Plataforma de Voluntariado, com muitas funcionalidades de qualidade,
                                         tem como objetivo ser voluntario, e assim uma pessoaa boa e humana,
@@ -148,7 +154,7 @@ class ProfileScreen extends React.Component {
                                 </ProjectContainer>
 
                                 <ProjectContainer>
-                                    <P style={{ color: '#000000', marginBottom: 4 }}>Bevolum - Plataforma de Voluntariado</P>
+                                    <P style={{ color: '#000000', marginBottom: 4 }}>Bevolum Plataforma de Voluntariado</P>
                                     <Span style={{ color: '#9E9E9E', lineHeight: 22 }}>
                                         Plataforma de Voluntariado, com muitas funcionalidades de qualidade,
                                         tem como objetivo ser voluntario, e assim uma pessoaa boa e humana,
@@ -178,7 +184,11 @@ class ProfileScreen extends React.Component {
                                 <LinkContainer>
                                     <Row>
                                         <Col style={{ width: 40 }}>
-                                            <Icon name='google-plus' style={{fontSize: 24, color: '#757575'}} />
+                                            <MaterialCommunityIcons
+                                                name="google-plus"
+                                                size={24}
+                                                color="#757575"
+                                            />
                                         </Col>
                                         <Col>
                                             <P style={{ color: '#757575', marginTop: 4 }}>travis.zuckerberg@gmail.com</P>
@@ -188,7 +198,11 @@ class ProfileScreen extends React.Component {
                                 <LinkContainer>
                                     <Row>
                                         <Col style={{ width: 40 }}>
-                                            <Icon name='facebook-box' style={{fontSize: 24, color: '#757575'}} />
+                                            <MaterialCommunityIcons
+                                                name="facebook-box"
+                                                size={24}
+                                                color="#757575"
+                                            />
                                         </Col>
                                         <Col>
                                             <P style={{ color: '#757575', marginTop: 4 }}>http://www.facebook.com/travis</P>
@@ -198,7 +212,11 @@ class ProfileScreen extends React.Component {
                                 <LinkContainer>
                                     <Row>
                                         <Col style={{ width: 40 }}>
-                                            <Icon name='linkedin-box' style={{fontSize: 24, color: '#757575'}} />
+                                            <MaterialCommunityIcons
+                                                name="linkedin-box"
+                                                size={24}
+                                                color="#757575"
+                                            />
                                         </Col>
                                         <Col>
                                             <P style={{ color: '#757575', marginTop: 4 }}>http://www.linkedin.com/travis</P>
@@ -208,7 +226,11 @@ class ProfileScreen extends React.Component {
                                 <LinkContainer>
                                     <Row>
                                         <Col style={{ width: 40 }}>
-                                            <Icon name='slack' style={{fontSize: 24, color: '#757575'}} />
+                                            <MaterialCommunityIcons
+                                                name="slack"
+                                                size={24}
+                                                color="#757575"
+                                            />
                                         </Col>
                                         <Col>
                                             <P style={{ color: '#757575', marginTop: 4 }}>http://www.slack.com/travis</P>
@@ -218,7 +240,11 @@ class ProfileScreen extends React.Component {
                                 <LinkContainer>
                                     <Row>
                                         <Col style={{ width: 40 }}>
-                                            <Icon name='trello' style={{fontSize: 24, color: '#757575'}} />
+                                            <MaterialCommunityIcons
+                                                name="trello"
+                                                size={24}
+                                                color="#757575"
+                                            />
                                         </Col>
                                         <Col>
                                             <P style={{ color: '#757575', marginTop: 4 }}>http://www.trello.com/travis</P>

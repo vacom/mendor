@@ -16,8 +16,11 @@ const RootStackNavigator = StackNavigator(
       }
   },
   {
-      initialRouteName: "Profile",
     navigationOptions: () => ({
+      headerTintColor: '#ffffff',
+      headerStyle: {
+        backgroundColor: '#3F51B5',
+      },
       headerTitleStyle: {
         fontWeight: 'normal',
       },

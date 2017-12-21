@@ -18,7 +18,6 @@
     "react-apollo": "^2.0.4",
     "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz",
     "react-native-easy-grid": "^0.1.15",
-    "react-native-vector-icons": "^4.4.3",
     "react-navigation": "^1.0.0-beta.19",
     "styled-components": "^2.2.4"
   },

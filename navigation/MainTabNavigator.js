@@ -66,6 +66,7 @@ export default TabNavigator(
     tabBarPosition: "bottom",
     animationEnabled: false,
     swipeEnabled: false,
-    initialRouteName: "Discover"
+    initialRouteName: "Discover",
+    headerTintColor: '#ffffff',
   }
 );
