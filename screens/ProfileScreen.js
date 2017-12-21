@@ -1,9 +1,9 @@
 import React from "react";
-import {View} from "react-native";
 import { Content, Thumbnail } from 'native-base';
-import styled from "styled-components/native";
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import { LinearGradient } from 'expo';
+import styled from "styled-components/native";
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 //Components
 import Label from "../components/Label";
@@ -36,7 +36,7 @@ class ProfileScreen extends React.Component {
                                 </Row>
                                 <Row>
                                     <Col style={{ marginTop: 20 }}>
-                                        <P style={{ lineHeight: 22 }}>
+                                        <P style={{ lineHeight: 24 }}>
                                             Estou a desenvolver um spray muito bom que limpa as unhas e brilha,
                                             e tem como objetivo limpar tudo muito bem para sempre, vale apena
                                             investir na minha ideia.
@@ -70,7 +70,7 @@ class ProfileScreen extends React.Component {
                         </LinearGradient>
 
                         <Row>
-                            <SkillContainer>
+                            <PortfolioContainer>
                                 <Span style={{ color: '#757575' }}>{'competências'.toUpperCase()}</Span>
                                 <LabelsContainer>
                                     <LabelContainer>
@@ -92,11 +92,11 @@ class ProfileScreen extends React.Component {
                                         <Label text="..."/>
                                     </LabelContainer>
                                 </LabelsContainer>
-                            </SkillContainer>
+                            </PortfolioContainer>
                         </Row>
 
                         <Row>
-                            <SkillContainer>
+                            <PortfolioContainer>
                                 <Span style={{ color: '#757575' }}>{'tecnologias'.toUpperCase()}</Span>
                                 <LabelsContainer>
                                     <LabelContainer>
@@ -118,9 +118,115 @@ class ProfileScreen extends React.Component {
                                         <Label text="..."/>
                                     </LabelContainer>
                                 </LabelsContainer>
-                            </SkillContainer>
+                            </PortfolioContainer>
                         </Row>
 
+                        <Row>
+                            <PortfolioContainer>
+                                <Span style={{ color: '#757575' }}>{'projetos'.toUpperCase()}</Span>
+                                <ProjectContainer>
+                                    <P style={{ color: '#000000', marginBottom: 4 }}>Bevolum - Plataforma de Voluntariado</P>
+                                    <Span style={{ color: '#9E9E9E', lineHeight: 22 }}>
+                                        Plataforma de Voluntariado, com muitas funcionalidades de qualidade,
+                                        tem como objetivo ser voluntario, e assim uma pessoaa boa e humana,
+                                        porque ajudar faz parte.
+                                    </Span>
+                                    <LabelsContainer>
+                                        <LabelContainer>
+                                            <Label text="GRH"/>
+                                        </LabelContainer>
+                                        <LabelContainer>
+                                            <Label text="Javascript"/>
+                                        </LabelContainer>
+                                        <LabelContainer>
+                                            <Label text="Angular.js"/>
+                                        </LabelContainer>
+                                        <LabelContainer>
+                                            <Label text="..."/>
+                                        </LabelContainer>
+                                    </LabelsContainer>
+                                </ProjectContainer>
+
+                                <ProjectContainer>
+                                    <P style={{ color: '#000000', marginBottom: 4 }}>Bevolum - Plataforma de Voluntariado</P>
+                                    <Span style={{ color: '#9E9E9E', lineHeight: 22 }}>
+                                        Plataforma de Voluntariado, com muitas funcionalidades de qualidade,
+                                        tem como objetivo ser voluntario, e assim uma pessoaa boa e humana,
+                                        porque ajudar faz parte.
+                                    </Span>
+                                    <LabelsContainer>
+                                        <LabelContainer>
+                                            <Label text="GRH"/>
+                                        </LabelContainer>
+                                        <LabelContainer>
+                                            <Label text="Javascript"/>
+                                        </LabelContainer>
+                                        <LabelContainer>
+                                            <Label text="Angular.js"/>
+                                        </LabelContainer>
+                                        <LabelContainer>
+                                            <Label text="..."/>
+                                        </LabelContainer>
+                                    </LabelsContainer>
+                                </ProjectContainer>
+                            </PortfolioContainer>
+                        </Row>
+
+                        <ContactContainer>
+                            <Span style={{ color: '#757575' }}>{'contactos'.toUpperCase()}</Span>
+                            <LinksContainer>
+                                <LinkContainer>
+                                    <Row>
+                                        <Col style={{ width: 40 }}>
+                                            <Icon name='google-plus' style={{fontSize: 24, color: '#757575'}} />
+                                        </Col>
+                                        <Col>
+                                            <P style={{ color: '#757575', marginTop: 4 }}>travis.zuckerberg@gmail.com</P>
+                                        </Col>
+                                    </Row>
+                                </LinkContainer>
+                                <LinkContainer>
+                                    <Row>
+                                        <Col style={{ width: 40 }}>
+                                            <Icon name='facebook-box' style={{fontSize: 24, color: '#757575'}} />
+                                        </Col>
+                                        <Col>
+                                            <P style={{ color: '#757575', marginTop: 4 }}>http://www.facebook.com/travis</P>
+                                        </Col>
+                                    </Row>
+                                </LinkContainer>
+                                <LinkContainer>
+                                    <Row>
+                                        <Col style={{ width: 40 }}>
+                                            <Icon name='linkedin-box' style={{fontSize: 24, color: '#757575'}} />
+                                        </Col>
+                                        <Col>
+                                            <P style={{ color: '#757575', marginTop: 4 }}>http://www.linkedin.com/travis</P>
+                                        </Col>
+                                    </Row>
+                                </LinkContainer>
+                                <LinkContainer>
+                                    <Row>
+                                        <Col style={{ width: 40 }}>
+                                            <Icon name='slack' style={{fontSize: 24, color: '#757575'}} />
+                                        </Col>
+                                        <Col>
+                                            <P style={{ color: '#757575', marginTop: 4 }}>http://www.slack.com/travis</P>
+                                        </Col>
+                                    </Row>
+                                </LinkContainer>
+                                <LinkContainer>
+                                    <Row>
+                                        <Col style={{ width: 40 }}>
+                                            <Icon name='trello' style={{fontSize: 24, color: '#757575'}} />
+                                        </Col>
+                                        <Col>
+                                            <P style={{ color: '#757575', marginTop: 4 }}>http://www.trello.com/travis</P>
+                                        </Col>
+                                    </Row>
+                                </LinkContainer>
+                            </LinksContainer>
+                        </ContactContainer>
 
                     </Grid>
                 </Content>
@@ -170,7 +276,7 @@ const AboutContainer = styled.View`
 --Center
 */
 const DataContainer = styled.View`
-  padding-top: 4px;
+  padding-top: 5px;
 `;
 
 /*
@@ -187,7 +293,7 @@ const NumberContainer = styled.View`
 /*
 --Skills Styles
 */
-const SkillContainer = styled.View`
+const PortfolioContainer = styled.View`
   margin-top: 30px;
   padding-left: 20px;
   padding-right: 20px;
@@ -202,4 +308,31 @@ const LabelsContainer = styled.View`
 const LabelContainer = styled.View`
   margin-right: 8px;
   margin-top: 8px;
+`;
+
+/*
+--Projects
+*/
+
+const ProjectContainer = styled.View`
+  margin-top: 15px;
+  margin-bottom: 15px;
+`;
+
+/*
+--Contact
+*/
+const ContactContainer = styled.View`
+  margin-top: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 18px;
+`;
+
+const LinksContainer = styled.View`
+  margin-top: 15px;
+`;
+
+const LinkContainer = styled.View`
+  margin-bottom: 12px;
 `;
