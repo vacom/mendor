@@ -1,16 +1,83 @@
 import React from "react";
-import { Platform, StatusBar, StyleSheet, View } from "react-native";
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+  AsyncStorage
+} from "react-native";
 import { AppLoading, Asset, Font } from "expo";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import RootNavigation from "./navigation/RootNavigation";
 //Apollo
 import { ApolloProvider } from "react-apollo";
 import { ApolloClient } from "apollo-client";
-import { HttpLink } from "apollo-link-http";
+import { createHttpLink } from "apollo-link-http";
+import { ApolloLink, split } from "apollo-link";
 import { InMemoryCache } from "apollo-cache-inmemory";
+import { onError } from "apollo-link-error";
+import { setContext } from "apollo-link-context";
+import { getMainDefinition } from "apollo-utilities";
+//Subscriptions
+import { WebSocketLink } from "apollo-link-ws";
+//Utils
+import {
+  GRAPHQL_ENDPOINT,
+  GRAPHQL_SUBSCRIPTION_ENDPOINT
+} from "./constants/Utils";
 
+//GraphQL endpoint
+const httpLink = createHttpLink({
+  uri: GRAPHQL_ENDPOINT
+});
+
+//Catch network errors
+const errorLink = onError(({ networkError }) => {
+  if (networkError.statusCode === 401) {
+    console.log("logout - error");
+  }
+});
+
+//GraphQL Auth
+const authLink = setContext(async (req, { headers }) => {
+  const token = await AsyncStorage.getItem("graphcoolToken");
+  return {
+    ...headers,
+    headers: {
+      authorization: token ? `Bearer ${token}` : null
+    }
+  };
+});
+
+const clientLink = ApolloLink.from([errorLink, authLink, httpLink]);
+
+//GraphQL Subscriptions
+//WebSocket link:
+const wsLink = new WebSocketLink({
+  uri: GRAPHQL_SUBSCRIPTION_ENDPOINT,
+  options: {
+    reconnect: true,
+    connectionParams: {
+      Authorization: `Bearer ${AsyncStorage.getItem("graphcoolToken")}`
+    }
+  }
+});
+
+// using the ability to split links, you can send data to each link
+// depending on what kind of operation is being sent
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query);
+    return kind === "OperationDefinition" && operation === "subscription";
+  },
+  wsLink,
+  clientLink
+);
+
+//GraphQL Client
 const client = new ApolloClient({
-  link: new HttpLink({ uri: "https://api.graph.cool/simple/v1/swapi" }),
+  link,
   cache: new InMemoryCache()
 });
 
@@ -51,10 +118,12 @@ export default class App extends React.Component {
       ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
-        ...Ionicons.font,
+        ...MaterialIcons.font,
         // We include SpaceMono because we use it in HomeScreen.js. Feel free
         // to remove this if you are not using it in your app
-        "space-mono": require("./assets/fonts/SpaceMono-Regular.ttf")
+        "space-mono": require("./assets/fonts/SpaceMono-Regular.ttf"),
+          'Roboto': require('native-base/Fonts/Roboto.ttf'),
+          'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
       })
     ]);
   };

@@ -15,7 +15,7 @@ class ProfileScreen extends React.Component {
             name="more-vert"
             size={24}
             color="white"
-            style={{ marginRight: 20}}
+            style={{ marginRight: 16}}
         />,
     };
 

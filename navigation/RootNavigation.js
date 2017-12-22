@@ -1,34 +1,43 @@
-import { Notifications } from 'expo';
-import React from 'react';
-import { StackNavigator } from 'react-navigation';
-
-import MainTabNavigator from './MainTabNavigator';
+import { Notifications } from "expo";
+import React from "react";
+import { StackNavigator } from "react-navigation";
+//Main Tab Navigation
+import MainTabNavigator from "./MainTabNavigator";
+//Screen Containers
 import ProfileScreen from "../screens/ProfileScreen";
 import DiscussionScreen from "../screens/DiscussionScreen";
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
+
+import SigninScreen from "../screens/SigninScreen/index";
+//Push Notifications
+import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 
 const RootStackNavigator = StackNavigator(
   {
     Main: {
-      screen: MainTabNavigator,
+      screen: MainTabNavigator
     },
-      Profile: {
-          screen: ProfileScreen
-      },
-      Discussion: {
-        screen: DiscussionScreen
+    Profile: {
+      screen: ProfileScreen
+    },
+    Discussion: {
+      screen: DiscussionScreen
+    },
+    SignIn: {
+      screen: SigninScreen
     }
   },
   {
     navigationOptions: () => ({
-      headerTintColor: '#ffffff',
+      headerTintColor: "#ffffff",
       headerStyle: {
-        backgroundColor: '#3F51B5',
+        backgroundColor: "#3F51B5"
       },
       headerTitleStyle: {
-        fontWeight: 'normal',
-      },
+        fontWeight: "normal"
+      }
     }),
+    initialRouteName: "Main"
   }
 );
 
@@ -53,10 +62,14 @@ export default class RootNavigator extends React.Component {
     registerForPushNotificationsAsync();
 
     // Watch for incoming notifications
-    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    this._notificationSubscription = Notifications.addListener(
+      this._handleNotification
+    );
   }
 
   _handleNotification = ({ origin, data }) => {
-    console.log(`Push notification ${origin} with data: ${JSON.stringify(data)}`);
+    console.log(
+      `Push notification ${origin} with data: ${JSON.stringify(data)}`
+    );
   };
 }
