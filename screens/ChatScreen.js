@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 
+
 class ChatScreen extends React.Component {
   static navigationOptions = {
     title: "Conversas"
@@ -9,7 +10,7 @@ class ChatScreen extends React.Component {
   render() {
     return (
       <ScrollView style={styles.container}>
-        <Text>Ecrã de conversas</Text>
+        <Text>Ecrã de Chat</Text>
       </ScrollView>
     );
   }

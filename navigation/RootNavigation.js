@@ -4,6 +4,7 @@ import { StackNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import ProfileScreen from "../screens/ProfileScreen";
+import DiscussionScreen from "../screens/DiscussionScreen";
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 const RootStackNavigator = StackNavigator(
@@ -13,7 +14,10 @@ const RootStackNavigator = StackNavigator(
     },
       Profile: {
           screen: ProfileScreen
-      }
+      },
+      Discussion: {
+        screen: DiscussionScreen
+    }
   },
   {
     navigationOptions: () => ({

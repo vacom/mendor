@@ -1,78 +1,95 @@
 import React from "react";
-//Styles
-import { StyleSheet, ScrollView, Container, Image } from "react-native";
-import { Text, View, Icon } from "native-base";
+import { Image } from "react-native";
+import { Icon, View } from "native-base";
 import styled from "styled-components/native";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
-class Discussion extends React.Component {
-  render() {
-    const resizeMode = "center";
-    return (
-      <DiscussionCard>
+const resizeMode = "cover";
+
+const Discussion = props => {
+  return (
+    <Card>
+      <Background>
         <Image
           style={{
             flex: 1,
-            resizeMode
+            borderRadius: 3
           }}
-          source={{ uri: "../assets/images/entrepeneur.jpg" }}
+          source={{ uri: props.background }}
         />
-        <Title numberOfLines={2}>{this.props.title}</Title>
-        <Desc numberOfLines={2}>{this.props.description}</Desc>
+      </Background>
+      <Content
+        style={{
+          justifyContent: "center",
+          flex: 1,
+          backgroundColor: "transparent"
+        }}
+      >
+        <Title numberOfLines={2}>{props.title}</Title>
+        <Desc numberOfLines={2}>{props.description}</Desc>
         <Footer
           style={{
             flex: 1,
             flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center"
+            justifyContent: "center"
           }}
         >
-          <Grid>
-            <Col>
-              <Users style={{ flex: 1, flexDirection: "row" }}>
-                <ImageUser
-                  source={{
-                    uri:
-                      "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
-                  }}
-                />
-                <ImageUser
-                  source={{
-                    uri:
-                      "https://www.unilad.co.uk/wp-content/uploads/2017/08/jaime-lannister-1024.jpg"
-                  }}
-                />
-                <ImageUser
-                  source={{
-                    uri:
-                      "https://optclean.com.br/wp-content/uploads/2017/03/Rollo.png"
-                  }}
-                />
-              </Users>
-            </Col>
-            <Col>
-              <Messages style={{ flex: 1, flexDirection: "row" }}>
-                <NumberMessages>{this.props.messagesNumber}</NumberMessages>
-                <Icon name="mail" style={{ color: "#fff", fontSize: 18 }} />
-              </Messages>
-            </Col>
-          </Grid>
+          <Users style={{ flex: 1, flexDirection: "row" }}>
+            <ImageUser
+              source={{
+                uri:
+                  "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
+              }}
+            />
+            <ImageUser
+              source={{
+                uri:
+                  "https://www.unilad.co.uk/wp-content/uploads/2017/08/jaime-lannister-1024.jpg"
+              }}
+            />
+            <ImageUser
+              source={{
+                uri:
+                  "https://optclean.com.br/wp-content/uploads/2017/03/Rollo.png"
+              }}
+            />
+          </Users>
+          <Messages>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "center"
+              }}
+            >
+              <NumberMessages>{props.messagesNumber}</NumberMessages>
+              <Icon name="mail" style={{ color: "#fff", fontSize: 18 }} />
+            </View>
+          </Messages>
         </Footer>
-      </DiscussionCard>
-    );
-  }
-}
+      </Content>
+    </Card>
+  );
+};
 
 export default Discussion;
 
-const DiscussionCard = styled.View`
-  background: #f3b9bf;
-  padding: 10px;
+const Card = styled.View`
   margin-right: 10px;
   margin-left: 15px;
   width: 220px;
-  border-radius: 3px;
   elevation: 10;
+`;
+
+const Background = styled.View`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+`;
+const Content = styled.View`
+  padding: 10px;
 `;
 
 const Title = styled.Text`
