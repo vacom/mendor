@@ -1,6 +1,5 @@
 import React from "react";
-import { Platform } from "react-native";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { TabNavigator, TabBarBottom } from "react-navigation";
 
 import Colors from "../constants/Colors";
@@ -27,8 +26,7 @@ export default TabNavigator(
     },
     Chat: {
       screen: ChatScreen
-    },
-
+    }
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -55,7 +53,7 @@ export default TabNavigator(
         return (
           <MaterialIcons
             name={iconName}
-            size={28}
+            size={24}
             style={{ marginBottom: -3 }}
             color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
           />
@@ -67,6 +65,12 @@ export default TabNavigator(
     animationEnabled: false,
     swipeEnabled: false,
     initialRouteName: "Discover",
-    headerTintColor: '#ffffff',
+    headerTintColor: "#ffffff",
+    tabBarOptions: {
+      style: {
+        backgroundColor: '#ffffff',
+      },
+    }
+    
   }
 );

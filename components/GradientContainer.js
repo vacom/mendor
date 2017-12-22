@@ -10,7 +10,7 @@ const StyledView = styled.View`
 
 const GradientContainer = (props) => {
     return (
-        <StyledView>
+        <StyledView {...props}>
             <LinearGradient
                 colors={['#3F54AF' , '#B39DDB']}
                 style={{
