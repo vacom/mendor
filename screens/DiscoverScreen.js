@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Thumbnail, Button, DeckSwiper, Card, Text } from "native-base";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styled from "styled-components/native";
@@ -7,7 +7,8 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 //Components
 import GradientContainer from "../components/GradientContainer";
-import Label from "../components/Label";
+import { Label, LabelContainer, LabelsContainer } from "../components/Label";
+import { HeaderRightContainer, HeaderRightElement } from "../components/HeaderRight";
 
 const cards = [
   {
@@ -57,17 +58,27 @@ class DiscoverScreen extends React.Component {
       headerStyle: {
         elevation: 0,
       },
-   
       headerRight: (
-        <TouchableOpacity onPress={params.goToProfile}>
-          <Thumbnail
-            style={{ width: 32, height: 32, marginRight: 16 }}
-            source={{
-              uri:
-                "https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg"
-            }}
-          />
-        </TouchableOpacity>
+        <HeaderRightContainer>
+          <HeaderRightElement>
+            <MaterialIcons
+                name="search"
+                size={24}
+                color="#ffffff"
+            />
+          </HeaderRightElement>
+          <HeaderRightElement>
+            <TouchableOpacity onPress={params.goToProfile}>
+              <Thumbnail
+                  style={{ width: 24, height: 24 }}
+                  source={{
+                      uri:
+                          "https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg"
+                  }}
+              />
+            </TouchableOpacity>
+          </HeaderRightElement>
+        </HeaderRightContainer>
       )
     };
   };
@@ -278,18 +289,4 @@ const SkillsContainer = styled.View`
   padding-right: 15px;
   padding-left: 15px;
   margin-bottom: 30px;
-`;
-
-/*
---Labels
-*/
-const LabelsContainer = styled.View`
-  margin-top: 7px;
-  flex-direction: row;
-  flex-wrap: wrap;
-`;
-
-const LabelContainer = styled.View`
-  margin-right: 8px;
-  margin-top: 8px;
 `;

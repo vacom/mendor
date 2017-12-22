@@ -6,17 +6,23 @@ import styled from "styled-components/native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 //Components
-import Label from "../components/Label";
+import { Label, LabelContainer, LabelsContainer } from "../components/Label";
+import { HeaderRightContainer, HeaderRightElement } from "../components/HeaderRight";
 
 class ProfileScreen extends React.Component {
     static navigationOptions = {
         title: "Profile",
-        headerRight: <MaterialIcons
-            name="more-vert"
-            size={24}
-            color="white"
-            style={{ marginRight: 16}}
-        />,
+        headerRight: (
+            <HeaderRightContainer>
+                <HeaderRightElement>
+                    <MaterialIcons
+                        name="more-vert"
+                        size={24}
+                        color="#ffffff"
+                    />
+                </HeaderRightElement>
+            </HeaderRightContainer>
+        )
     };
 
     render() {
@@ -323,17 +329,6 @@ const PortfolioContainer = styled.View`
   margin-top: 30px;
   padding-left: 20px;
   padding-right: 20px;
-`;
-
-const LabelsContainer = styled.View`
-  margin-top: 7px;
-  flex-direction: row;
-  flex-wrap: wrap;
-`;
-
-const LabelContainer = styled.View`
-  margin-right: 8px;
-  margin-top: 8px;
 `;
 
 /*
