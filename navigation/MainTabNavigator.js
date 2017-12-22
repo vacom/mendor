@@ -35,7 +35,7 @@ export default TabNavigator(
         let iconName;
         switch (routeName) {
           case "Discover":
-            iconName = "map";
+            iconName = "explore";
             break;
           case "Discussions":
             iconName = "chat";
