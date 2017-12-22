@@ -6,8 +6,6 @@ import MainTabNavigator from "./MainTabNavigator";
 //Screen Containers
 import ProfileScreen from "../screens/ProfileScreen";
 import DiscussionScreen from "../screens/DiscussionScreen";
-import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
-
 import SigninScreen from "../screens/SigninScreen/index";
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
