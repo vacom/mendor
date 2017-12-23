@@ -8,6 +8,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 //Components
 import { Label, LabelContainer, LabelsContainer } from "../components/Label";
 import { HeaderRightContainer, HeaderRightElement } from "../components/HeaderRight";
+import { CardContainer, CardLeft, CardBody, CardRight} from "../components/Card";
 
 class ProfileScreen extends React.Component {
     static navigationOptions = {
@@ -32,29 +33,29 @@ class ProfileScreen extends React.Component {
                     <Grid>
                         <LinearGradient colors={['#3f51b5' , '#B39DDB']}>
                             <AboutContainer>
-                                <Row style={{ height: 48 }}>
-                                    <Col style={{ width: 68 }}>
+                                <CardContainer>
+                                    <CardLeft>
                                         <Thumbnail
-                                            style={{ width: 48, height: 48 }}
-                                            source={{ uri: 'https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg' }}
+                                            style={{width: 48, height: 48}}
+                                            source={{uri: 'https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg'}}
                                         />
-                                    </Col>
-                                    <Col>
-                                        <DataContainer>
-                                            <H1>Marta Sousa</H1>
-                                            <Span style={{ paddingTop: 1, fontWeight: '600' }}>CTO na empresa UnhasLimpas</Span>
-                                        </DataContainer>
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col style={{ marginTop: 20 }}>
-                                        <P style={{ lineHeight: 24 }}>
-                                            Estou a desenvolver um spray muito bom que limpa as unhas e brilha,
-                                            e tem como objetivo limpar tudo muito bem para sempre, vale apena
-                                            investir na minha ideia.
-                                        </P>
-                                    </Col>
-                                </Row>
+                                    </CardLeft>
+                                    <CardBody>
+                                        <H1>Marta Sousa</H1>
+                                        <P>CTO na empresa UnhasLimpas</P>
+                                    </CardBody>
+                                </CardContainer>
+                                <AboutTextContainer>
+                                    <Row>
+                                        <Col>
+                                            <P style={{ lineHeight: 24 }}>
+                                                Estou a desenvolver um spray muito bom que limpa as unhas e brilha,
+                                                e tem como objetivo limpar tudo muito bem para sempre, vale apena
+                                                investir na minha ideia.
+                                            </P>
+                                        </Col>
+                                    </Row>
+                                </AboutTextContainer>
                             </AboutContainer>
                         </LinearGradient>
 
@@ -301,14 +302,11 @@ const Span = styled.Text`
 --User Information Styles
 */
 const AboutContainer = styled.View`
-  padding: 30px 20px 30px 20px;
+  padding: 20px 10px 20px 10px;
 `;
 
-/*
---Center
-*/
-const DataContainer = styled.View`
-  padding-top: 5px;
+const AboutTextContainer = styled.View`
+  padding: 20px 10px 10px 10px; 
 `;
 
 /*

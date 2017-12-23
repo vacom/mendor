@@ -5,7 +5,7 @@ import { StackNavigator } from "react-navigation";
 import MainTabNavigator from "./MainTabNavigator";
 //Screen Containers
 import ProfileScreen from "../screens/ProfileScreen";
-import DiscussionScreen from "../screens/DiscussionScreen";
+import DiscussionScreen from "../screens/DiscussionsScreen/ViewScreen/index.js";
 import SigninScreen from "../screens/SigninScreen/index";
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";

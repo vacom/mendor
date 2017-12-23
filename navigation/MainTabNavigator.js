@@ -5,7 +5,7 @@ import { TabNavigator, TabBarBottom } from "react-navigation";
 import Colors from "../constants/Colors";
 
 import DiscoverScreen from "../screens/DiscoverScreen";
-import DiscussionsScreen from "../screens/DiscussionsScreen";
+import DiscussionsScreen from "../screens/DiscussionsScreen/index";
 import ContactsScreen from "../screens/ContactsScreen";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import ChatScreen from "../screens/ChatScreen";

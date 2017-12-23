@@ -34,7 +34,7 @@ export default InputMessageBar;
 const Message = styled.View`
   background: #fff;
   width: 100%;
-  padding: 10px 20px;
+  padding: 10px 15px;
   justify-content: space-between;
   flex-direction: row;
 `;
