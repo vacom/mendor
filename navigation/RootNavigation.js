@@ -4,9 +4,13 @@ import { StackNavigator } from "react-navigation";
 //Main Tab Navigation
 import MainTabNavigator from "./MainTabNavigator";
 //Screen Containers
-import ProfileScreen from "../screens/ProfileScreen";
-import DiscussionScreen from "../screens/DiscussionsScreen/ViewScreen/index.js";
-import SigninScreen from "../screens/SigninScreen/index";
+//ProfileScreens
+import ProfileScreen from "../screens/ProfileScreen/index";
+//DiscussionScreens
+import DiscussionViewScreen from "../screens/DiscussionsScreen/ViewScreen/index.js";
+//AuthScreens
+import AuthScreen from "../screens/AuthScreen/index";
+import SigninScreen from "../screens/AuthScreen/SigninScreen/index";
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 
@@ -18,8 +22,11 @@ const RootStackNavigator = StackNavigator(
     Profile: {
       screen: ProfileScreen
     },
-    Discussion: {
-      screen: DiscussionScreen
+    DiscussionView: {
+      screen: DiscussionViewScreen
+    },
+    AuthScreen: {
+      screen: AuthScreen
     },
     SignIn: {
       screen: SigninScreen

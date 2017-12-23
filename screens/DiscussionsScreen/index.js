@@ -8,49 +8,46 @@ class DiscussionsScreen extends React.Component {
   static navigationOptions = {
     title: "Discussões"
   };
-  
-  render() {
+  _goToDiscussion = () => {
     const { navigate } = this.props.navigation;
-    const _goToDiscussion = () => {
-      navigate("Discussion")
-    }
-
-    
+    navigate("DiscussionView");
+  }
+  render() {
     return (
       <Container>
         <ScrollView>
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={_goToDiscussion}
+            goToDiscussion={this._goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />

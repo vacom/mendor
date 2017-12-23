@@ -6,10 +6,18 @@ import styled from "styled-components/native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 //Components
-import GradientContainer from "../components/GradientContainer";
-import { Label, LabelContainer, LabelsContainer } from "../components/Label";
-import { HeaderRightContainer, HeaderRightElement } from "../components/HeaderRight";
-import { CardContainer, CardLeft, CardBody, CardRight} from "../components/Card";
+import GradientContainer from "../../components/GradientContainer";
+import { Label, LabelContainer, LabelsContainer } from "../../components/Label";
+import {
+  HeaderRightContainer,
+  HeaderRightElement
+} from "../../components/HeaderRight";
+import {
+  CardContainer,
+  CardLeft,
+  CardBody,
+  CardRight
+} from "../../components/Card";
 
 const cards = [
   {
@@ -57,25 +65,21 @@ class DiscoverScreen extends React.Component {
     return {
       title: "Descobrir",
       headerStyle: {
-        elevation: 0,
+        elevation: 0
       },
       headerRight: (
         <HeaderRightContainer>
           <HeaderRightElement>
-            <MaterialIcons
-                name="search"
-                size={24}
-                color="#ffffff"
-            />
+            <MaterialIcons name="search" size={24} color="#ffffff" />
           </HeaderRightElement>
           <HeaderRightElement>
             <TouchableOpacity onPress={params.goToProfile}>
               <Thumbnail
-                  style={{ width: 24, height: 24 }}
-                  source={{
-                      uri:
-                          "https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg"
-                  }}
+                style={{ width: 24, height: 24 }}
+                source={{
+                  uri:
+                    "https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg"
+                }}
               />
             </TouchableOpacity>
           </HeaderRightElement>
@@ -105,8 +109,8 @@ class DiscoverScreen extends React.Component {
                     <CardContainer>
                       <CardLeft>
                         <Thumbnail
-                            style={{width: 48, height: 48}}
-                            source={{uri:  item.photo }}
+                          style={{ width: 48, height: 48 }}
+                          source={{ uri: item.photo }}
                         />
                       </CardLeft>
                       <CardBody>
@@ -115,9 +119,9 @@ class DiscoverScreen extends React.Component {
                       </CardBody>
                       <CardRight>
                         <MaterialIcons
-                            name="arrow-drop-down"
-                            size={24}
-                            color="#000000"
+                          name="arrow-drop-down"
+                          size={24}
+                          color="#000000"
                         />
                       </CardRight>
                     </CardContainer>
