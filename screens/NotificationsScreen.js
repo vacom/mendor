@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import {} from "react-native";
-=======
 import { ScrollView } from "react-native";
->>>>>>> 5ca7ca5ef9d06ece5816812dd1ad56da558db176
 import {Thumbnail, Button, Text} from "native-base";
 import styled from "styled-components/native";
 import {MaterialIcons} from "@expo/vector-icons";
@@ -33,11 +29,8 @@ class NotificationsScreen extends React.Component {
         return (
             <Container>
                 <GradientContainer>
-<<<<<<< HEAD
-                    <NotificationsScrollView>
-=======
+
                     <ScrollView style={{paddingBottom: 30}}>
->>>>>>> 5ca7ca5ef9d06ece5816812dd1ad56da558db176
 
                         <Card>
                             <CardContainer>
@@ -56,10 +49,7 @@ class NotificationsScreen extends React.Component {
                                     >
                                         <Text
                                             style={{
-<<<<<<< HEAD
-=======
                                                 lineHeight: 12,
->>>>>>> 5ca7ca5ef9d06ece5816812dd1ad56da558db176
                                                 fontSize: 12,
                                                 fontWeight: "600"
                                             }}
@@ -91,10 +81,6 @@ class NotificationsScreen extends React.Component {
                                 </CardRight>
                             </CardContainer>
                         </Card>
-
-<<<<<<< HEAD
-                    </NotificationsScrollView>
-=======
                         <Card>
                             <CardContainer>
                                 <CardLeft>
@@ -117,7 +103,6 @@ class NotificationsScreen extends React.Component {
                         </Card>
 
                     </ScrollView>
->>>>>>> 5ca7ca5ef9d06ece5816812dd1ad56da558db176
                 </GradientContainer>
             </Container>
         );
@@ -129,11 +114,4 @@ export default NotificationsScreen;
 const Container = styled.View`
   flex: 1;
   background-color: #fff;
-<<<<<<< HEAD
-`;
-
-const NotificationsScrollView = styled.ScrollView`
-
-=======
->>>>>>> 5ca7ca5ef9d06ece5816812dd1ad56da558db176
 `;
