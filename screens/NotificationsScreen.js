@@ -48,7 +48,7 @@ class NotificationsScreen extends React.Component {
                                     />
                                 </CardLeft>
                                 <CardBody>
-                                    <Text style={{fontSize: 14}}>Marta Sousa, acabou de enviar uma mensagens</Text>
+                                    <Text style={{fontSize: 14, color: '#000'}}>Vitor Amaral, acabou de enviar uma mensagens</Text>
                                 </CardBody>
                                 <CardRight>
                                     <Button small
@@ -80,7 +80,7 @@ class NotificationsScreen extends React.Component {
                                     />
                                 </CardLeft>
                                 <CardBody>
-                                    <Text style={{fontSize: 14}}>Vitor Amaral enviou-te um pedido para conetar</Text>
+                                    <Text style={{fontSize: 14, color: '#000'}}>Vitor Amaral enviou-te um pedido para conetar</Text>
                                 </CardBody>
                                 <CardRight>
                                     <MaterialIcons
@@ -104,7 +104,7 @@ class NotificationsScreen extends React.Component {
                                     />
                                 </CardLeft>
                                 <CardBody>
-                                    <Text style={{fontSize: 14}}>Vitor Amaral enviou-te um pedido para conetar</Text>
+                                    <Text style={{fontSize: 14, color: '#000'}}>Vitor Amaral enviou-te um pedido para conetar</Text>
                                 </CardBody>
                                 <CardRight>
                                     <MaterialIcons
