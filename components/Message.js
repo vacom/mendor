@@ -2,19 +2,20 @@ import React from "react";
 import styled from "styled-components/native";
 import { ScrollView } from "react-native";
 import { View, Text } from "native-base";
+import { LinearGradient } from "expo";
 
 const Chat = props => {
   let message = null;
   const id_user_signed = 1;
   if (props.id_user == id_user_signed) {
     message = (
-      <ViewMessageMine>
-        <TextMine>{props.message}</TextMine>
-      </ViewMessageMine>
+      <ViewMessageLogged>
+        <TextLogged>{props.message}</TextLogged>
+      </ViewMessageLogged>
     );
   } else {
     message = (
-      <ViewMessageNotMine>
+      <ViewMessageNotLogged>
         <ViewAvatar>
           <Avatar
             source={{
@@ -23,10 +24,10 @@ const Chat = props => {
             }}
           />
         </ViewAvatar>
-        <View>
-          <TextNotMine>{props.message}</TextNotMine>
-        </View>
-      </ViewMessageNotMine>
+        <LinearGradient colors={["#3F53AF", "#673AB7"]} style={{borderRadius:10, padding:10}} start={[0, 0]} end={[1, 0]} >
+          <TextNotLogged>{props.message}</TextNotLogged>
+        </LinearGradient>
+      </ViewMessageNotLogged>
     );
   }
   return <View>{message}</View>;
@@ -34,7 +35,7 @@ const Chat = props => {
 
 export default Chat;
 
-const TextMine = styled.Text`
+const TextLogged = styled.Text`
   padding: 11px;
   color: #000;
   background: #fff;
@@ -46,22 +47,19 @@ const TextMine = styled.Text`
   max-width: 90%;
 `;
 
-const TextNotMine = styled.Text`
-  padding: 10px;
-  background: #3f51b5;
+const TextNotLogged = styled.Text`
   color: #fff;
-  border-radius: 10;
   font-size: 16px;
   margin-bottom: 5px;
   text-align: justify;
 `;
 
-const ViewMessageMine = styled.View`
+const ViewMessageLogged = styled.View`
   align-items: flex-end;
   padding: 5px 10px;
 `;
 
-const ViewMessageNotMine = styled.View`
+const ViewMessageNotLogged = styled.View`
   flex: 1;
   flex-direction: row;
   padding: 5px 10px;

@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Icon, Fab, Text, View } from "native-base";
 import styled from "styled-components/native";
 //Components
-import CategoryGroup from "../components/CategoryGroup";
+import CategoryGroup from "../../components/CategoryGroup";
 
 class DiscussionsScreen extends React.Component {
   static navigationOptions = {
