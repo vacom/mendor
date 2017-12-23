@@ -9,6 +9,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import GradientContainer from "../components/GradientContainer";
 import { Label, LabelContainer, LabelsContainer } from "../components/Label";
 import { HeaderRightContainer, HeaderRightElement } from "../components/HeaderRight";
+import { CardContainer, CardLeft, CardBody, CardRight} from "../components/Card";
 
 const cards = [
   {
@@ -101,20 +102,25 @@ class DiscoverScreen extends React.Component {
               renderItem={item => (
                 <Card style={{ elevation: 3, padding: 15, borderRadius: 15 }}>
                   <UserContainer>
-                    <Row style={{ height: 48 }}>
-                      <Col style={{ width: 68 }}>
+                    <CardContainer>
+                      <CardLeft>
                         <Thumbnail
-                          style={{ width: 48, height: 48 }}
-                          source={{ uri: item.photo }}
+                            style={{width: 48, height: 48}}
+                            source={{uri:  item.photo }}
                         />
-                      </Col>
-                      <Col>
-                        <DataContainer>
-                          <H1>{item.name}</H1>
-                          <P style={{ paddingTop: 1 }}>{item.job}</P>
-                        </DataContainer>
-                      </Col>
-                    </Row>
+                      </CardLeft>
+                      <CardBody>
+                        <H1>{item.name}</H1>
+                        <P style={{ paddingTop: 1 }}>{item.job}</P>
+                      </CardBody>
+                      <CardRight>
+                        <MaterialIcons
+                            name="arrow-drop-down"
+                            size={24}
+                            color="#000000"
+                        />
+                      </CardRight>
+                    </CardContainer>
                   </UserContainer>
                   <LinksContainer>
                     <LinkContainer>
@@ -253,38 +259,27 @@ const Span = styled.Text`
   color: #000;
 `;
 
+//User
 const UserContainer = styled.View`
-  padding: 15px;
+  padding: 5px;
 `;
 
-/*
---Cards
-*/
+//Cards
 const CardsContainer = styled.View`
   padding: 10px;
 `;
 
-/*
---Center
-*/
-const DataContainer = styled.View`
-  padding-top: 5px;
-`;
-
-/*
---Links
-*/
+//Links
 const LinksContainer = styled.View`
-  padding: 15px;
+  padding: 15px 15px 15px 15px;
 `;
 
+//Link
 const LinkContainer = styled.View`
-  margin-bottom: 12px;
+  padding-bottom: 15px;
 `;
 
-/*
---Skills
-*/
+//Skills
 const SkillsContainer = styled.View`
   padding-right: 15px;
   padding-left: 15px;
