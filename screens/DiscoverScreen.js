@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { Thumbnail, Button, DeckSwiper, Card, Text } from "native-base";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import styled from "styled-components/native";
