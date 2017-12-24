@@ -8,7 +8,6 @@ class DiscussionsScreen extends React.Component {
   static navigationOptions = {
     title: "Discussões"
   };
-<<<<<<< HEAD
 
   render() {
     const { navigate } = this.props.navigation;
@@ -20,13 +19,6 @@ class DiscussionsScreen extends React.Component {
       navigate("AddDiscussion");
     };
 
-=======
-  _goToDiscussion = () => {
-    const { navigate } = this.props.navigation;
-    navigate("DiscussionView");
-  }
-  render() {
->>>>>>> 66847abef6b87b2ca3d070d2bd3f7952fa66d31b
     return (
       <Container>
         <ScrollView>

@@ -8,7 +8,7 @@ import Accordion from "react-native-collapsible/Accordion";
 import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
 
-class DiscussionScreen extends React.Component {
+class DiscussionViewScreen extends React.Component {
   static navigationOptions = {
     title: "Discussão"
   };
@@ -98,7 +98,7 @@ class DiscussionScreen extends React.Component {
   }
 }
 
-export default DiscussionScreen;
+export default DiscussionViewScreen;
 
 const ContainerDiscussion = styled.View`
   background: #fff;
