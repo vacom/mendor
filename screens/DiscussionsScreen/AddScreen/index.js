@@ -62,15 +62,6 @@ class AddDiscussion extends React.Component {
             <Item>
               <Input multiline={true} numberOfLines={8} placeholder="Título" />
             </Item>
-            <Picker
-              selectedValue={this.state.language}
-              onValueChange={(itemValue, itemIndex) =>
-                this.setState({ language: itemValue })
-              }
-            >
-              <Picker.Item label="Java" value="java" />
-              <Picker.Item label="JavaScript" value="js" />
-            </Picker>
           </Form>
         </View>
       </View>

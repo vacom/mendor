@@ -11,8 +11,9 @@ class DiscussionsScreen extends React.Component {
 
   render() {
     const { navigate } = this.props.navigation;
+
     const _goToDiscussion = () => {
-      navigate("Discussion");
+      navigate("DiscussionView");
     };
 
     const _goToAddDiscussion = () => {
@@ -23,37 +24,37 @@ class DiscussionsScreen extends React.Component {
       <Container>
         <ScrollView>
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
           <CategoryGroup
-            goToDiscussion={this._goToDiscussion}
+            goToDiscussion={_goToDiscussion}
             idCategory="1"
             nameCategory="EMPREENDEDORISMO"
           />
