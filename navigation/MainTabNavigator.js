@@ -4,11 +4,11 @@ import { TabNavigator, TabBarBottom } from "react-navigation";
 
 import Colors from "../constants/Colors";
 
-import DiscoverScreen from "../screens/DiscoverScreen";
+import DiscoverScreen from "../screens/DiscoverScreen/index";
 import DiscussionsScreen from "../screens/DiscussionsScreen/index";
-import ContactsScreen from "../screens/ContactsScreen";
-import NotificationsScreen from "../screens/NotificationsScreen";
-import ChatScreen from "../screens/ChatScreen";
+import ContactsScreen from "../screens/ContactsScreen/index";
+import NotificationsScreen from "../screens/NotificationsScreen/index";
+import ChatScreen from "../screens/ChatScreen/index";
 
 export default TabNavigator(
   {

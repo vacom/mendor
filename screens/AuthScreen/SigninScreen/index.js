@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 //Components
 import { Thumbnail, H1, Text, Button, Content, Container } from "native-base";
-import { GradientContainer } from "../../components/index";
+import { GradientContainer } from "../../../components/index";
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 class SigninScreen extends React.Component {
