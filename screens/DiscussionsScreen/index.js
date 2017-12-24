@@ -8,14 +8,17 @@ class DiscussionsScreen extends React.Component {
   static navigationOptions = {
     title: "Discussões"
   };
-  
+
   render() {
     const { navigate } = this.props.navigation;
     const _goToDiscussion = () => {
-      navigate("Discussion")
-    }
+      navigate("Discussion");
+    };
 
-    
+    const _goToAddDiscussion = () => {
+      navigate("AddDiscussion");
+    };
+
     return (
       <Container>
         <ScrollView>
@@ -56,6 +59,7 @@ class DiscussionsScreen extends React.Component {
           />
         </ScrollView>
         <Fab
+          onPress={_goToAddDiscussion}
           direction="up"
           containerStyle={{}}
           style={{ backgroundColor: "#3F51B5" }}

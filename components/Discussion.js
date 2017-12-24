@@ -13,7 +13,8 @@ const Discussion = props => {
         <Image
           style={{
             flex: 1,
-            borderRadius: 3
+            borderRadius: 3,
+            resizeMode
           }}
           source={{ uri: props.background }}
         />
