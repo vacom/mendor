@@ -10,6 +10,8 @@ import AddDiscussion from "../screens/DiscussionsScreen/AddScreen/index";
 import ProfileScreen from "../screens/ProfileScreen/index";
 //DiscussionScreens
 import DiscussionViewScreen from "../screens/DiscussionsScreen/ViewScreen/index";
+//ChatScreens
+import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 //AuthScreens
 import AuthScreen from "../screens/AuthScreen/index";
 import SigninScreen from "../screens/AuthScreen/SigninScreen/index";
@@ -26,6 +28,9 @@ const RootStackNavigator = StackNavigator(
     },
     DiscussionView: {
       screen: DiscussionViewScreen
+    },
+    ChatView: {
+      screen: ChatViewScreen
     },
     AuthScreen: {
       screen: AuthScreen

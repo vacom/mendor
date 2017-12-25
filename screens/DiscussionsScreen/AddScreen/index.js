@@ -2,16 +2,38 @@ import React from "react";
 import { Image, View, Text } from "react-native";
 import { ImagePicker } from "expo";
 import styled from "styled-components/native";
-import { Form, Item, Input, Label, Button } from "native-base";
+import { Form, Item, Input, Label, Button, Picker } from "native-base";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+
+import {
+  HeaderRightContainer,
+  HeaderRightElement
+} from "../../../components/HeaderRight";
 
 class AddDiscussion extends React.Component {
-  static navigationOptions = {
-    title: "Adicionar discussão"
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected3: "key3",
+      image:
+        "http://4globetrotters.world/wp-content/uploads/2015/08/Light-Grey-Background.jpg"
+    };
+  }
+  onValueChange3(value) {
+    this.setState({
+      selected3: value
+    });
+  }
 
-  state = {
-    image:
-      "http://hdimages.org/wp-content/uploads/2017/03/placeholder-image4.jpg"
+  static navigationOptions = {
+    title: "Adicionar discussão",
+    headerRight: (
+      <HeaderRightContainer>
+        <HeaderRightElement>
+          <MaterialIcons name="check" size={24} color="#ffffff" />
+        </HeaderRightElement>
+      </HeaderRightContainer>
+    )
   };
 
   render() {
@@ -54,14 +76,35 @@ class AddDiscussion extends React.Component {
             </Button>
           </Content>
         </View>
-        <View style={{ flex: 0.7 }}>
+        <View style={{ flex: 0.7, marginTop: 10 }}>
           <Form>
             <Item>
               <Input placeholder="Título" />
             </Item>
             <Item>
-              <Input multiline={true} numberOfLines={8} placeholder="Título" />
+              <Input
+                multiline={true}
+                numberOfLines={8}
+                placeholder="Descrição"
+              />
             </Item>
+            <StyledPickerView>
+              <Picker
+                style={{ color: "#6B6A6F" }}
+                mode="dropdown"
+                onValueChange={this.onValueChange3.bind(this)}
+              >
+                <Item
+                  style={{ fontSize: 20, backgroundColor: "red" }}
+                  label="Categoria"
+                  value="key0"
+                />
+                <Item style={{ fontSize: 20 }} label="Categoria" value="key1" />
+                <Item style={{ fontSize: 20 }} label="Categoria" value="key2" />
+                <Item style={{ fontSize: 20 }} label="Categoria" value="key3" />
+                <Item style={{ fontSize: 20 }} label="Categoria" value="key4" />
+              </Picker>
+            </StyledPickerView>
           </Form>
         </View>
       </View>
@@ -99,6 +142,13 @@ const Content = styled.View`
 
 const StyledText = styled.Text`
   font-size: 18px;
-  font-weight: 600;
   margin-bottom: 10px;
+`;
+
+const StyledPickerView = styled.View`
+  padding: 10px 5px 0px 0px;
+  margin: 30px 0px 0px 15px;
+  border-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: #dedde3;
 `;
