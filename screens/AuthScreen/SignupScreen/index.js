@@ -3,7 +3,7 @@ import {Text, Container, Content, Form, Item, Input, Label, Fab} from "native-ba
 import {Row} from "react-native-easy-grid";
 import styled from "styled-components/native";
 import {LinearGradient} from "expo";
-import {MaterialIcons} from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 //Components
 
@@ -19,7 +19,7 @@ class AuthScreen extends React.Component {
                     <ContentContainer>
                         <Row style={{height: 'auto', marginBottom: 15, marginTop: 30, backgroundColor: 'transparent'}}>
                             <Text style={{fontSize: 26, fontWeight: '600', color: "#fff"}}>
-                                Entrar
+                                Registar
                             </Text>
                         </Row>
                         <Row style={{height: 'auto', backgroundColor: 'transparent', marginBottom: 30}}>
@@ -28,7 +28,8 @@ class AuthScreen extends React.Component {
                                 lineHeight: 24,
                                 color: '#fff',
                             }}>
-                                Bem vindo de volta, no mendor és sempre recebido com muito amor.
+                                Mendor é conetar as pessoas certas,
+                                estabelecer relaçoes de valor e partilhar ideias.
                             </Text>
                         </Row>
                     </ContentContainer>
@@ -37,11 +38,23 @@ class AuthScreen extends React.Component {
                     <Content style={{paddingLeft: 20, paddingRight: 20}}>
                         <Form style={{paddingBottom: 60}}>
                             <Item style={{marginLeft: 0}} floatingLabel>
+                                <Label style={{color: '#757575'}}>Nome</Label>
+                                <Input />
+                            </Item>
+                            <Item style={{marginLeft: 0}} floatingLabel>
+                                <Label style={{color: '#757575'}}>Apelido</Label>
+                                <Input />
+                            </Item>
+                            <Item style={{marginLeft: 0}} floatingLabel>
                                 <Label style={{color: '#757575'}}>Email</Label>
                                 <Input />
                             </Item>
                             <Item style={{marginLeft: 0}} floatingLabel>
                                 <Label style={{color: '#757575'}}>Password</Label>
+                                <Input />
+                            </Item>
+                            <Item style={{marginLeft: 0}} floatingLabel>
+                                <Label style={{color: '#757575'}}>Repetir Password</Label>
                                 <Input />
                             </Item>
                         </Form>
@@ -50,10 +63,10 @@ class AuthScreen extends React.Component {
                 <Fab
                     direction="up"
                     containerStyle={{ }}
-                    style={{backgroundColor: '#3f51b5'}}
+                    style={{ backgroundColor: '#3f51b5' }}
                     position="bottomRight"
                 >
-                    <MaterialIcons name="arrow-forward" size={24} color="#ffffff"/>
+                    <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
                 </Fab>
             </ScreenContainer>
         );

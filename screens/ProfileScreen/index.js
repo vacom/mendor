@@ -14,8 +14,7 @@ import {
 import {
   CardContainer,
   CardLeft,
-  CardBody,
-  CardRight
+  CardBody
 } from "../../components/Card";
 
 class ProfileScreen extends React.Component {

@@ -15,6 +15,7 @@ import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 //AuthScreens
 import AuthScreen from "../screens/AuthScreen/index";
 import SigninScreen from "../screens/AuthScreen/SigninScreen/index";
+import SignupScreen from "../screens/AuthScreen/SignupScreen/index";
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 
@@ -37,6 +38,9 @@ const RootStackNavigator = StackNavigator(
     },
     SignIn: {
       screen: SigninScreen
+    },
+    SignUp: {
+      screen: SignupScreen
     },
     AddDiscussion: {
       screen: AddDiscussion
