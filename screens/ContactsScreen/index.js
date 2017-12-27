@@ -52,9 +52,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Eça de Queiroz</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -75,9 +73,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Fernando Pessoa</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -98,9 +94,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Luís de Camões</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -121,9 +115,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>José Saramago</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -144,9 +136,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Miguel Torga</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -167,9 +157,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Raúl Brandão</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -190,9 +178,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Florbela Espanca</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                 <CardRight>
                   <MaterialIcons name="more-vert" size={24} color="#757575" />
@@ -213,9 +199,7 @@ class ContactsScreen extends React.Component {
                 </CardLeft>
                 <CardBody>
                   <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Antero de Quental</Text>
-                  <CardBody>
                   <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
                 </CardBody>
                
                 <CardRight>
