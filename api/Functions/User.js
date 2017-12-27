@@ -16,7 +16,9 @@ const USER_SIGNIN_FUNC = async (
       },
       update: (store, { data: { signinUser } }) => {
         try {
+          //console.log(signinUser.token);
           AsyncStorage.setItem("graphcoolToken", signinUser.token);
+          AsyncStorage.setItem("@mendor:userId", signinUser.user.id);
           userId = signinUser.user.id;
         } catch (e) {
           return e;
@@ -25,7 +27,7 @@ const USER_SIGNIN_FUNC = async (
     });
     return { status: true, userId };
   } catch (e) {
-    return { status: false };
+    return { status: false, error: e };
   }
 };
 
