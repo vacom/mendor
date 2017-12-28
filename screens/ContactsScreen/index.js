@@ -19,6 +19,7 @@ import {
   CardRight
 } from "../../components/Card";
 
+
 class ContactsScreen extends React.Component {
   static navigationOptions = {
     title: "Contactos",
@@ -33,75 +34,14 @@ class ContactsScreen extends React.Component {
 
   render() {
     return (
+    
       <Container>
+        <Header hasTabs />
+        <Tabs initialPage={0}>
+          <Tab heading="Mentores">
+          <Container>
         <GradientContainer>
-
-
           <ScrollView>
-          <ScrollView style={{ paddingBottom: 140 }}>
-            <Card>
-              <CardContainer>
-                <CardLeft>
-                  <Thumbnail
-                    style={{ width: 48, height: 48 }}
-                    source={{
-                      uri:
-                        "https://images.wook.pt/getresourcesservlet/GetResource?+4Hu1d+XFcIbRCL+rns/dPLJIyl/ptUmguQ7wc4aH8s="
-                    }}
-                  />
-                </CardLeft>
-                <CardBody>
-                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Eça de Queiroz</Text>
-                  <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
-                <CardRight>
-                  <MaterialIcons name="more-vert" size={24} color="#757575" />
-                </CardRight>
-              </CardContainer>
-            </Card>
-
-            <Card>
-              <CardContainer>
-                <CardLeft>
-                  <Thumbnail
-                    style={{ width: 48, height: 48 }}
-                    source={{
-                      uri:
-                        "http://www.citador.pt/images/autorid00334.jpg"
-                    }}
-                  />
-                </CardLeft>
-                <CardBody>
-                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Fernando Pessoa</Text>
-                  <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
-                <CardRight>
-                  <MaterialIcons name="more-vert" size={24} color="#757575" />
-                </CardRight>
-              </CardContainer>
-            </Card>
-
-            <Card>
-              <CardContainer>
-                <CardLeft>
-                  <Thumbnail
-                    style={{ width: 48, height: 48 }}
-                    source={{
-                      uri:
-                        "http://www.revistaestante.fnac.pt/wp-content/uploads/2017/06/cam%C3%B5es-portugal-revista-estante-fnac.jpg"
-                    }}
-                  />
-                </CardLeft>
-                <CardBody>
-                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Luís de Camões</Text>
-                  <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
-                </CardBody>
-                <CardRight>
-                  <MaterialIcons name="more-vert" size={24} color="#757575" />
-                </CardRight>
-              </CardContainer>
-            </Card>
-
             <Card>
               <CardContainer>
                 <CardLeft>
@@ -207,11 +147,83 @@ class ContactsScreen extends React.Component {
                 </CardRight>
                 </CardContainer>
             </Card>
-
-          </ScrollView>
           </ScrollView>
         </GradientContainer>
       </Container>
+          </Tab>
+          <Tab heading="Empreendedores">
+          <Container>
+        <GradientContainer>
+          <ScrollView>
+            <Card>
+              <CardContainer>
+                <CardLeft>
+                  <Thumbnail
+                    style={{ width: 48, height: 48 }}
+                    source={{
+                      uri:
+                        "https://images.wook.pt/getresourcesservlet/GetResource?+4Hu1d+XFcIbRCL+rns/dPLJIyl/ptUmguQ7wc4aH8s="
+                    }}
+                  />
+                </CardLeft>
+                <CardBody>
+                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Eça de Queiroz</Text>
+                  <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
+                </CardBody>
+                <CardRight>
+                  <MaterialIcons name="more-vert" size={24} color="#757575" />
+                </CardRight>
+              </CardContainer>
+            </Card>
+
+            <Card>
+              <CardContainer>
+                <CardLeft>
+                  <Thumbnail
+                    style={{ width: 48, height: 48 }}
+                    source={{
+                      uri:
+                        "http://www.citador.pt/images/autorid00334.jpg"
+                    }}
+                  />
+                </CardLeft>
+                <CardBody>
+                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Fernando Pessoa</Text>
+                  <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
+                </CardBody>
+                <CardRight>
+                  <MaterialIcons name="more-vert" size={24} color="#757575" />
+                </CardRight>
+              </CardContainer>
+            </Card>
+
+            <Card>
+              <CardContainer>
+                <CardLeft>
+                  <Thumbnail
+                    style={{ width: 48, height: 48 }}
+                    source={{
+                      uri:
+                        "http://www.revistaestante.fnac.pt/wp-content/uploads/2017/06/cam%C3%B5es-portugal-revista-estante-fnac.jpg"
+                    }}
+                  />
+                </CardLeft>
+                <CardBody>
+                  <Text style={{ fontSize: 14, fontWeight: "bold", color: "#000" }}>Luís de Camões</Text>
+                  <Text style={{ fontSize: 14, color: "#757575" }}>Escritor</Text>
+                </CardBody>
+                <CardRight>
+                  <MaterialIcons name="more-vert" size={24} color="#757575" />
+                </CardRight>
+              </CardContainer>
+            </Card>
+          </ScrollView>
+        </GradientContainer>
+      </Container>
+          </Tab>
+        </Tabs>
+      </Container>
+
     );
   }
 }
