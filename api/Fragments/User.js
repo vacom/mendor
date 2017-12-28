@@ -6,6 +6,7 @@ import gql from "graphql-tag";
 const BASIC_USER_FIELDS_FRAGMENT = gql`
   fragment basicUserFields on User {
     id
+    type
     email
     name
     avatar

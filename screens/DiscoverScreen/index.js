@@ -1,10 +1,9 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Thumbnail, Button, DeckSwiper, Card, Text } from "native-base";
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row } from "react-native-easy-grid";
 import styled from "styled-components/native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-
 //Components
 import GradientContainer from "../../components/GradientContainer";
 import { Label, LabelContainer, LabelsContainer } from "../../components/Label";
@@ -18,6 +17,11 @@ import {
   CardBody,
   CardRight
 } from "../../components/Card";
+//GraphQL
+import { graphql, compose, withApollo } from "react-apollo";
+import { BASIC_USER_QUERY } from "../../api/Queries/User";
+//Utils
+import Toast from "react-native-root-toast";
 
 const cards = [
   {
@@ -77,8 +81,7 @@ class DiscoverScreen extends React.Component {
               <Thumbnail
                 style={{ width: 24, height: 24 }}
                 source={{
-                  uri:
-                    "https://static.pexels.com/photos/324658/pexels-photo-324658.jpeg"
+                  uri: params.avatar
                 }}
               />
             </TouchableOpacity>
@@ -88,12 +91,33 @@ class DiscoverScreen extends React.Component {
     };
   };
 
+  state = {
+    userId: ""
+  };
+
   componentDidMount() {
-    this.props.navigation.setParams({ goToProfile: this._goToProfile });
+    this._getBasicUserInfo();
   }
 
   _goToProfile = () => {
     this.props.navigation.navigate("Profile");
+  };
+  _getBasicUserInfo = async () => {
+    const res = await this.props.client.query({ query: BASIC_USER_QUERY });
+    console.log("res = ", res);
+    if (!res.loading) {
+      this.props.navigation.setParams({
+        goToProfile: this._goToProfile,
+        avatar: res.data.user.avatar
+      });
+      this.setState({
+        userId: res.data.user.id
+      });
+    }
+
+    /* this.props.client.query({ query: BASIC_USER_QUERY }).then(res => {
+      console.log(res);
+    });*/
   };
 
   render() {
@@ -233,7 +257,11 @@ class DiscoverScreen extends React.Component {
   }
 }
 
-export default DiscoverScreen;
+const discoverScreenWithData = compose(
+  graphql(BASIC_USER_QUERY, { name: "basicUserQuery" })
+)(DiscoverScreen);
+
+export default withApollo(discoverScreenWithData);
 
 const Container = styled.View`
   flex: 1;
