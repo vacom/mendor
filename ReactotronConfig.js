@@ -8,7 +8,7 @@ import Reactotron, {
   
     Reactotron
       .configure({
-        name: 'React Native Demo'
+        name: 'Mendor'
       })
       .use(trackGlobalErrors())
       .use(openInEditor())
