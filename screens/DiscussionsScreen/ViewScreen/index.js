@@ -1,16 +1,40 @@
 import React from "react";
-import { Icon, View, Text } from "native-base";
+import { Icon, View, Text, Spinner } from "native-base";
 import { ScrollView, KeyboardAvoidingView, Keyboard } from "react-native";
 import styled from "styled-components/native";
 import Accordion from "react-native-collapsible/Accordion";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { graphql, compose, withApollo } from "react-apollo";
+
+//Requests
+import { DISCUSSION } from "../../../api/Queries/Discussions";
 
 //Components
 import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
+import CategoryGroup from "../../../components/CategoryGroup";
+import {
+  HeaderRightContainer,
+  HeaderRightElement
+} from "../../../components/HeaderRight";
 
 class DiscussionViewScreen extends React.Component {
-  static navigationOptions = {
-    title: "Discussão"
+  constructor(props) {
+    super(props);
+    this._addMessage = this._addMessage.bind(this);
+  }
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      title: params.title,
+      headerRight: (
+        <HeaderRightContainer>
+          <HeaderRightElement>
+            <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+          </HeaderRightElement>
+        </HeaderRightContainer>
+      )
+    };
   };
 
   state = {
@@ -26,79 +50,108 @@ class DiscussionViewScreen extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
+    //this._getDiscussion();
+
+    // CHANGE TO APOLLO STORE
+    this.setState({
+      userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
+    });
   }
 
+
+  /* _getDiscussion = async () => {
+    const result = await this.props.client.query({
+      query: DISCUSSION
+    });
+    
+  };
+  */
+
   _keyboardDidShow = () => {
-    this.setState({ height: 75 });
+    if (this.refs.marginBar) {
+      this.setState({ height: 75 });
+    }
   };
 
   _keyboardDidHide = () => {
-    this.setState({ height: 0 });
+    if (this.refs.marginBar) {
+      this.setState({ height: 0 });
+    }
   };
 
   _renderHeader() {
+    const discussion = this.props.data.Discussion;
     return (
       <ContainerDiscussion>
         <Header>
           <ViewAvatar>
             <Avatar
               source={{
-                uri:
-                  "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
+                uri: discussion.author.avatar
               }}
             />
           </ViewAvatar>
           <ViewInput>
-            <Username>Travis Zuckberg</Username>
-            <Span>230 respostas</Span>
+            <Username>{discussion.author.name}</Username>
+            <Span>{discussion.responses.length} respostas</Span>
           </ViewInput>
           <ViewIcon>
             <Icon name="arrow-dropdown" style={{ fontSize: 20 }} />
           </ViewIcon>
         </Header>
-        <Title>
-          A dificuldade que os empreendedores enfrentam para obter investimento
-        </Title>
+        <Title>{discussion.title}</Title>
         <Desc>2 de Dezembro de 2017 - Atualizado há uma semana</Desc>
       </ContainerDiscussion>
     );
   }
 
   _renderContent() {
+    const discussion = this.props.data.Discussion;
     return (
       <ContentDiscussion>
-        <ContentDesc>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          sed dolor mauris. Integer at ornare justo. Vestibulum ante ipsum
-          primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras
-          vel risus ac enim cursus porttitor. 
-          In hac habitasse platea dictumst.
-          Quisque in consectetur ante. Donec imperdiet justo nec risus varius,
-          ac porttitor mi pellentesque. Nulla tristique sagittis imperdiet.
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
-        </ContentDesc>
+        <ContentDesc>{discussion.description}</ContentDesc>
       </ContentDiscussion>
     );
   }
 
+  //Adicionar Mensagem
+  _addMessage(e) {
+    console.log("Added" + e);
+  }
+
   render() {
-    return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <Accordion
-          duration={600}
-          sections={["Section 1"]}
-          renderHeader={this._renderHeader}
-          renderContent={this._renderContent}
-        />
-        <Chat />
-        <InputMessageBar />
-        <View style={{ height: this.state.height }} />
-      </KeyboardAvoidingView>
-    );
+    if (this.props.data.loading) {
+      return <Spinner />;
+    } else {
+      return (
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+          <Accordion
+            duration={600}
+            sections={["Section1"]}
+            renderHeader={this._renderHeader.bind(this)}
+            renderContent={this._renderContent.bind(this)}
+          />
+          <Chat
+            userIdLogged={this.state.userIdLogged}
+            messages={this.props.data.Discussion.responses}
+          />
+          <InputMessageBar addMessage={this._addMessage} />
+          <View ref="marginBar" style={{ height: this.state.height }} />
+        </KeyboardAvoidingView>
+      );
+    }
   }
 }
 
-export default DiscussionViewScreen;
+const DiscussionViewScreenWithData = compose(
+  graphql(DISCUSSION, {
+    options: props => ({
+      variables: { id: props.navigation.state.params.id }
+    })
+  })
+)(DiscussionViewScreen);
+
+export default withApollo(DiscussionViewScreenWithData);
 
 const ContainerDiscussion = styled.View`
   background: #fff;
@@ -115,7 +168,7 @@ const ContentDiscussion = styled.View`
 const ContentDesc = styled.Text`
   font-size: 16px;
   color: #757575;
-  text-align: justify
+  text-align: justify;
 `;
 
 const Header = styled.View`

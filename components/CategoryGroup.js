@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableHighlight, View } from "react-native";
+import { TouchableHighlight, View, Text } from "react-native";
 import styled from "styled-components/native";
 //Components
 import Discussion from "./Discussion";
@@ -11,61 +11,22 @@ const CategoryGroup = props => {
     <CategoryGroupContainer>
       <Title>{props.nameCategory}</Title>
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
-        <TouchableHighlight onPress={() => props.goToDiscussion()}>
-          <View>
-            <Discussion
-              background={url}
-              id="1"
-              title="Jovens Empreendedores"
-              description="A dificuldade de se tornar empreendedor nos dias de hoje é muito grande "
-              messagesNumber="4"
-            />
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => props.goToDiscussion()}>
-          <View>
-            <Discussion
-              background={url}
-              id="1"
-              title="Jovens Empreendedores"
-              description="A dificuldade de se tornar empreendedor nos dias de hoje é muito grande "
-              messagesNumber="4"
-            />
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => props.goToDiscussion()}>
-          <View>
-            <Discussion
-              background={url}
-              id="1"
-              title="Jovens Empreendedores"
-              description="A dificuldade de se tornar empreendedor nos dias de hoje é muito grande "
-              messagesNumber="4"
-            />
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => props.goToDiscussion()}>
-          <View>
-            <Discussion
-              background={url}
-              id="1"
-              title="Jovens Empreendedores"
-              description="A dificuldade de se tornar empreendedor nos dias de hoje é muito grande "
-              messagesNumber="4"
-            />
-          </View>
-        </TouchableHighlight>
-        <TouchableHighlight onPress={() => props.goToDiscussion()}>
-          <View>
-            <Discussion
-              background={url}
-              id="1"
-              title="Jovens Empreendedores"
-              description="A dificuldade de se tornar empreendedor nos dias de hoje é muito grande "
-              messagesNumber="4"
-            />
-          </View>
-        </TouchableHighlight>
+        {props.discussions.map((data, index) => {
+          return (
+            <TouchableHighlight key={data.id} onPress={props.goToDiscussion(data.id, data.title)}>
+              <View>
+                <Discussion
+                  background={data.cover}
+                  id={data.id}
+                  title={data.title}
+                  description={data.description}
+                  messagesNumber={data.responses.length}
+                  responses={data.responses}
+                />
+              </View>
+            </TouchableHighlight>
+          );
+        })}
       </ArticlesList>
     </CategoryGroupContainer>
   );

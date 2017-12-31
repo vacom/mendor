@@ -104,7 +104,6 @@ class DiscoverScreen extends React.Component {
   };
   _getBasicUserInfo = async () => {
     const res = await this.props.client.query({ query: BASIC_USER_QUERY });
-    console.log("res = ", res);
     if (!res.loading) {
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,

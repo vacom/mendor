@@ -36,35 +36,28 @@ const Discussion = props => {
           }}
         >
           <Users style={{ flex: 1, flexDirection: "row" }}>
-            <ImageUser
-              source={{
-                uri:
-                  "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
-              }}
-            />
-            <ImageUser
-              source={{
-                uri:
-                  "https://www.unilad.co.uk/wp-content/uploads/2017/08/jaime-lannister-1024.jpg"
-              }}
-            />
-            <ImageUser
-              source={{
-                uri:
-                  "https://optclean.com.br/wp-content/uploads/2017/03/Rollo.png"
-              }}
-            />
+            {props.responses.map((data, index) => {
+              return (
+                <ImageUser
+                  key={data.id}
+                  source={{
+                    uri: data.author.avatar
+                  }}
+                />
+              );
+            })}
           </Users>
           <Messages>
             <View
               style={{
                 flex: 1,
                 flexDirection: "row",
-                justifyContent: "center"
+                justifyContent: "center",
+                alignItems: "center"
               }}
             >
               <NumberMessages>{props.messagesNumber}</NumberMessages>
-              <Icon name="mail" style={{ color: "#fff", fontSize: 18 }} />
+              <Icon name="mail" style={{ color: "#fff", fontSize: 14 }} />
             </View>
           </Messages>
         </Footer>

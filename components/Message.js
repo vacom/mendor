@@ -6,8 +6,9 @@ import { LinearGradient } from "expo";
 
 const Chat = props => {
   let message = null;
-  const id_user_signed = 1;
-  if (props.id_user == id_user_signed) {
+  const userId = props.userId;
+  const userIdLogged = props.userIdLogged;
+  if (userId == userIdLogged) {
     message = (
       <ViewMessageLogged>
         <TextLogged>{props.message}</TextLogged>
@@ -20,7 +21,7 @@ const Chat = props => {
           <Avatar
             source={{
               uri:
-                "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=e027e305b330218e0780f28c2cdc1a31&oe=5ABE2638"
+                props.avatar
             }}
           />
         </ViewAvatar>

@@ -1,35 +1,48 @@
 import React from "react";
 import { Icon } from "native-base";
+import { TouchableHighlight } from "react-native";
 import styled from "styled-components/native";
 
-const InputMessageBar = (props) => {
-  return (
-    <Message>
-      <ViewAvatar>
-        <Avatar
-          source={{
-            uri:
-              "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
-          }}
-        />
-      </ViewAvatar>
-      <ViewInput>
-        <InputMessage
-          multiline={true}
-          underlineColorAndroid="transparent"
-          borderWidth="0"
-          placeholder="Escrever uma mensagem..."
-        />
-      </ViewInput>
-      <ViewIcon>
-        <Icon name="send" style={{ color: "#3F51B5", fontSize: 30 }} />
-      </ViewIcon>
-    </Message>
-  );
-};
+class InputMessageBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { text: "" };
+  }
+  
+  render() {
+    const addMessage = () => {
+      this.props.addMessage(this.state.text)
+    }
+    return (
+      <Message>
+        <ViewAvatar>
+          <Avatar
+            source={{
+              uri:
+                "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
+            }}
+          />
+        </ViewAvatar>
+        <ViewInput>
+          <InputMessage
+            multiline={true}
+            underlineColorAndroid="transparent"
+            borderWidth="0"
+            placeholder="Escrever uma mensagem..."
+            onChangeText={text =>{ this.setState({ text }), console.log(text)}}
+          />
+        </ViewInput>
+        <TouchableHighlight onPress={addMessage}>
+          <ViewIcon>
+            <Icon name="send" style={{ color: "#3F51B5", fontSize: 30 }} />
+          </ViewIcon>
+        </TouchableHighlight>
+      </Message>
+    );
+  }
+}
 
 export default InputMessageBar;
-
 
 const Message = styled.View`
   background: #fff;
