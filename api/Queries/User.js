@@ -22,12 +22,55 @@ const BASIC_USER_QUERY = gql`
 
 //collects the complete information from the user
 const USER_PROFILE_QUERY = gql`
-  query {
-    user {
-      ...basicUserFields
+  query User($id: ID!) {
+    User(id: $id) {
+      id
+      type
+      name
+      avatar
+      profile {
+        about
+        role
+        company
+      }
+      competences(first: 5) {
+        interest {
+          id
+          title
+        }
+      }
+      technologies(first: 5) {
+        id
+        name
+      }
+      projects {
+        id
+        title
+        description
+        technologies(first: 5) {
+          id
+          name
+        }
+      }
+      socials {
+        id
+        content
+        type
+      }
+      _contactsMeta {
+        count
+      }
+      _competencesMeta {
+        count
+      }
+      _projectsMeta {
+        count
+      }
+      _technologiesMeta {
+        count
+      }
     }
   }
-  ${BASIC_USER_FIELDS_FRAGMENT}
 `;
 
 export { BASIC_USER_QUERY, USER_PROFILE_QUERY };
