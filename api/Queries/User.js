@@ -22,8 +22,8 @@ const BASIC_USER_QUERY = gql`
 
 //collects the complete information from the user
 const USER_PROFILE_QUERY = gql`
-  query {
-    user {
+  query User($id: ID!) {
+    User(id: $id) {
       id
       type
       name

@@ -14,6 +14,7 @@ const ALL_NOTIFICATIONS_QUERY = gql`
       discussion {
         id
         title
+        cover
       }
       userRequest {
         id

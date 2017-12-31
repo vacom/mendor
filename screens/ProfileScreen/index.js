@@ -36,7 +36,8 @@ class ProfileScreen extends React.Component {
     if (this.props.userProfileQuery && this.props.userProfileQuery.error) {
       return <Error />;
     }
-    const { user } = this.props.userProfileQuery;
+    console.log(this.props.userProfileQuery);
+    const { User } = this.props.userProfileQuery;
     const {
       profile,
       competences,
@@ -47,7 +48,7 @@ class ProfileScreen extends React.Component {
       _competencesMeta,
       _projectsMeta,
       _technologiesMeta
-    } = user;
+    } = User;
     return (
       <Container>
         <Content>
@@ -58,11 +59,11 @@ class ProfileScreen extends React.Component {
                   <CardLeft>
                     <Thumbnail
                       style={{ width: 48, height: 48 }}
-                      source={{ uri: user.avatar }}
+                      source={{ uri: User.avatar }}
                     />
                   </CardLeft>
                   <CardBody>
-                    <H1>{user.name}</H1>
+                    <H1>{User.name}</H1>
                     <P>{`${profile.role} na ${profile.company}`}</P>
                   </CardBody>
                 </CardContainer>
@@ -212,7 +213,12 @@ class ProfileScreen extends React.Component {
 }
 
 export default compose(
-  graphql(USER_PROFILE_QUERY, { name: "userProfileQuery" })
+  graphql(USER_PROFILE_QUERY, {
+    name: "userProfileQuery",
+    options: props => ({
+      variables: { id: props.navigation.state.params.id }
+    })
+  })
 )(ProfileScreen);
 
 const Container = styled.View`

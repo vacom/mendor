@@ -1,6 +1,7 @@
-import React from 'react';
+import React from "react";
+import { TouchableWithoutFeedback } from "react-native";
 import styled from "styled-components/native";
-import {Col, Row} from "react-native-easy-grid";
+import { Col, Row } from "react-native-easy-grid";
 
 /*
 -- Card Styles
@@ -12,12 +13,12 @@ const CardWithStyles = styled.View`
   border-radius: 2px;
 `;
 
-const Card = (props) => {
-    return (
-        <CardWithStyles>
-            {props.children}
-        </CardWithStyles>
-    )
+const Card = props => {
+  return (
+    <TouchableWithoutFeedback {...props}>
+      <CardWithStyles>{props.children}</CardWithStyles>
+    </TouchableWithoutFeedback>
+  );
 };
 
 /*
@@ -27,49 +28,50 @@ const CardContainerWithStyles = styled.View`
   padding: 10px;
 `;
 
-const CardContainer = (props) => {
-    return (
-        <CardContainerWithStyles>
-            <Row>
-                {props.children}
-            </Row>
-        </CardContainerWithStyles>
-    )
+const CardContainer = props => {
+  return (
+    <CardContainerWithStyles>
+      <Row>{props.children}</Row>
+    </CardContainerWithStyles>
+  );
 };
-
 
 // For notifications ETC
 /*
 -- Card Left
 */
-const CardLeft = (props) => {
-    return (
-        <Col style={{width: 48, height: 48}}>
-            {props.children}
-        </Col>
-    )
+const CardLeft = props => {
+  return <Col style={{ width: 48, height: 48 }}>{props.children}</Col>;
 };
 
 /*
 -- Card Body
 */
-const CardBody = (props) => {
-    return (
-        <Col style={{justifyContent: 'center', height: 48, overflow: 'hidden', paddingLeft: 10, paddingRight: 10}}>
-            {props.children}
-        </Col>
-    )
+const CardBody = props => {
+  return (
+    <Col
+      style={{
+        justifyContent: "center",
+        height: 48,
+        overflow: "hidden",
+        paddingLeft: 10,
+        paddingRight: 10
+      }}
+    >
+      {props.children}
+    </Col>
+  );
 };
 
 /*
 -- Card Right
 */
-const CardRight = (props) => {
-    return (
-        <Col style={{justifyContent: 'center', width: 'auto'}}>
-            {props.children}
-        </Col>
-    )
+const CardRight = props => {
+  return (
+    <Col style={{ justifyContent: "center", width: "auto" }}>
+      {props.children}
+    </Col>
+  );
 };
 
 export { Card, CardContainer, CardLeft, CardBody, CardRight };

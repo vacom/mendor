@@ -100,11 +100,10 @@ class DiscoverScreen extends React.Component {
   }
 
   _goToProfile = () => {
-    this.props.navigation.navigate("Profile");
+    this.props.navigation.navigate("Profile", { id: this.state.userId });
   };
   _getBasicUserInfo = async () => {
     const res = await this.props.client.query({ query: BASIC_USER_QUERY });
-    console.log("res = ", res);
     if (!res.loading) {
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,
@@ -114,10 +113,6 @@ class DiscoverScreen extends React.Component {
         userId: res.data.user.id
       });
     }
-
-    /* this.props.client.query({ query: BASIC_USER_QUERY }).then(res => {
-      console.log(res);
-    });*/
   };
 
   render() {

@@ -35,6 +35,14 @@ class NotificationsScreen extends React.Component {
     )
   };
 
+  _openNotification = data => e => {
+    e.preventDefault();
+    const route = data.type === "REQUEST" ? "Profile" : "DiscussionView";
+    const id =
+      data.type === "REQUEST" ? data.userRequest.id : data.discussion.id;
+    this.props.navigation.navigate(route, { id });
+    console.log(data);
+  };
   render() {
     if (
       this.props.allNotificationsQuery &&
@@ -48,7 +56,6 @@ class NotificationsScreen extends React.Component {
     ) {
       return <Error />;
     }
-    console.log(this.props.allNotificationsQuery);
     const { allNotifications } = this.props.allNotificationsQuery;
     return (
       <Container>
@@ -59,7 +66,7 @@ class NotificationsScreen extends React.Component {
             <ScrollView style={{ paddingBottom: 30 }}>
               {allNotifications.map(data => {
                 return (
-                  <Card key={data.id}>
+                  <Card key={data.id} onPress={this._openNotification(data)}>
                     <CardContainer>
                       <CardLeft>
                         <Thumbnail
@@ -77,7 +84,7 @@ class NotificationsScreen extends React.Component {
                           {data.type === "REQUEST"
                             ? `${
                                 data.userRequest.name
-                              } enviou um pedido para se conectar`
+                              } enviou um pedido para conectar`
                             : `Nova resposta na discussão ${
                                 data.discussion.title
                               }`}
