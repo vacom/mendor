@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from 'react-native';
 //Components
 import {
   Text,
@@ -8,7 +9,10 @@ import {
   Item,
   Input,
   Label,
-  Fab
+  Fab,
+  ListItem,
+  CheckBox,
+  Body
 } from "native-base";
 import { Row } from "react-native-easy-grid";
 import styled from "styled-components/native";
@@ -96,7 +100,7 @@ class SignupScreen extends React.Component {
             <Row
               style={{
                 height: "auto",
-                marginBottom: 15,
+                marginBottom: 10,
                 marginTop: 30,
                 backgroundColor: "transparent"
               }}
@@ -128,6 +132,21 @@ class SignupScreen extends React.Component {
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60 }}>
+              <View style={{ marginTop: 40 }}>
+                <Label style={{ color: "#757575" }}>Selecionar perfil:</Label>
+                <ListItem style={{ marginLeft: 0 }}>
+                  <CheckBox checked={false} />
+                  <Body>
+                  <Text style={{ color: "#757575" }}>Empreendedor</Text>
+                  </Body>
+                </ListItem>
+                <ListItem style={{ marginLeft: 0 }}>
+                  <CheckBox checked={false}/>
+                  <Body>
+                  <Text style={{ color: "#757575" }}>Mentor</Text>
+                  </Body>
+                </ListItem>
+              </View>
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Nome</Label>
                 <Input onChangeText={name => this.setState({ name })} />

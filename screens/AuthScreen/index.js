@@ -33,7 +33,7 @@ class AuthScreen extends React.Component {
             <Row
               style={{
                 height: "auto",
-                marginBottom: 15,
+                marginBottom: 10,
                 backgroundColor: "transparent"
               }}
             >

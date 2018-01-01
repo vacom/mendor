@@ -53,7 +53,7 @@ class SigninScreen extends React.Component {
             <Row
               style={{
                 height: "auto",
-                marginBottom: 15,
+                marginBottom: 10,
                 marginTop: 30,
                 backgroundColor: "transparent"
               }}
