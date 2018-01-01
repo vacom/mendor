@@ -41,8 +41,8 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
         description
         responses {
           id
-          user{
-             avatar
+          user {
+            avatar
           }
         }
       }

@@ -58,7 +58,6 @@ class DiscussionViewScreen extends React.Component {
     });
   }
 
-
   /* _getDiscussion = async () => {
     const result = await this.props.client.query({
       query: DISCUSSION
