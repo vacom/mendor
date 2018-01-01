@@ -41,7 +41,7 @@ const Discussion = props => {
                 <ImageUser
                   key={data.id}
                   source={{
-                    uri: data.author.avatar
+                    uri: data.user.avatar
                   }}
                 />
               );

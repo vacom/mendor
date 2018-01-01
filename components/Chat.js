@@ -21,10 +21,10 @@ class Chat extends React.Component {
             return (
               <Message
                 key={data.id}
-                userId={data.author.id}
+                userId={data.user.id}
                 userIdLogged={this.props.userIdLogged}
                 message={data.content}
-                avatar={data.author.avatar}
+                avatar={data.user.avatar}
               />
             );
           })}

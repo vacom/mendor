@@ -136,7 +136,7 @@ class DiscussionViewScreen extends React.Component {
             messages={this.props.data.Discussion.responses}
           />
           <InputMessageBar addMessage={this._addMessage} />
-          <View ref="marginBar" style={{ height: this.state.height }} />
+          <View style={{ height: this.state.height }} />
         </KeyboardAvoidingView>
       );
     }

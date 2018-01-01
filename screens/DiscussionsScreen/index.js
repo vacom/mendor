@@ -1,8 +1,8 @@
 import React from "react";
-import { Container, Icon, Fab, Text, View } from "native-base";
+import { Container, Icon, Fab, View } from "native-base";
 import styled from "styled-components/native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
-import { graphql, compose, withApollo } from "react-apollo";
+import { MaterialIcons } from "@expo/vector-icons";
+import { graphql, compose, } from "react-apollo";
 import { DISCUSSIONS_BY_CATEGORIES_QUERY } from "../../api/Queries/Discussions";
 
 //Components
@@ -11,6 +11,7 @@ import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../components/HeaderRight";
+import { Error, Loading } from "../../components/index";
 
 class DiscussionsScreen extends React.Component {
   static navigationOptions = {
@@ -23,41 +24,34 @@ class DiscussionsScreen extends React.Component {
       </HeaderRightContainer>
     )
   };
+  _goToDiscussion = (id, title) => () => {
+      this.props.navigation.navigate("DiscussionView", { id: id, title: title });
+  };
 
-  componentDidMount() {
-    this._getDiscussions();
-  }
-  _getDiscussions = async () => {
-    const res = await this.props.client.query({
-      query: DISCUSSIONS_BY_CATEGORIES_QUERY
-    });
+  _goToAddDiscussion = () => {
+      this.props.navigation.navigate("AddDiscussion");
   };
   render() {
-    const { navigate } = this.props.navigation;
-
-
-    const _goToDiscussion = (id, title) => () => {
-      navigate("DiscussionView", { id: id, title: title });
-    };
-
-    const _goToAddDiscussion = () => {
-      navigate("AddDiscussion");
-    };
-
-    if (this.props.data.loading) {
-      return (
-        <View>
-          <Text>loading...</Text>
-        </View>
-      );
-    } else {
+      if (
+          this.props.data &&
+          this.props.data.loading
+      ) {
+          return <Loading />;
+      }
+      if (
+          this.props.data &&
+          this.props.data.error
+      ) {
+          return <Error />;
+      }
+      const {allCategories} = this.props.data;
       return (
         <Container>
           <ScrollView>
-            {this.props.data.allCategories.map((data, index) => {
+            {allCategories.map((data) => {
               return (
                 <CategoryGroup
-                  goToDiscussion={_goToDiscussion}
+                  goToDiscussion={this._goToDiscussion}
                   discussions={data.discussions}
                   idCategory={data.id}
                   nameCategory={data.title}
@@ -67,7 +61,7 @@ class DiscussionsScreen extends React.Component {
             })}
           </ScrollView>
           <Fab
-            onPress={_goToAddDiscussion}
+            onPress={this._goToAddDiscussion}
             direction="up"
             containerStyle={{}}
             style={{ backgroundColor: "#3F51B5" }}
@@ -76,16 +70,22 @@ class DiscussionsScreen extends React.Component {
             <Icon name="add" />
           </Fab>
         </Container>
-      );
-    }
+      )
   }
 }
 
 const DiscussionsScreenWithData = compose(
-  graphql(DISCUSSIONS_BY_CATEGORIES_QUERY)
+  graphql(DISCUSSIONS_BY_CATEGORIES_QUERY,
+      {
+          options: () => ({
+            variables: {
+              id: null
+            }
+          })
+      })
 )(DiscussionsScreen);
 
-export default withApollo(DiscussionsScreenWithData);
+export default DiscussionsScreenWithData;
 
 const ScrollView = styled.ScrollView`
   flex: 1;
