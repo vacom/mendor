@@ -1,14 +1,16 @@
 import React from 'react';
 import styled from "styled-components/native";
+import {TouchableWithoutFeedback} from "react-native";
 
 /*
 -- Label Styles
 */
 
 const LabelWithStyles = styled.View`
-  background-color: #F5F5F5;
-  padding: 10px;
+  background-color: ${props => props.active ? "#ffffff" : "#F5F5F5"};
+  padding: 9px;
   border-radius: 20px;
+  border: 1px solid ${props => props.active ? "#B39DDB" : "#F5F5F5"};
   justify-content: center;
   align-items: center;
   align-self: flex-start;
@@ -17,14 +19,16 @@ const LabelWithStyles = styled.View`
 const Span = styled.Text`
   font-size: 14px;
   line-height: 16px;
-  color: #757575;
+  color: ${props => props.active ? "#000000" : "#757575"};
 `;
 
 const Label = (props) => {
     return (
-        <LabelWithStyles>
-            <Span>{props.text}</Span>
-        </LabelWithStyles>
+        <TouchableWithoutFeedback onPress={props.onPress}>
+            <LabelWithStyles {...props}>
+                <Span {...props}>{props.text}</Span>
+            </LabelWithStyles>
+        </TouchableWithoutFeedback>
     )
 };
 
