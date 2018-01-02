@@ -8,11 +8,12 @@ import { graphql, compose, withApollo } from "react-apollo";
 
 //Requests
 import { DISCUSSION } from "../../../api/Queries/Discussions";
+import { CREATE_RESPONSE_MUTATION } from "../../../api/Mutations/Discussions";
 
 //Components
-import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
 import CategoryGroup from "../../../components/CategoryGroup";
+import { Error, Loading } from "../../../components/index";
 import {
   HeaderRightContainer,
   HeaderRightElement
@@ -50,37 +51,93 @@ class DiscussionViewScreen extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
-    //this._getDiscussion();
-
     // CHANGE TO APOLLO STORE
     this.setState({
       userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
     });
   }
 
-
-  /* _getDiscussion = async () => {
-    const result = await this.props.client.query({
-      query: DISCUSSION
-    });
-    
-  };
-  */
-
+  //Quando o teclado abre
   _keyboardDidShow = () => {
     if (this.refs.marginBar) {
       this.setState({ height: 75 });
     }
   };
 
+  //Quando o teclado fecha
   _keyboardDidHide = () => {
     if (this.refs.marginBar) {
       this.setState({ height: 0 });
     }
   };
 
+  //Adicionar Mensagem/Response
+  _addMessage(e) {
+    this._createResponseMutation(e);
+  }
+
+  _createResponseMutation = async e => {
+    const content = e;
+    const userId = this.state.userIdLogged;
+    const discussionId = this.props.Discussion.Discussion.id;
+    console.log(
+      "content " +
+        content +
+        " userId " +
+        userId +
+        " discussionId " +
+        discussionId
+    );
+    try {
+      await this.props.createResponse({
+        variables: {
+          content,
+          userId,
+          discussionId
+        },
+        update: (proxy, { data: { createResponse } }) => {
+          // Read the data from our cache for this query.
+          const data = proxy.readQuery({
+            query: DISCUSSION,
+            variables: { id: discussionId }
+          });
+          data.Discussion.responses.push(createResponse);
+          proxy.writeQuery({ query: DISCUSSION, data });
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  render() {
+    if (this.props.Discussion && this.props.Discussion.loading) {
+      return <Loading />;
+    } else if (this.props.Discussion && this.props.Discussion.error) {
+      return <Error />;
+    } else {
+      return (
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+          <Accordion
+            duration={600}
+            sections={["Section1"]}
+            renderHeader={this._renderHeader.bind(this)}
+            renderContent={this._renderContent.bind(this)}
+          />
+          <Chat
+            userIdLogged={this.state.userIdLogged}
+            messages={this.props.Discussion.Discussion.responses}
+            addMessage={this._addMessage}
+          />
+          <View ref="marginBar" style={{ height: this.state.height }} />
+        </KeyboardAvoidingView>
+      );
+    }
+  }
+
+  //Cabeçalho Accordion
   _renderHeader() {
-    const discussion = this.props.data.Discussion;
+    const discussion = this.props.Discussion.Discussion;
     return (
       <ContainerDiscussion>
         <Header>
@@ -105,41 +162,14 @@ class DiscussionViewScreen extends React.Component {
     );
   }
 
+  //Conteudo Accordion
   _renderContent() {
-    const discussion = this.props.data.Discussion;
+    const discussion = this.props.Discussion.Discussion;
     return (
       <ContentDiscussion>
         <ContentDesc>{discussion.description}</ContentDesc>
       </ContentDiscussion>
     );
-  }
-
-  //Adicionar Mensagem
-  _addMessage(e) {
-    console.log("Added" + e);
-  }
-
-  render() {
-    if (this.props.data.loading) {
-      return <Spinner />;
-    } else {
-      return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-          <Accordion
-            duration={600}
-            sections={["Section1"]}
-            renderHeader={this._renderHeader.bind(this)}
-            renderContent={this._renderContent.bind(this)}
-          />
-          <Chat
-            userIdLogged={this.state.userIdLogged}
-            messages={this.props.data.Discussion.responses}
-          />
-          <InputMessageBar addMessage={this._addMessage} />
-          <View style={{ height: this.state.height }} />
-        </KeyboardAvoidingView>
-      );
-    }
   }
 }
 
@@ -147,7 +177,11 @@ const DiscussionViewScreenWithData = compose(
   graphql(DISCUSSION, {
     options: props => ({
       variables: { id: props.navigation.state.params.id }
-    })
+    }),
+    name: "Discussion"
+  }),
+  graphql(CREATE_RESPONSE_MUTATION, {
+    name: "createResponse"
   })
 )(DiscussionViewScreen);
 
@@ -186,6 +220,7 @@ const ViewAvatar = styled.View`
   padding-right: 15px;
   justify-content: center;
 `;
+
 const ViewInput = styled.View`
   flex: 1;
   justify-content: center;
@@ -211,12 +246,6 @@ const Title = styled.Text`
   margin-top: 20px;
   font-weight: bold;
   font-size: 18px;
-`;
-
-const InputMessage = styled.TextInput`
-  width: 100%;
-  font-size: 18px;
-  border: 0 !important;
 `;
 
 const ViewIcon = styled.View`

@@ -41,24 +41,13 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
         description
         responses {
           id
-          user{
-             avatar
+          user {
+            avatar
           }
         }
       }
     }
   }
 `;
-const ADD_RESPONSE_MUTATION = gql`
-  mutation addMessage {
-    createResponse(
-      content: "Hey"
-      authorId: "cjbjhh0f9lbfz01142sd6tvuv"
-      discussionId: "cjbtdg427rbph0115pf6vatf6"
-    ) {
-      id
-    }
-  }
-`;
 
-export { DISCUSSION, DISCUSSIONS_BY_CATEGORIES_QUERY, ADD_RESPONSE_MUTATION };
+export { DISCUSSION, DISCUSSIONS_BY_CATEGORIES_QUERY };

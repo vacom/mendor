@@ -7,12 +7,16 @@ class InputMessageBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = { text: "" };
+    this._addMessage = this._addMessage.bind(this);
   }
-  
+  _addMessage() {
+    if(this.state.text && this.state.text!="")
+    this.props.addMessage(this.state.text);
+    this.setState({
+      text: ""
+    });
+  }
   render() {
-    const addMessage = () => {
-      this.props.addMessage(this.state.text)
-    }
     return (
       <Message>
         <ViewAvatar>
@@ -25,14 +29,17 @@ class InputMessageBar extends React.Component {
         </ViewAvatar>
         <ViewInput>
           <InputMessage
+            value={this.state.text}
             multiline={true}
             underlineColorAndroid="transparent"
             borderWidth="0"
             placeholder="Escrever uma mensagem..."
-            onChangeText={text =>{ this.setState({ text }), console.log(text)}}
+            onChangeText={text => {
+              this.setState({ text }), console.log(text);
+            }}
           />
         </ViewInput>
-        <TouchableHighlight onPress={addMessage}>
+        <TouchableHighlight onPress={this._addMessage}>
           <ViewIcon>
             <Icon name="send" style={{ color: "#3F51B5", fontSize: 30 }} />
           </ViewIcon>

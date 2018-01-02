@@ -4,8 +4,16 @@ import { ScrollView, View, Text } from "react-native";
 
 //Components
 import Message from "./Message";
+import InputMessageBar from "./InputMessageBar";
 
 class Chat extends React.Component {
+  constructor(props) {
+    super(props);
+    this._addMessage = this._addMessage.bind(this);
+  }
+  state = {
+    messages: this.props.messages
+  };
   componentDidMount() {
     if (this.props.messages.length > 0) {
       setTimeout(() => {
@@ -13,28 +21,48 @@ class Chat extends React.Component {
       }, 50);
     }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.messages !== this.state.messages) {
+      this.setState({ messages: nextProps.messages });
+      setTimeout(() => {
+        this.refs.ScrollView.scrollToEnd({ animated: true });
+      }, 50);
+    }
+  }
+
+  _addMessage(e) {
+    console.log("children" + e);
+    this.props.addMessage(e);
+  }
   render() {
-    if (this.props.messages.length > 0) {
+    if (this.state.messages.length > 0) {
       return (
-        <ScrollView ref="ScrollView">
-          {this.props.messages.map((data, index) => {
-            return (
-              <Message
-                key={data.id}
-                userId={data.user.id}
-                userIdLogged={this.props.userIdLogged}
-                message={data.content}
-                avatar={data.user.avatar}
-              />
-            );
-          })}
-        </ScrollView>
+        <View style={{ flex: 1 }}>
+          <ScrollView ref="ScrollView">
+            {this.state.messages.map((data, index) => {
+              return (
+                <Message
+                  key={data.id}
+                  userId={data.user.id}
+                  userIdLogged={this.props.userIdLogged}
+                  message={data.content}
+                  avatar={data.user.avatar}
+                />
+              );
+            })}
+          </ScrollView>
+          <InputMessageBar addMessage={this._addMessage} />
+        </View>
       );
     } else {
       return (
-        <NoMessages ref="ScrollView">
-          <Text>No messages...</Text>
-        </NoMessages>
+        <View style={{ flex: 1 }}>
+          <NoMessages ref="ScrollView">
+            <Text>No messages...</Text>
+          </NoMessages>
+          <InputMessageBar addMessage={this._addMessage} />
+        </View>
       );
     }
   }
