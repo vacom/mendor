@@ -36,8 +36,7 @@ class ContactsScreen extends React.Component {
     return (
     
       <Container>
-        <Header hasTabs />
-        <Tabs initialPage={0}>
+        <Tabs style={{ }} initialPage={0}>
           <Tab heading="Mentores">
           <Container>
         <GradientContainer>
@@ -228,10 +227,13 @@ class ContactsScreen extends React.Component {
   }
 }
 
-export default ContactsScreen;
-
 const Container = styled.View`
   flex: 1;
   background-color: #fff;
 `;
+
+
+export default ContactsScreen;
+
+
 
