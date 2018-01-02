@@ -50,4 +50,38 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
   }
 `;
 
-export { DISCUSSION, DISCUSSIONS_BY_CATEGORIES_QUERY };
+const ALL_CATEGORIES_QUERY = gql`
+  query Categories {
+    allCategories {
+      id
+      title
+    }
+  }
+`;
+
+const CATEGORY_QUERY = gql`
+  query Category($id: ID) {
+    Category(id: $id) {
+      id
+      title
+      discussions {
+        title
+        description
+        cover
+        author {
+          id
+        }
+        responses {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export {
+  DISCUSSION,
+  DISCUSSIONS_BY_CATEGORIES_QUERY,
+  ALL_CATEGORIES_QUERY,
+  CATEGORY_QUERY
+};

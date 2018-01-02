@@ -80,14 +80,6 @@ class DiscussionViewScreen extends React.Component {
     const content = e;
     const userId = this.state.userIdLogged;
     const discussionId = this.props.Discussion.Discussion.id;
-    console.log(
-      "content " +
-        content +
-        " userId " +
-        userId +
-        " discussionId " +
-        discussionId
-    );
     try {
       await this.props.createResponse({
         variables: {

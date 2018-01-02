@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import { Thumbnail, Button, Text, StyleSheet } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -21,15 +21,29 @@ import {
 
 
 class ContactsScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
     title: "Contactos",
     headerRight: (
       <HeaderRightContainer>
         <HeaderRightElement>
+        <TouchableOpacity onPress={params.goToSearch}>
           <MaterialIcons name="search" size={24} color="#ffffff" />
+          </TouchableOpacity>
         </HeaderRightElement>
       </HeaderRightContainer>
     )
+  }
+  };
+
+  componentDidMount() {
+    this.props.navigation.setParams({
+      goToSearch: this._goToSearch,
+    });
+  }
+  _goToSearch = () => {
+    this.props.navigation.navigate("Search");
   };
 
   render() {

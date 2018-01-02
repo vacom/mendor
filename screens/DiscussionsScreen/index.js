@@ -32,13 +32,13 @@ class DiscussionsScreen extends React.Component {
     this.props.navigation.navigate("AddDiscussion");
   };
   render() {
-    if (this.props.data && this.props.data.loading) {
+    if (this.props.DiscussionsByCategories && this.props.DiscussionsByCategories.loading) {
       return <Loading />;
     }
-    if (this.props.data && this.props.data.error) {
+    if (this.props.DiscussionsByCategories && this.props.DiscussionsByCategories.error) {
       return <Error />;
     }
-    const { allCategories } = this.props.data;
+    const { allCategories } = this.props.DiscussionsByCategories;
     return (
       <Container>
         <ScrollView>
@@ -69,13 +69,17 @@ class DiscussionsScreen extends React.Component {
 }
 
 const DiscussionsScreenWithData = compose(
-  graphql(DISCUSSIONS_BY_CATEGORIES_QUERY, {
-    options: () => ({
-      variables: {
-        id: null
-      }
-    })
-  })
+  graphql(
+    DISCUSSIONS_BY_CATEGORIES_QUERY,
+    { name: "DiscussionsByCategories" },
+    {
+      options: () => ({
+        variables: {
+          id: null
+        }
+      })
+    }
+  )
 )(DiscussionsScreen);
 
 export default DiscussionsScreenWithData;

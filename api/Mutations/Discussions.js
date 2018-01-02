@@ -17,4 +17,28 @@ const CREATE_RESPONSE_MUTATION = gql`
   }
 `;
 
-export { CREATE_RESPONSE_MUTATION };
+const CREATE_DISCUSSION_MUTATION = gql`
+  mutation createDiscussion($title:String!, $description: String!, $cover:String!, $authorId:ID, $categoryId:ID ) {
+    createDiscussion(
+      title: $title
+      description: $description
+      cover: $cover
+      authorId: $authorId
+      categoryId: $categoryId
+    ) {
+      id
+      title
+      cover
+      description
+      responses {
+        id
+        content
+        user {
+          avatar
+        }
+      }
+    }
+  }
+`;
+
+export { CREATE_RESPONSE_MUTATION, CREATE_DISCUSSION_MUTATION };

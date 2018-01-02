@@ -15,6 +15,8 @@ import EditProfileScreen from "../screens/ProfileScreen/EditScreen/index";
 import DiscussionViewScreen from "../screens/DiscussionsScreen/ViewScreen/index";
 //ChatScreens
 import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
+//SearchScreens
+import SearchScreen from "../screens/SearchScreen/index";
 /**
  * AuthScreens
  */
@@ -64,6 +66,9 @@ export const createRootNavigator = (signedIn = false) => {
       },
       AddDiscussion: {
         screen: AddDiscussion
+      },
+      Search: {
+        screen: SearchScreen
       }
     },
     {
