@@ -51,9 +51,10 @@ class DiscussionViewScreen extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
-    // CHANGE TO APOLLO STORE
+
     this.setState({
-      userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
+      userIdLogged: this.props.navigation.state.params.userIdLogged,
+      avatar: this.props.navigation.state.params.avatar
     });
   }
 
@@ -119,6 +120,7 @@ class DiscussionViewScreen extends React.Component {
             userIdLogged={this.state.userIdLogged}
             messages={this.props.Discussion.Discussion.responses}
             addMessage={this._addMessage}
+            avatar={this.state.avatar}
           />
           <View ref="marginBar" style={{ height: this.state.height }} />
         </KeyboardAvoidingView>

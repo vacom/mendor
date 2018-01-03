@@ -3,7 +3,7 @@ import { View, Text, Input, Thumbnail } from "native-base";
 import styled from "styled-components/native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import GradientContainer from "../../components/GradientContainer";
-import { ScrollView } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import {
   Card,
   CardContainer,
@@ -22,7 +22,13 @@ class SearchScreen extends React.Component {
         <Header>
           <SearchView>
             <IconBackView>
-              <MaterialIcons name="arrow-back" size={23} color="#757575" />
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.goBack();
+                }}
+              >
+                <MaterialIcons name="arrow-back" size={23} color="#757575" />
+              </TouchableOpacity>
             </IconBackView>
             <ViewInput>
               <Input placeholder="Pesquisar" />

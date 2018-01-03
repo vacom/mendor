@@ -13,7 +13,7 @@ const CategoryGroup = props => {
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
         {props.discussions.map((data, index) => {
           return (
-            <TouchableHighlight key={data.id} onPress={props.goToDiscussion(data.id, data.title)}>
+            <TouchableHighlight key={data.id} onPress={props.goToDiscussion(data.id, data.title, props.avatar, props.userIdLogged)}>
               <View>
                 <Discussion
                   background={data.cover}

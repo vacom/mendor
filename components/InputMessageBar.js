@@ -1,17 +1,21 @@
 import React from "react";
 import { Icon } from "native-base";
-import { TouchableHighlight } from "react-native";
+import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
 class InputMessageBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { text: "" };
+    this.state = {
+      //ALTERAR
+      avatar:
+        "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=e027e305b330218e0780f28c2cdc1a31&oe=5ABE2638"
+    };
     this._addMessage = this._addMessage.bind(this);
   }
   _addMessage() {
-    if(this.state.text && this.state.text!="")
-    this.props.addMessage(this.state.text);
+    if (this.state.text && this.state.text != "")
+      this.props.addMessage(this.state.text);
     this.setState({
       text: ""
     });
@@ -22,8 +26,7 @@ class InputMessageBar extends React.Component {
         <ViewAvatar>
           <Avatar
             source={{
-              uri:
-                "https://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg"
+              uri: this.state.avatar
             }}
           />
         </ViewAvatar>
@@ -39,11 +42,9 @@ class InputMessageBar extends React.Component {
             }}
           />
         </ViewInput>
-        <TouchableHighlight onPress={this._addMessage}>
-          <ViewIcon>
-            <Icon name="send" style={{ color: "#3F51B5", fontSize: 30 }} />
-          </ViewIcon>
-        </TouchableHighlight>
+        <TouchableOpacity onPress={this._addMessage}>
+          <Icon name="send" style={{ color: "#3F51B5", fontSize: 30 }} />
+        </TouchableOpacity>
       </Message>
     );
   }
@@ -55,7 +56,8 @@ const Message = styled.View`
   background: #fff;
   width: 100%;
   padding: 10px 15px;
-  justify-content: space-between;
+  justify-content: center;
+  align-items: center;
   flex-direction: row;
 `;
 
@@ -79,8 +81,4 @@ const InputMessage = styled.TextInput`
   width: 100%;
   font-size: 18px;
   border: 0 !important;
-`;
-
-const ViewIcon = styled.View`
-  justify-content: center;
 `;

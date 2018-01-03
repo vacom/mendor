@@ -2,7 +2,7 @@ import React from "react";
 import { Container, Icon, Fab, View, Text } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 import { DISCUSSIONS_BY_CATEGORIES_QUERY } from "../../api/Queries/Discussions";
 
 //Components
@@ -24,13 +24,28 @@ class DiscussionsScreen extends React.Component {
       </HeaderRightContainer>
     )
   };
-  _goToDiscussion = (id, title) => () => {
-    this.props.navigation.navigate("DiscussionView", { id: id, title: title });
+
+  componentDidMount() {
+    this.setState({
+      userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv",
+      avatar:
+        "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=e027e305b330218e0780f28c2cdc1a31&oe=5ABE2638"
+    });
+  }
+
+  _goToDiscussion = (id, title, avatar, userIdLogged) => () => {
+    this.props.navigation.navigate("DiscussionView", {
+      id: id,
+      title: title,
+      avatar: avatar,
+      userIdLogged: userIdLogged
+    });
   };
 
   _goToAddDiscussion = () => {
     this.props.navigation.navigate("AddDiscussion");
   };
+
   render() {
     if (
       this.props.DiscussionsByCategories &&
@@ -58,6 +73,8 @@ class DiscussionsScreen extends React.Component {
                     idCategory={data.id}
                     nameCategory={data.title}
                     key={data.id}
+                    avatar={this.state.avatar}
+                    userIdLogged={this.state.userIdLogged}
                   />
                 );
               })}
@@ -111,7 +128,7 @@ const DiscussionsScreenWithData = compose(
   )
 )(DiscussionsScreen);
 
-export default DiscussionsScreenWithData;
+export default withApollo(DiscussionsScreenWithData);
 
 const ScrollView = styled.ScrollView`
   flex: 1;

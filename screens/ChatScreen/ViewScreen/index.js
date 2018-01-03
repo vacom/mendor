@@ -13,15 +13,31 @@ import {
 } from "../../../components/HeaderRight";
 
 class ChatViewScreen extends React.Component {
-  static navigationOptions = {
-    title: "Conversa",
-    headerRight: (
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      headerTitle: (
+        <View style={{ flex: 1, flexDirection: "row", alignItems:'center', justifyContent:'center' }}>
+          <View>
+            <ImageUser
+              source={{
+                uri: params.avatar
+              }}
+            />
+          </View>
+          <ViewNameHeader>
+            <TextNameHeader>{params.name}</TextNameHeader>
+          </ViewNameHeader>
+        </View>
+      ),
+      headerRight: (
         <HeaderRightContainer>
           <HeaderRightElement>
             <MaterialIcons name="more-vert" size={24} color="#ffffff" />
           </HeaderRightElement>
         </HeaderRightContainer>
-      )    
+      )
+    };
   };
 
   state = {
@@ -47,12 +63,9 @@ class ChatViewScreen extends React.Component {
     this.setState({ height: 0 });
   };
 
-  
   render() {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <Chat />
-        <InputMessageBar />
         <View style={{ height: this.state.height }} />
       </KeyboardAvoidingView>
     );
@@ -87,7 +100,6 @@ const Span = styled.Text`
   color: #757575;
 `;
 
-
 const InputMessage = styled.TextInput`
   width: 100%;
   font-size: 18px;
@@ -97,3 +109,16 @@ const InputMessage = styled.TextInput`
 const ViewIcon = styled.View`
   justify-content: center;
 `;
+
+const ImageUser = styled.Image`
+  border-radius: 50px;
+  height: 40px;
+  width: 40px;
+`;
+
+const ViewNameHeader = styled.View`
+margin-left:10px;`
+
+const TextNameHeader = styled.Text`
+color: #fff;
+font-size:20px;`

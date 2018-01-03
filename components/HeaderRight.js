@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components/native";
 
 /*
@@ -6,17 +6,19 @@ import styled from "styled-components/native";
 */
 
 const HeaderRightContainerWithStyles = styled.View`
+  flex: 1;
   flex-direction: row;
-  flex-wrap: wrap; 
+  justify-content: center;
+  align-items: center;
   margin-right: 16px;
 `;
 
-const HeaderRightContainer = (props) => {
-    return (
-        <HeaderRightContainerWithStyles>
-            {props.children}
-        </HeaderRightContainerWithStyles>
-    )
+const HeaderRightContainer = props => {
+  return (
+    <HeaderRightContainerWithStyles>
+      {props.children}
+    </HeaderRightContainerWithStyles>
+  );
 };
 
 /*
@@ -24,20 +26,19 @@ const HeaderRightContainer = (props) => {
 */
 
 const HeaderRightElementWithStyles = styled.View`
-  align-items: center; 
-  justify-content: center; 
-  width: 24px; 
-  height: 24px; 
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   margin-left: 20px;
 `;
 
-const HeaderRightElement = (props) => {
-    return (
-        <HeaderRightElementWithStyles>
-            {props.children}
-        </HeaderRightElementWithStyles>
-    )
+const HeaderRightElement = props => {
+  return (
+    <HeaderRightElementWithStyles>
+      {props.children}
+    </HeaderRightElementWithStyles>
+  );
 };
-
 
 export { HeaderRightContainer, HeaderRightElement };

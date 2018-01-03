@@ -12,7 +12,9 @@ class Chat extends React.Component {
     this._addMessage = this._addMessage.bind(this);
   }
   state = {
-    messages: this.props.messages
+    messages: this.props.messages,
+    avatar: this.props.avatar,
+    userIdLogged:this.props.userIdLogged
   };
   componentDidMount() {
     if (this.props.messages.length > 0) {
@@ -52,7 +54,7 @@ class Chat extends React.Component {
               );
             })}
           </ScrollView>
-          <InputMessageBar addMessage={this._addMessage} />
+          <InputMessageBar avatar={this.state.avatar} userIdLogged={this.state.userIdLogged} addMessage={this._addMessage} />
         </View>
       );
     } else {
@@ -61,7 +63,7 @@ class Chat extends React.Component {
           <NoMessages ref="ScrollView">
             <Text>No messages...</Text>
           </NoMessages>
-          <InputMessageBar addMessage={this._addMessage} />
+          <InputMessageBar avatar={this.state.avatar} userIdLogged={this.state.userIdLogged} addMessage={this._addMessage} />
         </View>
       );
     }
