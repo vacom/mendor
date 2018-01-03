@@ -1,5 +1,12 @@
 import React from "react";
-import { Image, View, Text, TouchableOpacity, Alert } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView
+} from "react-native";
 import { ImagePicker } from "expo";
 import styled from "styled-components/native";
 import { Form, Item, Input, Label, Button, Picker } from "native-base";
@@ -84,10 +91,20 @@ class AddDiscussion extends React.Component {
               onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
-            { text: "Sim", onPress: () => this._submitMutation() }
+            {
+              text: "Sim",
+              onPress: () => {
+                this.setState({
+                  cover: "https://i.ytimg.com/vi/YmIlsUKEjaA/maxresdefault.jpg"
+                });
+                this._submitMutation();
+              }
+            }
           ],
           { cancelable: false }
         );
+      } else {
+        this._submitMutation();
       }
     }
   };
@@ -95,7 +112,6 @@ class AddDiscussion extends React.Component {
   _submitMutation = async () => {
     const { title, description, categoryId, cover, authorId } = this.state;
     try {
-      console.log(this.props.DiscussionsByCategories);
       await this.props.createDiscussion({
         variables: {
           title,
@@ -103,23 +119,27 @@ class AddDiscussion extends React.Component {
           categoryId,
           cover,
           authorId
-        }
-        /*update: (proxy, { data: { createDiscussion } }) => {
+        },
+        update: (proxy, { data: { createDiscussion } }) => {
           const data = proxy.readQuery({
             query: DISCUSSIONS_BY_CATEGORIES_QUERY,
             variables: { id: null }
           });
-          data.allCategories.push({
+          data.allCategories.unshift({
             id: categoryId,
-            title: "troll",
+            title: "Adicionadas recentemente",
             __typename: "Category",
             discussions: [createDiscussion]
           });
-          console.log(data)
-          proxy.writeQuery({ query: DISCUSSIONS_BY_CATEGORIES_QUERY, data });
-        }*/
+          proxy.writeQuery({
+            query: DISCUSSIONS_BY_CATEGORIES_QUERY,
+            data,
+            variables: { id: null }
+          });
+        }
       });
       Toast.show("Discussão inserida com sucesso");
+      this.props.navigation.goBack();
     } catch (e) {
       console.log(e);
       Toast.show("Ocorreu um erro a inserir a discussão");
@@ -134,7 +154,7 @@ class AddDiscussion extends React.Component {
       let { cover } = this.state;
       const resizeMode = "cover";
       return (
-        <View style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={{ flex: 0.3 }}>
             <Background>
               <Image
@@ -145,7 +165,6 @@ class AddDiscussion extends React.Component {
                 source={{ uri: this.state.cover }}
               />
             </Background>
-
             <Content>
               <StyledText>Carregar imagem de fundo</StyledText>
               <Button
@@ -207,7 +226,7 @@ class AddDiscussion extends React.Component {
               </StyledPickerView>
             </Form>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
   }
@@ -216,9 +235,6 @@ class AddDiscussion extends React.Component {
       allowsEditing: true,
       aspect: [4, 3]
     });
-
-    console.log(result);
-
     if (!result.cancelled) {
       this.setState({ cover: result.uri });
     }
@@ -229,20 +245,7 @@ const AddDiscussionWithData = compose(
   graphql(ALL_CATEGORIES_QUERY, {
     name: "Categories"
   }),
-  graphql(
-    CREATE_DISCUSSION_MUTATION,
-    { name: "createDiscussion" },
-    {
-      options: state => {
-        refetchQueries: [
-          {
-            query: DISCUSSIONS_BY_CATEGORIES_QUERY,
-            variables: {id:state.categoryId}
-          }
-        ];
-      }
-    }
-  )
+  graphql(CREATE_DISCUSSION_MUTATION, { name: "createDiscussion" })
 )(AddDiscussion);
 
 export default withApollo(AddDiscussionWithData);

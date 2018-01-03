@@ -18,7 +18,13 @@ const CREATE_RESPONSE_MUTATION = gql`
 `;
 
 const CREATE_DISCUSSION_MUTATION = gql`
-  mutation createDiscussion($title:String!, $description: String!, $cover:String!, $authorId:ID, $categoryId:ID ) {
+  mutation createDiscussion(
+    $title: String!
+    $description: String!
+    $cover: String!
+    $authorId: ID
+    $categoryId: ID
+  ) {
     createDiscussion(
       title: $title
       description: $description
@@ -32,7 +38,6 @@ const CREATE_DISCUSSION_MUTATION = gql`
       description
       responses {
         id
-        content
         user {
           avatar
         }

@@ -96,10 +96,12 @@ const Desc = styled.Text`
   font-size: 16px;
   color: white;
   margin-top: 5px;
+  height: 35px;
 `;
 
 const Users = styled.View`
   padding-left: 7px;
+  height: 15px;
 `;
 const Footer = styled.View`
   margin-top: 10px;

@@ -75,7 +75,8 @@ export const createRootNavigator = (signedIn = false) => {
       navigationOptions: () => ({
         headerTintColor: "#ffffff",
         headerStyle: {
-          backgroundColor: "#3F51B5"
+          backgroundColor: "#3F51B5",
+          elevation: 0
         },
         headerTitleStyle: {
           fontWeight: "normal"

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Icon, Fab, View } from "native-base";
+import { Container, Icon, Fab, View, Text } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose } from "react-apollo";
@@ -32,39 +32,68 @@ class DiscussionsScreen extends React.Component {
     this.props.navigation.navigate("AddDiscussion");
   };
   render() {
-    if (this.props.DiscussionsByCategories && this.props.DiscussionsByCategories.loading) {
+    if (
+      this.props.DiscussionsByCategories &&
+      this.props.DiscussionsByCategories.loading
+    ) {
       return <Loading />;
     }
-    if (this.props.DiscussionsByCategories && this.props.DiscussionsByCategories.error) {
+    if (
+      this.props.DiscussionsByCategories &&
+      this.props.DiscussionsByCategories.error
+    ) {
       return <Error />;
     }
     const { allCategories } = this.props.DiscussionsByCategories;
-    return (
-      <Container>
-        <ScrollView>
-          {allCategories.map(data => {
-            return (
-              <CategoryGroup
-                goToDiscussion={this._goToDiscussion}
-                discussions={data.discussions}
-                idCategory={data.id}
-                nameCategory={data.title}
-                key={data.id}
-              />
-            );
-          })}
-        </ScrollView>
-        <Fab
-          onPress={this._goToAddDiscussion}
-          direction="up"
-          containerStyle={{}}
-          style={{ backgroundColor: "#3F51B5" }}
-          position="bottomRight"
-        >
-          <Icon name="add" />
-        </Fab>
-      </Container>
-    );
+    if (allCategories.length > 0) {
+      return (
+        <Container>
+          <ScrollView>
+            <View style={{ marginBottom: 15 }}>
+              {allCategories.map(data => {
+                return (
+                  <CategoryGroup
+                    goToDiscussion={this._goToDiscussion}
+                    discussions={data.discussions}
+                    idCategory={data.id}
+                    nameCategory={data.title}
+                    key={data.id}
+                  />
+                );
+              })}
+            </View>
+          </ScrollView>
+          <Fab
+            onPress={this._goToAddDiscussion}
+            direction="up"
+            containerStyle={{}}
+            style={{ backgroundColor: "#3F51B5" }}
+            position="bottomRight"
+          >
+            <Icon name="add" />
+          </Fab>
+        </Container>
+      );
+    } else {
+      return (
+        <Container>
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text>Ainda não existem discussões.</Text>
+          </View>
+          <Fab
+            onPress={this._goToAddDiscussion}
+            direction="up"
+            containerStyle={{}}
+            style={{ backgroundColor: "#3F51B5" }}
+            position="bottomRight"
+          >
+            <Icon name="add" />
+          </Fab>
+        </Container>
+      );
+    }
   }
 }
 

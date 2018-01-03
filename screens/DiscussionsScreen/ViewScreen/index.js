@@ -88,7 +88,6 @@ class DiscussionViewScreen extends React.Component {
           discussionId
         },
         update: (proxy, { data: { createResponse } }) => {
-          // Read the data from our cache for this query.
           const data = proxy.readQuery({
             query: DISCUSSION,
             variables: { id: discussionId }
