@@ -46,10 +46,10 @@ class Chat extends React.Component {
               return (
                 <Message
                   key={data.id}
-                  userId={data.user.id}
+                  userId={data.author.id}
                   userIdLogged={this.props.userIdLogged}
                   message={data.content}
-                  avatar={data.user.avatar}
+                  avatar={data.author.avatar}
                 />
               );
             })}

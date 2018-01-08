@@ -3,6 +3,11 @@ import { ScrollView, TouchableHighlight } from "react-native";
 import { Thumbnail, Button, Text, View } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { graphql, compose, withApollo } from "react-apollo";
+
+//Requests
+import { ALL_CHATS_QUERY } from "../../api/Queries/Chat";
+import { ALL_CHATS_SUBSCRIPTION } from "../../api/Subscriptions/Chat";
 
 //Components
 import GradientContainer from "../../components/GradientContainer";
@@ -17,6 +22,8 @@ import {
   CardBody,
   CardRight
 } from "../../components/Card";
+import { Error, Loading } from "../../components/index";
+
 class ChatScreen extends React.Component {
   static navigationOptions = {
     title: "Conversas",
@@ -28,143 +35,170 @@ class ChatScreen extends React.Component {
       </HeaderRightContainer>
     )
   };
-  _goToChatView = () => {
-    console.log("ds");
+  state = {
+    userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
+  };
+  componentDidMount() {
+    this._subscribeChat();
+  }
+
+  _subscribeChat = () => {
+    this.props.AllChats.subscribeToMore({
+      document: ALL_CHATS_SUBSCRIPTION,
+      variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" },
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return previous;
+        }
+        const newItems = subscriptionData.data.Chat.node;
+        const result = Object.assign({}, previous, {
+          allChats: [newItems, ...previous.allChats]
+        });
+        return result;
+      }
+    });
+  };
+  _goToChatView = (id, name, users) => {
+    let avatar = "";
+    if (users.length > 2) {
+      avatar =
+        "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
+    } else {
+      users.map(user => {
+        if (user.id != this.state.userIdLogged) {
+          avatar = user.avatar;
+        }
+      });
+    }
     this.props.navigation.navigate("ChatView", {
-      name: "Flávio Amaral",
-      avatar:
-        "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25659784_1765573030153718_6319117596302378519_n.jpg?oh=24a6cd2344187d7f8c0e2847e673db02&oe=5ACBEF04",
+      name: name,
+      avatar: avatar,
+      id: id
     });
   };
   render() {
-    return (
-      <Container>
-        <GradientContainer>
-          <ScrollView style={{ paddingBottom: 30 }}>
-            <View>
-              <Card onPress={this._goToChatView}>
-                <CardContainer>
-                  <CardLeft>
-                    <Thumbnail
-                      style={{ width: 48, height: 48 }}
-                      source={{
-                        uri:
-                          "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25659784_1765573030153718_6319117596302378519_n.jpg?oh=24a6cd2344187d7f8c0e2847e673db02&oe=5ACBEF04"
-                      }}
-                    />
-                  </CardLeft>
-                  <CardBody>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: 16,
-                        color: "#000",
-                        fontWeight: "600"
-                      }}
-                    >
-                      Flávio Amaral
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{ fontSize: 14, color: "#757575" }}
-                    >
-                      Já desenhei a página de contactos. Contacta-me para te
-                      mostrar
-                    </Text>
-                  </CardBody>
-                  <CardRight>
-                    <Text style={{ fontSize: 14, color: "#757575" }}>
-                      12:03
-                    </Text>
-                  </CardRight>
-                </CardContainer>
-              </Card>
-            </View>
-            <View>
-              <Card onPress={this._goToChatView}>
-                <CardContainer>
-                  <CardLeft>
-                    <Thumbnail
-                      style={{ width: 48, height: 48 }}
-                      source={{
-                        uri:
-                          "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=e027e305b330218e0780f28c2cdc1a31&oe=5ABE2638"
-                      }}
-                    />
-                  </CardLeft>
-                  <CardBody>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: 16,
-                        color: "#000",
-                        fontWeight: "600"
-                      }}
-                    >
-                      Vitor Amaral
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{ fontSize: 14, color: "#757575" }}
-                    >
-                      Relativamente ao crédito, teremos de abordar melhor essa
-                      situação.
-                    </Text>
-                  </CardBody>
-                  <CardRight>
-                    <Text style={{ fontSize: 14, color: "#757575" }}>
-                      12:03
-                    </Text>
-                  </CardRight>
-                </CardContainer>
-              </Card>
-            </View>
-            <View>
-              <Card onPress={this._goToChatView}>
-                <CardContainer>
-                  <CardLeft>
-                    <Thumbnail
-                      style={{ width: 48, height: 48 }}
-                      source={{
-                        uri:
-                          "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/13627206_1379839418710828_7794737684553008176_n.jpg?oh=c9b0e09abdf973faff3e5d8a598b8a78&oe=5ACF621A"
-                      }}
-                    />
-                  </CardLeft>
-                  <CardBody>
-                    <Text
-                      numberOfLines={1}
-                      style={{
-                        fontSize: 16,
-                        color: "#000",
-                        fontWeight: "600"
-                      }}
-                    >
-                      Hugo Silva
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={{ fontSize: 14, color: "#757575" }}
-                    >
-                      Já trataste de escrever o relatório de contas?
-                    </Text>
-                  </CardBody>
-                  <CardRight>
-                    <Text style={{ fontSize: 14, color: "#757575" }}>
-                      12:03
-                    </Text>
-                  </CardRight>
-                </CardContainer>
-              </Card>
-            </View>
-          </ScrollView>
-        </GradientContainer>
-      </Container>
-    );
+    const _renderMessageContent = data => {
+      if (data.messages.length > 0) {
+        return (
+          <Text numberOfLines={1} style={{ fontSize: 14, color: "#757575" }}>
+            {data.messages[0].content}
+          </Text>
+        );
+      } else {
+        return (
+          <Text numberOfLines={1} style={{ fontSize: 14, color: "#757575" }}>
+            Sem mensagens.{" "}
+          </Text>
+        );
+      }
+    };
+    const _renderMessageDate = data => {
+      if (data.messages.length > 0) {
+        return (
+          <Text style={{ fontSize: 14, color: "#757575" }}>
+            {data.messages[0].createdAt}
+          </Text>
+        );
+      } else {
+        return <Text style={{ fontSize: 14, color: "#757575" }}> </Text>;
+      }
+    };
+    const _renderMessageAvatar = data => {
+      let avatar = "";
+      if (data.users.length > 2) {
+        avatar =
+          "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
+      } else {
+        data.users.map(user => {
+          if (user.id != this.state.userIdLogged) {
+            avatar = user.avatar;
+          }
+        });
+      }
+      return (
+        <Thumbnail
+          style={{ width: 48, height: 48 }}
+          source={{
+            uri: avatar
+          }}
+        />
+      );
+    };
+
+    const { AllChats } = this.props;
+    if (AllChats && AllChats.loading) {
+      return <Loading />;
+    }
+    if (AllChats && AllChats.error) {
+      return <Error />;
+    } else {
+      if (AllChats.allChats.length > 0) {
+        const chats = AllChats.allChats;
+        return (
+          <Container>
+            <GradientContainer>
+              <ScrollView style={{ paddingBottom: 30 }}>
+                {chats.map(data => {
+                  return (
+                    <View key={data.id}>
+                      <Card
+                        onPress={() =>
+                          this._goToChatView(data.id, data.name, data.users)
+                        }
+                      >
+                        <CardContainer>
+                          <CardLeft>{_renderMessageAvatar(data)}</CardLeft>
+                          <CardBody>
+                            <Text
+                              numberOfLines={1}
+                              style={{
+                                fontSize: 16,
+                                color: "#000",
+                                fontWeight: "600"
+                              }}
+                            >
+                              {data.name}
+                            </Text>
+                            {_renderMessageContent(data)}
+                          </CardBody>
+                          <CardRight>{_renderMessageDate(data)}</CardRight>
+                        </CardContainer>
+                      </Card>
+                    </View>
+                  );
+                })}
+              </ScrollView>
+            </GradientContainer>
+          </Container>
+        );
+      } else {
+        return (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text>Ainda não existem conversas.</Text>
+          </View>
+        );
+      }
+    }
   }
 }
 
-export default ChatScreen;
+const ChatScreenWithData = compose(
+  graphql(
+    ALL_CHATS_QUERY,
+    { name: "AllChats" },
+    {
+      options: () => ({
+        variables: {
+          id: "cjbjhh0f9lbfz01142sd6tvuv"
+        }
+      })
+    }
+  )
+)(ChatScreen);
+
+export default withApollo(ChatScreenWithData);
 
 const Container = styled.View`
   flex: 1;
