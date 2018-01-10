@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components/native";
-import { Modal, TouchableHighlight, TouchableNativeFeedback } from "react-native";
-import { Text, View, Icon } from "native-base";
+import {
+  Modal,
+  TouchableHighlight,
+  TouchableNativeFeedback
+} from "react-native";
+import { Text, View, Icon, Badge } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 
 /*
@@ -25,18 +29,16 @@ const ModalContent = styled.View`
 
 const ViewList = styled.View`
   flex: 1;
-  align-items: center;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
   padding: 20px;
-`;
-
-const ViewIcon = styled.View`
-  margin-right: 15px;
 `;
 
 const ListText = styled.Text`
   font-size: 16px;
   color: #757575;
+  margin-left: 15px;
 `;
 
 const ModalBottom = props => {
@@ -54,16 +56,26 @@ const ModalBottom = props => {
               return (
                 <TouchableNativeFeedback key={i}>
                   <ViewList>
-                    <ViewIcon>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        alignItems: "center"
+                      }}
+                    >
                       <MaterialIcons
                         name={data.icon}
                         size={24}
                         color="#757575"
                       />
-                    </ViewIcon>
-                    <View>
                       <ListText>{data.text}</ListText>
                     </View>
+
+                    {data.badge && (
+                        <Badge success>
+                          <Text>{data.notifications}</Text>
+                        </Badge>
+                    )}
                   </ViewList>
                 </TouchableNativeFeedback>
               );

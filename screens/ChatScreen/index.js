@@ -5,6 +5,7 @@ import { Thumbnail, Button, Text, View, Fab, Icon } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose, withApollo } from "react-apollo";
+import moment from "moment/min/moment-with-locales";
 
 //Requests
 import { ALL_CHATS_QUERY } from "../../api/Queries/Chat";
@@ -50,6 +51,7 @@ class ChatScreen extends React.Component {
     modalVisible: false
   };
   componentDidMount() {
+    moment.locale('pt');
     this._subscribeChat();
     this.props.navigation.setParams({
       openModal: this._setModalVisible(true)
@@ -114,7 +116,7 @@ class ChatScreen extends React.Component {
       if (data.messages.length > 0) {
         return (
           <Text style={{ fontSize: 14, color: "#757575" }}>
-            {data.messages[0].createdAt}
+            {moment(data.messages[0].createdAt).fromNow()}
           </Text>
         );
       } else {

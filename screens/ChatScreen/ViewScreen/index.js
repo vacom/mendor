@@ -1,6 +1,11 @@
 import React from "react";
 import { Icon, View, Text } from "native-base";
-import { ScrollView, KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableOpacity
+} from "react-native";
 import styled from "styled-components/native";
 
 import { graphql, compose, withApollo } from "react-apollo";
@@ -11,7 +16,7 @@ import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
 //Components
 import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
-import ModalBottom from "../../../components/ModalBottom";
+import { ModalBottom } from "../../../components/ModalBottom";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   HeaderRightContainer,
@@ -62,6 +67,7 @@ class ChatViewScreen extends React.Component {
 
   state = {
     height: 0,
+    modalVisible: false,
     userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv",
     avatar:
       "https://scontent.fopo2-1.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=0c486e7b1b615efadcfdb3c9f6e08780&oe=5AE5B338"
@@ -152,8 +158,10 @@ class ChatViewScreen extends React.Component {
             visible={this.state.modalVisible}
             close={this._setModalVisible(!this.state.modalVisible)}
             content={[
-              { icon: "edit", text: "Editar perfil" },
-              { icon: "settings", text: "Configurações" }
+              { icon: "edit", text: "Editar nome da conversa" },
+              { icon: "person-add", text: "Adicionar pessoas à conversa" },
+              { icon: "notifications-off", text: "Silenciar conversa" },
+              { icon: "group-add", text: "Sugestões de parceiros", badge:true, notifications:"2"},
             ]}
           />
         </KeyboardAvoidingView>
