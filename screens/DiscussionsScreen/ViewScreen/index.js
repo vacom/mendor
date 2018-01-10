@@ -79,13 +79,13 @@ class DiscussionViewScreen extends React.Component {
 
   _createResponseMutation = async e => {
     const content = e;
-    const userId = this.state.userIdLogged;
+    const authorId = this.state.userIdLogged;
     const discussionId = this.props.Discussion.Discussion.id;
     try {
       await this.props.createResponse({
         variables: {
           content,
-          userId,
+          authorId,
           discussionId
         },
         update: (proxy, { data: { createResponse } }) => {
@@ -137,12 +137,12 @@ class DiscussionViewScreen extends React.Component {
           <ViewAvatar>
             <Avatar
               source={{
-                uri: discussion.author.avatar
+                uri: discussion.user.avatar
               }}
             />
           </ViewAvatar>
           <ViewInput>
-            <Username>{discussion.author.name}</Username>
+            <Username>{discussion.user.name}</Username>
             <Span>{discussion.responses.length} respostas</Span>
           </ViewInput>
           <ViewIcon>

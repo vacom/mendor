@@ -1,15 +1,15 @@
 import gql from "graphql-tag";
 
 const CREATE_RESPONSE_MUTATION = gql`
-  mutation createResponse($content: String!, $userId: ID, $discussionId: ID) {
+  mutation createResponse($content: String!, $authorId: ID, $discussionId: ID) {
     createResponse(
       content: $content
-      userId: $userId
+      authorId: $authorId
       discussionId: $discussionId
     ) {
       content
       id
-      user {
+      author {
         avatar
         id
       }
@@ -22,14 +22,14 @@ const CREATE_DISCUSSION_MUTATION = gql`
     $title: String!
     $description: String!
     $cover: String!
-    $authorId: ID
+    $userId: ID
     $categoryId: ID
   ) {
     createDiscussion(
       title: $title
       description: $description
       cover: $cover
-      authorId: $authorId
+      userId: $authorId
       categoryId: $categoryId
     ) {
       id
@@ -38,7 +38,7 @@ const CREATE_DISCUSSION_MUTATION = gql`
       description
       responses {
         id
-        user {
+        author {
           avatar
         }
       }

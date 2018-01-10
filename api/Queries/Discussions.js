@@ -12,14 +12,14 @@ const DISCUSSION = gql`
       title
       description
       createdAt
-      author {
+      user {
         name
         avatar
       }
       responses {
         id
         content
-        user {
+        author {
           id
           avatar
         }
@@ -41,7 +41,7 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
         description
         responses {
           id
-          user {
+          author {
             avatar
           }
         }

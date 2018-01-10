@@ -20,18 +20,22 @@ const Chat = props => {
         <ViewAvatar>
           <Avatar
             source={{
-              uri:
-                props.avatar
+              uri: props.avatar
             }}
           />
         </ViewAvatar>
-        <LinearGradient colors={["#3F53AF", "#673AB7"]} style={{borderRadius:10, padding:10}} start={[0, 0]} end={[1, 0]} >
+        <LinearGradient
+          colors={["#3F53AF", "#673AB7"]}
+          style={{ borderRadius: 10, padding: 10 }}
+          start={[0, 0]}
+          end={[1, 0]}
+        >
           <TextNotLogged>{props.message}</TextNotLogged>
         </LinearGradient>
       </ViewMessageNotLogged>
     );
   }
-  return <View>{message}</View>;
+  return <View style={{flex:1}}>{message}</View>;
 };
 
 export default Chat;
@@ -58,6 +62,7 @@ const TextNotLogged = styled.Text`
 const ViewMessageLogged = styled.View`
   align-items: flex-end;
   padding: 5px 10px;
+  width: 100%;
 `;
 
 const ViewMessageNotLogged = styled.View`

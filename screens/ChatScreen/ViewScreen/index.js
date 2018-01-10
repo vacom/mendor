@@ -1,6 +1,6 @@
 import React from "react";
 import { Icon, View, Text } from "native-base";
-import { ScrollView, KeyboardAvoidingView, Keyboard } from "react-native";
+import { ScrollView, KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
 import { graphql, compose, withApollo } from "react-apollo";
@@ -11,6 +11,7 @@ import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
 //Components
 import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
+import ModalBottom from "../../../components/ModalBottom";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   HeaderRightContainer,
@@ -50,7 +51,9 @@ class ChatViewScreen extends React.Component {
       headerRight: (
         <HeaderRightContainer>
           <HeaderRightElement>
-            <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+            <TouchableOpacity onPress={params.openModal}>
+              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+            </TouchableOpacity>
           </HeaderRightElement>
         </HeaderRightContainer>
       )
@@ -74,7 +77,14 @@ class ChatViewScreen extends React.Component {
       this._keyboardDidHide
     );
     this._subscribeMessages();
+    this.props.navigation.setParams({
+      openModal: this._setModalVisible(true)
+    });
   }
+
+  _setModalVisible = visible => () => {
+    this.setState({ modalVisible: visible });
+  };
 
   _addMessage(e) {
     this._createMessageMutation(e);
@@ -84,7 +94,7 @@ class ChatViewScreen extends React.Component {
     const content = e;
     const authorId = this.state.userIdLogged;
     const chatId = this.props.navigation.state.params.id;
-    console.log(content, authorId, chatId)
+    console.log(content, authorId, chatId);
     try {
       await this.props.createMessage({
         variables: {
@@ -108,7 +118,7 @@ class ChatViewScreen extends React.Component {
         }
         const newItems = subscriptionData.data.Message.node;
         const result = Object.assign({}, previous, {
-          allMessages: [newItems, ...previous.allMessages]
+          allMessages: [...previous.allMessages, newItems]
         });
         return result;
       }
@@ -138,6 +148,14 @@ class ChatViewScreen extends React.Component {
             avatar={this.state.avatar}
           />
           <View style={{ height: this.state.height }} />
+          <ModalBottom
+            visible={this.state.modalVisible}
+            close={this._setModalVisible(!this.state.modalVisible)}
+            content={[
+              { icon: "edit", text: "Editar perfil" },
+              { icon: "settings", text: "Configurações" }
+            ]}
+          />
         </KeyboardAvoidingView>
       );
     }
