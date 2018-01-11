@@ -29,7 +29,7 @@ const CREATE_DISCUSSION_MUTATION = gql`
       title: $title
       description: $description
       cover: $cover
-      userId: $authorId
+      userId: $userId
       categoryId: $categoryId
     ) {
       id

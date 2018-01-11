@@ -51,7 +51,7 @@ class ChatScreen extends React.Component {
     modalVisible: false
   };
   componentDidMount() {
-    moment.locale('pt');
+    moment.locale("pt");
     this._subscribeChat();
     this.props.navigation.setParams({
       openModal: this._setModalVisible(true)
@@ -77,6 +77,9 @@ class ChatScreen extends React.Component {
         return result;
       }
     });
+  };
+  _goToAddChat = () => {
+    this.props.navigation.navigate("AddChat", {});
   };
   _goToChatView = (id, name, users) => {
     let avatar = "";
@@ -193,9 +196,10 @@ class ChatScreen extends React.Component {
             </GradientContainer>
             <View>
               <Fab
+                onPress={() => this._goToAddChat()}
                 direction="up"
                 containerStyle={{ borderRadius: 10 }}
-                style={{ backgroundColor: "#3F51B5" }}
+                style={{ backgroundColor: "#3F51B5", elevation: 0 }}
                 position="bottomRight"
               >
                 <Icon name="add" />

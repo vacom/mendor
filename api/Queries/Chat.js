@@ -32,4 +32,21 @@ const ALL_MESSAGES_QUERY = gql`
   }
 `;
 
+// Collect all the individual chats of two specific users
+const ALL_INDIVIDUAL_CHATS_OF_USERS = gql`
+  query allIndividualChatsOfUsers($id1: ID, $id2: ID) {
+    allChats(
+      filter: {
+        AND: [
+          { isGroup: false }
+          { users_some: { id: $id1 } }
+          { users_some: { id: $id2 } }
+        ]
+      }
+    ) {
+      id
+    }
+  }
+`;
+
 export { ALL_CHATS_QUERY, ALL_MESSAGES_QUERY };
