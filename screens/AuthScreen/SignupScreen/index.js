@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from 'react-native';
+import { View } from "react-native";
 //Components
 import {
   Text,
@@ -19,6 +19,7 @@ import styled from "styled-components/native";
 import { LinearGradient } from "expo";
 import { MaterialIcons } from "@expo/vector-icons";
 import { NavigationActions } from "react-navigation";
+import { SignUpHeader } from "../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import {
@@ -44,7 +45,7 @@ class SignupScreen extends React.Component {
 
   _onUserSignUp = async () => {
     const { name, email, password, repeatPassword, type } = this.state;
-    const { signinUser, createUser } = this.props;
+    const { signinUser, createUser, navigation } = this.props;
 
     //Checks if fields are empty
     if (!name || !email || !password) {
@@ -70,21 +71,19 @@ class SignupScreen extends React.Component {
           try {
             //Saves the userID for the next steps of the registration
             this.setState({ userId: createUser.id });
+            const userId = createUser.id;
             //Signins the user and checks in the DB
             const result = await USER_SIGNIN_FUNC(email, password, signinUser);
-            //If it passes goes to the main screen
+            //If it passes goes to the next screen
             if (result.status) {
-              const resetAction = NavigationActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({ routeName: "Main" })]
-              });
-              this.props.navigation.dispatch(resetAction);
+              navigation.navigate("SignUpProfileStep", { userId });
             } else {
               console.log("error = ", result.error);
               Toast.show("Erro! Verifique os campos.");
             }
           } catch (e) {
             console.log(e);
+            Toast.show("Erro! Verifique os campos.");
           }
         }
       });
@@ -92,58 +91,36 @@ class SignupScreen extends React.Component {
       Toast.show(e);
     }
   };
+  _onType = value => () => {
+    this.setState({
+      type: value
+    });
+  };
   render() {
     return (
       <ScreenContainer>
-        <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
-          <ContentContainer>
-            <Row
-              style={{
-                height: "auto",
-                marginBottom: 10,
-                marginTop: 30,
-                backgroundColor: "transparent"
-              }}
-            >
-              <Text style={{ fontSize: 26, fontWeight: "600", color: "#fff" }}>
-                Registar
-              </Text>
-            </Row>
-            <Row
-              style={{
-                height: "auto",
-                backgroundColor: "transparent",
-                marginBottom: 30
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 16,
-                  lineHeight: 24,
-                  color: "#fff"
-                }}
-              >
-                Mendor é conetar as pessoas certas, estabelecer relaçoes de
-                valor e partilhar ideias.
-              </Text>
-            </Row>
-          </ContentContainer>
-        </LinearGradient>
+        <SignUpHeader text="Mendor é conetar as pessoas certas, estabelecer relaçoes de valor e partilhar ideias." />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60 }}>
               <View style={{ marginTop: 40 }}>
                 <Label style={{ color: "#757575" }}>Selecionar perfil:</Label>
                 <ListItem style={{ marginLeft: 0 }}>
-                  <CheckBox checked={false} />
+                  <CheckBox
+                    checked={this.state.type === "ENTREPRENEUR" ? true : false}
+                    onPress={this._onType("ENTREPRENEUR")}
+                  />
                   <Body>
-                  <Text style={{ color: "#757575" }}>Empreendedor</Text>
+                    <Text style={{ color: "#757575" }}>Empreendedor</Text>
                   </Body>
                 </ListItem>
                 <ListItem style={{ marginLeft: 0 }}>
-                  <CheckBox checked={false}/>
+                  <CheckBox
+                    checked={this.state.type === "MENTOR" ? true : false}
+                    onPress={this._onType("MENTOR")}
+                  />
                   <Body>
-                  <Text style={{ color: "#757575" }}>Mentor</Text>
+                    <Text style={{ color: "#757575" }}>Mentor</Text>
                   </Body>
                 </ListItem>
               </View>
@@ -196,9 +173,4 @@ export default compose(
 const ScreenContainer = styled.View`
   flex: 1;
   background-color: #fff;
-`;
-
-const ContentContainer = styled.View`
-  margin-left: 20px;
-  margin-right: 20px;
 `;

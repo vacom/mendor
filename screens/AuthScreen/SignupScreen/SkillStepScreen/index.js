@@ -1,106 +1,129 @@
 import React from "react";
-import {Text, Container, Content, Form, Item, Input, Label, Fab} from "native-base";
-import {Row} from "react-native-easy-grid";
-import styled from "styled-components/native";
-import {LinearGradient} from "expo";
-import {MaterialIcons} from "@expo/vector-icons";
-
+import { NavigationActions } from "react-navigation";
 //Components
-import { Label as MendorLabel, LabelContainer, LabelsContainer } from "../../../../components/Label";
+import { Container, Content, Form, Item, Input, Fab, Text } from "native-base";
+import styled from "styled-components/native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { SignUpHeader } from "../../../../components/index";
+//Containers
+import InterestsContainer from "./InterestsContainer/index";
+//GraphQL
+import { graphql, compose } from "react-apollo";
+import { CREATE_USER_COMPETENCE_MUTATION } from "../../../../api/Mutations/Competence";
+//Utils
+import Toast from "react-native-root-toast";
+import { allFalse, countAllTrue } from "../../../../constants/Utils";
 
 class SkillStepScreen extends React.Component {
-    static navigationOptions = {
-        title: "",
-    };
-    state = {
-        active: false,
-    };
-
-    render() {
-        return (
-            <ScreenContainer>
-                <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
-                    <ContentContainer>
-                        <Row style={{height: 'auto', marginBottom: 10, marginTop: 30, backgroundColor: 'transparent'}}>
-                            <Text style={{fontSize: 26, fontWeight: '600', color: "#fff"}}>
-                                Registar
-                            </Text>
-                        </Row>
-                        <Row style={{height: 'auto', backgroundColor: 'transparent', marginBottom: 30}}>
-                            <Text style={{
-                                fontSize: 16,
-                                lineHeight: 24,
-                                color: '#fff',
-                            }}>
-                                Está quase, para terminar, selecione as areas de interesse que pretende.
-                            </Text>
-                        </Row>
-                    </ContentContainer>
-                </LinearGradient>
-                <Container>
-                    <Content style={{paddingLeft: 20, paddingRight: 20}}>
-                        <Form style={{paddingBottom: 60, paddingTop: 30}}>
-                            <Item style={{marginLeft: 0, marginBottom: 10}}>
-                                <MaterialIcons
-                                    name="search"
-                                    size={24}
-                                    color="#757575"
-                                />
-                                <Input placeholderTextColor="#757575" placeholder='Pesquisar areas de interesse'/>
-                            </Item>
-                            <LabelsContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Financeira" onPress={ () => this.setState({active: !this.state.active})} active={this.state.active}/>
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Gestão de Recursos Humanos" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Desenvolvimento Web" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Gestão Pessoas" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Gestão de equipas" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Tecnologias mobile" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Financeira" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Gestão de Recursos Humanos" />
-                                </LabelContainer>
-                                <LabelContainer>
-                                    <MendorLabel text="Desenvolvimento Web" />
-                                </LabelContainer>
-                            </LabelsContainer>
-                        </Form>
-                    </Content>
-                </Container>
-                <Fab
-                    direction="up"
-                    containerStyle={{}}
-                    style={{backgroundColor: '#3f51b5'}}
-                    position="bottomRight"
-                >
-                    <MaterialIcons name="arrow-forward" size={24} color="#ffffff"/>
-                </Fab>
-            </ScreenContainer>
-        );
+  static navigationOptions = {
+    title: ""
+  };
+  state = {
+    timeoutSearch: 0,
+    interests: [],
+    query: "programaçao"
+  };
+  _onSearch(query) {
+    clearTimeout(this.state.timeoutSearch);
+    this.setState({
+      timeoutSearch: setTimeout(() => {
+        //searches for interests based on category on the BD
+        this.setState({ query: query.trim() });
+      }, 500)
+    });
+  }
+  _onGetInterests(interests) {
+    this.setState({ interests });
+  }
+  _onSaveSkills = async () => {
+    const { interests } = this.state;
+    //Checks if fields are empty
+    if (countAllTrue(interests) <= 0 || allFalse(interests)) {
+      Toast.show("You have not selected any interest!");
+      return;
     }
+    try {
+      for (var key in this.state.interests) {
+        if (this.state.interests[key]) {
+          this._onCreateCompetence(key);
+          console.log(key);
+        }
+      }
+      //If it passes goes to the main screen
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: "Main" })]
+      });
+      this.props.navigation.dispatch(resetAction);
+
+    } catch (e) {
+      Toast.show(e);
+    }
+  };
+  _onCreateCompetence = async interestId => {
+    const { createCompetence, navigation } = this.props;
+    const userId = navigation.state.params.userId;
+    await createCompetence({
+      variables: {
+        interestId,
+        userId
+      },
+      update: async (store, { data: { createCompetence } }) => {
+        try {
+          console.log(createCompetence.id);
+        } catch (e) {
+          console.log(e);
+          Toast.show("Erro! Verifique os campos.");
+          return;
+        }
+      }
+    });
+  };
+  render() {
+    const { interests } = this.state;
+    return (
+      <ScreenContainer>
+        <SignUpHeader text="Está quase, para terminar, selecione as areas de interesse que pretende." />
+        <Container>
+          <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <Form style={{ paddingBottom: 60, paddingTop: 30 }}>
+              <Item style={{ marginLeft: 0, marginBottom: 10 }}>
+                <MaterialIcons name="search" size={24} color="#757575" />
+                <Input
+                  onChangeText={query => this._onSearch(query)}
+                  placeholderTextColor="#757575"
+                  placeholder="Pesquisar areas de interesse"
+                />
+              </Item>
+              <Text style={{ fontSize: 14, color: "gray", marginBottom: 6 }}>
+                {countAllTrue(interests)} Interesses Selecionados
+              </Text>
+              <InterestsContainer
+                query={this.state.query}
+                interests={items => this._onGetInterests(items)}
+              />
+            </Form>
+          </Content>
+        </Container>
+        <Fab
+          onPress={this._onSaveSkills}
+          direction="up"
+          containerStyle={{}}
+          style={{ backgroundColor: "#3f51b5" }}
+          position="bottomRight"
+        >
+          <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+        </Fab>
+      </ScreenContainer>
+    );
+  }
 }
 
-export default SkillStepScreen;
+export default compose(
+  graphql(CREATE_USER_COMPETENCE_MUTATION, { name: "createCompetence" })
+)(SkillStepScreen);
 
 const ScreenContainer = styled.View`
   flex: 1;
   background-color: #fff;
-`;
-
-const ContentContainer = styled.View`
-  margin-left: 20px;
-  margin-right: 20px;
 `;

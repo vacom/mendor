@@ -2,6 +2,10 @@ import gql from "graphql-tag";
 //Fragments
 import { BASIC_USER_FIELDS_FRAGMENT } from "../Fragments/User";
 
+/**
+ * USER MUTATIONS
+ */
+
 const SIGNIN_USER_MUTATION = gql`
   mutation($email: String!, $password: String!) {
     signinUser(email: { email: $email, password: $password }) {
@@ -31,4 +35,36 @@ const CREATE_USER_MUTATION = gql`
   }
 `;
 
-export { SIGNIN_USER_MUTATION, CREATE_USER_MUTATION };
+/**
+ * PROFILE MUTATIONS
+ */
+
+const CREATE_USER_PROFILE_MUTATION = gql`
+  mutation(
+    $userId: ID!
+    $about: String!
+    $company: String!
+    $profession: String!
+    $role: String!
+    $location: String!
+  ) {
+    createProfile(
+      userId: $userId
+      about: $about
+      company: $company
+      profession: $profession
+      role: $role
+      location: $location
+    ) {
+      user {
+        id
+      }
+    }
+  }
+`;
+
+export {
+  SIGNIN_USER_MUTATION,
+  CREATE_USER_MUTATION,
+  CREATE_USER_PROFILE_MUTATION
+};
