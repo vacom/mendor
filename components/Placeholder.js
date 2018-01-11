@@ -1,14 +1,22 @@
 import React from "react";
+import { MaterialIcons } from "@expo/vector-icons";
+import styled from "styled-components/native";
 //Components
-import { Content, Container, Text } from "native-base";
+import { Text } from "native-base";
 
-const Placeholder = () => {
+const PlaceholderContainerWithStyles = styled.View`
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+
+const Placeholder = (props) => {
   return (
-    <Container>
-      <Content>
-        <Text>Empty Spot</Text>
-      </Content>
-    </Container>
+    <PlaceholderContainerWithStyles>
+        <MaterialIcons name={props.IconName} size={42} color="#ffffff" style={{backgroundColor: 'transparent'}}/>
+        <Text style={{fontSize: 20, marginTop: 10, color: '#fff', backgroundColor: 'transparent'}}>{props.text}</Text>
+    </PlaceholderContainerWithStyles>
   );
 };
 

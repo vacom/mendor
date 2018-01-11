@@ -95,18 +95,6 @@ class AuthScreen extends React.Component {
                   </Text>
                 </Button>
               </OptionContainer>
-              <OptionContainer>
-                <Button
-                  style={{ backgroundColor: "#0077B5", borderRadius: 2 }}
-                  full
-                >
-                  <Text
-                    style={{ fontSize: 14, fontWeight: "600", color: "#fff" }}
-                  >
-                    {"entrar com linkedin".toUpperCase()}
-                  </Text>
-                </Button>
-              </OptionContainer>
             </AuthOptions>
           </ContentContainer>
         </GradientContainer>
