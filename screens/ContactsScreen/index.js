@@ -1,9 +1,9 @@
 import React from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
-import { Thumbnail, Button, Text, StyleSheet } from "native-base";
+import { Thumbnail, Text } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Header, Content, Tab, Tabs } from "native-base";
+import { Tab, Tabs } from "native-base";
 
 //Components
 import GradientContainer from "../../components/GradientContainer";

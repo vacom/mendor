@@ -11,6 +11,7 @@ import HeaderRight from "./HeaderRight";
 import InputMessageBar from "./InputMessageBar";
 import Label from "./Label";
 import Message from "./Message";
+import SignUpHeader from "./SignUpHeader";
 
 export {
   GradientContainer,
@@ -24,5 +25,6 @@ export {
   HeaderRight,
   InputMessageBar,
   Label,
-  Message
+  Message,
+  SignUpHeader
 };

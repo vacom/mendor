@@ -33,10 +33,29 @@ const isSignedIn = () => {
   });
 };
 
+const allFalse = data => {
+  for (var i in data) {
+    if (data[i] === true) return false;
+  }
+  return true;
+};
+
+const countAllTrue = data => {
+  let count = 0
+  for (var i in data) {
+    if (data[i] === true) {
+      count++;
+    }
+  }
+  return count;
+};
+
 export {
   GRAPHQL_ENDPOINT,
   GRAPHQL_SUBSCRIPTION_ENDPOINT,
   SOCIAL_ICONS,
   isSignedIn,
-  onSignOut
+  onSignOut,
+  allFalse,
+  countAllTrue
 };

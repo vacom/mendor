@@ -61,7 +61,7 @@ class NotificationsScreen extends React.Component {
       <Container>
         <GradientContainer>
           {Object.keys(allNotifications).length <= 0 ? (
-            <Placeholder />
+            <Placeholder text="Sem Notificações" IconName="notifications-none"/>
           ) : (
             <ScrollView style={{ paddingBottom: 30 }}>
               {allNotifications.map(data => {

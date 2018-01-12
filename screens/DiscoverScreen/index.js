@@ -17,6 +17,7 @@ import {
   CardBody,
   CardRight
 } from "../../components/Card";
+import { Loading } from "../../components/index";
 //GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { BASIC_USER_QUERY } from "../../api/Queries/User";
