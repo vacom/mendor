@@ -17,7 +17,10 @@ const SOCIAL_ICONS = {
 
 //const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
 
-const onSignOut = () => AsyncStorage.removeItem("graphcoolToken");
+const onSignOut = () => {
+  AsyncStorage.removeItem("graphcoolToken");
+  AsyncStorage.removeItem("@mendor:userId");
+};
 
 const isSignedIn = () => {
   return new Promise((resolve, reject) => {
@@ -41,7 +44,7 @@ const allFalse = data => {
 };
 
 const countAllTrue = data => {
-  let count = 0
+  let count = 0;
   for (var i in data) {
     if (data[i] === true) {
       count++;

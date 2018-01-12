@@ -1,5 +1,6 @@
 import { Notifications } from "expo";
 import React from "react";
+import { Root } from "native-base";
 import { StackNavigator } from "react-navigation";
 //Main Tab Navigation
 import MainTabNavigator from "./MainTabNavigator";
@@ -119,7 +120,11 @@ export default class RootNavigator extends React.Component {
     }
 
     const RootStackNavigator = createRootNavigator(signedIn);
-    return <RootStackNavigator />;
+    return (
+      <Root>
+        <RootStackNavigator />
+      </Root>
+    );
   }
 
   _registerForPushNotifications() {

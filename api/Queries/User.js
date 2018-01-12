@@ -29,9 +29,12 @@ const USER_PROFILE_QUERY = gql`
       name
       avatar
       profile {
+        id
         about
         role
         company
+        profession
+        location
       }
       competences(first: 5) {
         interest {

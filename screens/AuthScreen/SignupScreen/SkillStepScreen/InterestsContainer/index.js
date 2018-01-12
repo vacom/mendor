@@ -43,7 +43,7 @@ class InterestsContainer extends React.Component {
   };
   render() {
     if (this.props.interestsQuery && this.props.interestsQuery.loading) {
-      return <Loading />;
+      return <Loading dark/>;
     }
     if (this.props.interestsQuery && this.props.interestsQuery.error) {
       return <Error />;

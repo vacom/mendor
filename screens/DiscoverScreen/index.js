@@ -108,7 +108,9 @@ class DiscoverScreen extends React.Component {
     if (!res.loading) {
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,
-        avatar: res.data.user.avatar
+        avatar:
+          res.data.user.avatar ||
+          "https://ui-avatars.com/api/?size=128&name=mendor"
       });
       this.setState({
         userId: res.data.user.id

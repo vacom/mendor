@@ -1,5 +1,6 @@
 import React from "react";
-import { Content, Thumbnail, Text } from "native-base";
+import { TouchableOpacity, RefreshControl } from "react-native";
+import { Content, Thumbnail, ActionSheet } from "native-base";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { LinearGradient } from "expo";
 import styled from "styled-components/native";
@@ -16,22 +17,79 @@ import { Error, Loading } from "../../components/index";
 import { graphql, compose } from "react-apollo";
 import { USER_PROFILE_QUERY } from "../../api/Queries/User";
 //Utils
-import { SOCIAL_ICONS } from "../../constants/Utils";
+import { SOCIAL_ICONS, onSignOut } from "../../constants/Utils";
 
-class ProfileScreen extends React.Component {
-  static navigationOptions = {
-    title: "Profile",
-    headerRight: (
-      <HeaderRightContainer>
-        <HeaderRightElement>
-          <MaterialIcons name="more-vert" size={24} color="#ffffff" />
-        </HeaderRightElement>
-      </HeaderRightContainer>
-    )
+class ProfileScreen extends React.PureComponent {
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      title: "Profile",
+      headerRight: (
+        <HeaderRightContainer>
+          <HeaderRightElement>
+            <TouchableOpacity onPress={params.openActions}>
+              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </HeaderRightElement>
+        </HeaderRightContainer>
+      )
+    };
+  };
+  state = {
+    refreshing: false
+  };
+  componentDidMount() {
+    this.props.navigation.setParams({
+      openActions: this._onOpenActions
+    });
+  }
+  _onOpenActions = () => {
+    var BUTTONS = ["Editar Perfil", "Termos e Condições", "Sair", "Cancelar"];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 3,
+        destructiveButtonIndex: 2,
+        title: "Configurações"
+      },
+      buttonIndex => {
+        console.log(buttonIndex);
+        switch (buttonIndex) {
+          case 0:
+            this._goToEditProfile();
+            break;
+          case 2:
+            this._onUserSignOut();
+            break;
+        }
+      }
+    );
+  };
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    //gets new content from the DB
+    this.props.userProfileQuery.refetch();
+    //clears the loading
+    if (!this.props.userProfileQuery.loading) {
+      this.setState({ refreshing: false });
+    }
+  };
+  _goToEditProfile = () => {
+    const data = this.props.userProfileQuery.User.profile;
+    const userId = this.props.userProfileQuery.User.id;
+    this.props.navigation.navigate("EditProfile", { data, userId });
+  };
+  _onUserSignOut = () => {
+    //clears the user session id and token
+    onSignOut();
+    //redirects the user to auth screen
+    setTimeout(() => {
+      this.props.navigation.navigate("AuthScreen");
+    }, 150);
   };
   render() {
     if (this.props.userProfileQuery && this.props.userProfileQuery.loading) {
-      return <Loading />;
+      return <Loading dark />;
     }
     if (this.props.userProfileQuery && this.props.userProfileQuery.error) {
       return <Error />;
@@ -49,9 +107,17 @@ class ProfileScreen extends React.Component {
       _projectsMeta,
       _technologiesMeta
     } = User;
+
     return (
       <Container>
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
           <Grid>
             <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
               <AboutContainer>
@@ -64,13 +130,23 @@ class ProfileScreen extends React.Component {
                   </CardLeft>
                   <CardBody>
                     <H1>{User.name}</H1>
-                    <P>{`${profile.role} na ${profile.company}`}</P>
+                    {profile !== null ? (
+                      <P>{`${profile.role} na ${profile.company}`}</P>
+                    ) : (
+                      <P>Sem Empresa</P>
+                    )}
                   </CardBody>
                 </CardContainer>
                 <AboutTextContainer>
                   <Row>
                     <Col>
-                      <P style={{ lineHeight: 24 }}>{profile.about}</P>
+                      {profile !== null ? (
+                        <P style={{ lineHeight: 24 }}>{profile.about}</P>
+                      ) : (
+                        <P style={{ lineHeight: 24 }}>
+                          Comece por escrever algo sobre si e as suas ideias.
+                        </P>
+                      )}
                     </Col>
                   </Row>
                 </AboutTextContainer>
@@ -105,21 +181,27 @@ class ProfileScreen extends React.Component {
                 <Span style={{ color: "#757575" }}>
                   {"competências".toUpperCase()}
                 </Span>
-
-                <LabelsContainer>
-                  {competences.map(data => {
-                    return (
-                      <LabelContainer key={data.interest.id}>
-                        <Label text={data.interest.title} />
+                {Object.keys(competences).length <= 0 ? (
+                  <P style={{ color: "gray", marginTop: 10 }}>
+                    Ainda não adicionou competências.
+                  </P>
+                ) : (
+                  <LabelsContainer>
+                    {competences.map(data => {
+                      return (
+                        <LabelContainer key={data.interest.id}>
+                          <Label text={data.interest.title} />
+                        </LabelContainer>
+                      );
+                    })}
+                    {_competencesMeta.count >
+                    Object.keys(competences).length ? (
+                      <LabelContainer>
+                        <Label text="..." />
                       </LabelContainer>
-                    );
-                  })}
-                  {_competencesMeta.count > Object.keys(competences).length ? (
-                    <LabelContainer>
-                      <Label text="..." />
-                    </LabelContainer>
-                  ) : null}
-                </LabelsContainer>
+                    ) : null}
+                  </LabelsContainer>
+                )}
               </PortfolioContainer>
             </Row>
 
@@ -128,23 +210,29 @@ class ProfileScreen extends React.Component {
                 <Span style={{ color: "#757575" }}>
                   {"tecnologias".toUpperCase()}
                 </Span>
-                <LabelsContainer>
+                {Object.keys(technologies).length <= 0 ? (
+                  <P style={{ color: "gray", marginTop: 10 }}>
+                    Ainda não adicionou tecnologias.
+                  </P>
+                ) : (
                   <LabelsContainer>
-                    {technologies.map(data => {
-                      return (
-                        <LabelContainer key={data.id}>
-                          <Label text={data.name} />
+                    <LabelsContainer>
+                      {technologies.map(data => {
+                        return (
+                          <LabelContainer key={data.id}>
+                            <Label text={data.name} />
+                          </LabelContainer>
+                        );
+                      })}
+                      {_technologiesMeta.count >
+                      Object.keys(technologies).length ? (
+                        <LabelContainer>
+                          <Label text="..." />
                         </LabelContainer>
-                      );
-                    })}
-                    {_technologiesMeta.count >
-                    Object.keys(technologies).length ? (
-                      <LabelContainer>
-                        <Label text="..." />
-                      </LabelContainer>
-                    ) : null}
+                      ) : null}
+                    </LabelsContainer>
                   </LabelsContainer>
-                </LabelsContainer>
+                )}
               </PortfolioContainer>
             </Row>
 
@@ -153,28 +241,33 @@ class ProfileScreen extends React.Component {
                 <Span style={{ color: "#757575" }}>
                   {"projetos".toUpperCase()}
                 </Span>
-
-                {projects.map(data => {
-                  return (
-                    <ProjectContainer key={data.id}>
-                      <P style={{ color: "#000000", marginBottom: 4 }}>
-                        {data.title}
-                      </P>
-                      <Span style={{ color: "#9E9E9E", lineHeight: 22 }}>
-                        {data.description}
-                      </Span>
-                      <LabelsContainer>
-                        {data.technologies.map(res => {
-                          return (
-                            <LabelContainer key={res.id}>
-                              <Label text={res.name} />
-                            </LabelContainer>
-                          );
-                        })}
-                      </LabelsContainer>
-                    </ProjectContainer>
-                  );
-                })}
+                {Object.keys(technologies).length <= 0 ? (
+                  <P style={{ color: "gray", marginTop: 10 }}>
+                    Ainda não adicionou projetos.
+                  </P>
+                ) : (
+                  projects.map(data => {
+                    return (
+                      <ProjectContainer key={data.id}>
+                        <P style={{ color: "#000000", marginBottom: 4 }}>
+                          {data.title}
+                        </P>
+                        <Span style={{ color: "#9E9E9E", lineHeight: 22 }}>
+                          {data.description}
+                        </Span>
+                        <LabelsContainer>
+                          {data.technologies.map(res => {
+                            return (
+                              <LabelContainer key={res.id}>
+                                <Label text={res.name} />
+                              </LabelContainer>
+                            );
+                          })}
+                        </LabelsContainer>
+                      </ProjectContainer>
+                    );
+                  })
+                )}
               </PortfolioContainer>
             </Row>
 
@@ -182,28 +275,34 @@ class ProfileScreen extends React.Component {
               <Span style={{ color: "#757575" }}>
                 {"contactos".toUpperCase()}
               </Span>
-              <LinksContainer>
-                {socials.map(data => {
-                  return (
-                    <LinkContainer key={data.id}>
-                      <Row>
-                        <Col style={{ width: 40 }}>
-                          <MaterialCommunityIcons
-                            name={SOCIAL_ICONS[data.type]}
-                            size={24}
-                            color="#757575"
-                          />
-                        </Col>
-                        <Col>
-                          <P style={{ color: "#757575", marginTop: 4 }}>
-                            {data.content}
-                          </P>
-                        </Col>
-                      </Row>
-                    </LinkContainer>
-                  );
-                })}
-              </LinksContainer>
+              {Object.keys(technologies).length <= 0 ? (
+                <P style={{ color: "gray", marginTop: 10 }}>
+                  Ainda não adicionou contatos.
+                </P>
+              ) : (
+                <LinksContainer>
+                  {socials.map(data => {
+                    return (
+                      <LinkContainer key={data.id}>
+                        <Row>
+                          <Col style={{ width: 40 }}>
+                            <MaterialCommunityIcons
+                              name={SOCIAL_ICONS[data.type]}
+                              size={24}
+                              color="#757575"
+                            />
+                          </Col>
+                          <Col>
+                            <P style={{ color: "#757575", marginTop: 4 }}>
+                              {data.content}
+                            </P>
+                          </Col>
+                        </Row>
+                      </LinkContainer>
+                    );
+                  })}
+                </LinksContainer>
+              )}
             </ContactContainer>
           </Grid>
         </Content>

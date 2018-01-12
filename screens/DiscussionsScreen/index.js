@@ -24,15 +24,10 @@ class DiscussionsScreen extends React.Component {
       </HeaderRightContainer>
     )
   };
-
-  componentDidMount() {
-    this.setState({
-      userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv",
-      avatar:
-        "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=e027e305b330218e0780f28c2cdc1a31&oe=5ABE2638"
-    });
-  }
-
+  state = {
+    avatar: "https://ui-avatars.com/api/?size=128&name=mendor",
+    userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
+  };
   _goToDiscussion = (id, title, avatar, userIdLogged) => () => {
     this.props.navigation.navigate("DiscussionView", {
       id: id,
