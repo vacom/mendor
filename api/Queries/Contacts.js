@@ -42,7 +42,10 @@ const SEARCH_CONTACTS = gql`
   query searchContacts($id: ID, $query: String!) {
     allContacts(
       filter: {
-        AND: [{ contactID: { name_contains: $query } }, { user: { id: $id } }]
+        AND: [
+          { contactID_some: { name_contains: $query } }
+          { user: { id: $id } }
+        ]
       }
     ) {
       contactID {

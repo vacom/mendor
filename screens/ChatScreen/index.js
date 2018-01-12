@@ -81,17 +81,23 @@ class ChatScreen extends React.Component {
   _goToAddChat = () => {
     this.props.navigation.navigate("AddChat", {});
   };
-  _goToChatView = (id, name, users) => {
+  _goToChatView = (id, users) => {
     let avatar = "";
-    if (users.length > 2) {
+    let name = "";
+    const usersLen = users.length;
+    if (users.length > 1) {
       avatar =
         "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
-    } else {
-      users.map(user => {
-        if (user.id != this.state.userIdLogged) {
-          avatar = user.avatar;
+      users.map((user, i) => {
+        if (usersLen === i + 1) {
+          name += user.name
+        } else {
+          name += user.name + ", "
         }
       });
+    } else {
+      avatar = users[0].avatar;
+      name = users[0].name;
     }
     this.props.navigation.navigate("ChatView", {
       name: name,
@@ -128,15 +134,11 @@ class ChatScreen extends React.Component {
     };
     const _renderMessageAvatar = data => {
       let avatar = "";
-      if (data.users.length > 2) {
+      if (data.users.length > 1) {
         avatar =
           "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
       } else {
-        data.users.map(user => {
-          if (user.id != this.state.userIdLogged) {
-            avatar = user.avatar;
-          }
-        });
+        avatar = data.users[0].avatar;
       }
       return (
         <Thumbnail
@@ -146,6 +148,23 @@ class ChatScreen extends React.Component {
           }}
         />
       );
+    };
+
+    const _renderMessageName = users => {
+      let name = "";
+      const usersLen = users.length;
+      if (users.length > 1) {
+        users.map((user, i) => {
+          if (usersLen === i + 1) {
+            name += user.name
+          } else {
+            name += user.name + ", "
+          }
+        });
+      } else {
+        name = users[0].name;
+      }
+      return name;
     };
 
     const { AllChats } = this.props;
@@ -167,7 +186,7 @@ class ChatScreen extends React.Component {
                       <View key={data.id}>
                         <Card
                           onPress={() =>
-                            this._goToChatView(data.id, data.name, data.users)
+                            this._goToChatView(data.id, data.users)
                           }
                         >
                           <CardContainer>
@@ -181,7 +200,7 @@ class ChatScreen extends React.Component {
                                   fontWeight: "600"
                                 }}
                               >
-                                {data.name}
+                                {_renderMessageName(data.users)}
                               </Text>
                               {_renderMessageContent(data)}
                             </CardBody>

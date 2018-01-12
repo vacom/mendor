@@ -3,7 +3,7 @@ import { View, Text, Input, Thumbnail } from "native-base";
 import styled from "styled-components/native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import GradientContainer from "../../../components/GradientContainer";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity, TouchableHighlight } from "react-native";
 import { Error, Loading } from "../../../components/index";
 import {
   Card,
@@ -17,7 +17,7 @@ import {
 import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_CONTACTS_QUERY } from "../../../api/Queries/Contacts";
 import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
-import { ALL_INDIVIDUAL_CHATS_OF_USERS } from "../../../api/Queries/Contacts";
+import { ALL_INDIVIDUAL_CHATS_OF_USERS } from "../../../api/Queries/Chat";
 import { CREATE_CHAT_MUTATION } from "../../../api/Mutations/Chat";
 class ChatAddScreen extends React.Component {
   static navigationOptions = {
@@ -34,14 +34,17 @@ class ChatAddScreen extends React.Component {
   };
 
   handleChange() {
-    if (!this.state.typing) { // Só executa se nao estiver a escrever
+    if (!this.state.typing) {
+      // Só executa se nao estiver a escrever
       const self = this;
-      this.setState({ // Confirma que está a escrever
+      this.setState({
+        // Confirma que está a escrever
         typing: true
       });
       clearInterval(timer); // Reinicia eventual timer anterior (porque voltou a escrever)
       const timer = setTimeout(function() {
-        self.setState({ // Passado 5 segundos o user parou de escrever e executa a função (para nao fazer multiplos requests)
+        self.setState({
+          // Passado 5 segundos o user parou de escrever e executa a função (para nao fazer multiplos requests)
           typing: false
         });
         self._searchValue();
@@ -50,19 +53,63 @@ class ChatAddScreen extends React.Component {
   }
 
   _searchValue() {
-    if (!this.state.typing) { // Se não estiver a escrever
-      if (this.state.search_value != "") { // Se o input não estiver vazio
+    if (!this.state.typing) {
+      // Se não estiver a escrever
+      if (this.state.search_value != "") {
+        // Se o input não estiver vazio
         this._searchQuery(); // Faz o pedido
-        this.setState({ // Ativa o loading
+        this.setState({
+          // Ativa o loading
           loading: true
         });
       } else {
-        this.setState({ // Se for vazio, não realiza o search (mostra todos os contactos)
-          searched: false 
+        this.setState({
+          // Se for vazio, não realiza o search (mostra todos os contactos)
+          searched: false
         });
       }
     }
   }
+
+  _goToChat = async (id, avatar) => {
+    const res = await this.props.client.query({
+      query: ALL_INDIVIDUAL_CHATS_OF_USERS,
+      variables: {
+        id1: "cjbjhh0f9lbfz01142sd6tvuv", // id1 -> Sempre o id logado!!!
+        id2: id
+      }
+    });
+    if (!res.loading) {
+      if (res.data.allChats.length > 0) {
+        this.props.navigation.navigate("ChatView", {
+          name: res.data.allChats[0].users[0].name,
+          avatar: avatar,
+          id: res.data.allChats[0].id
+        });
+      } else {
+        try {
+          const res_mutation = await this.props.createChat({
+            variables: {
+              name: "created",
+              usersIds: [id, "cjbjhh0f9lbfz01142sd6tvuv"],
+              authorId: "cjbjhh0f9lbfz01142sd6tvuv",
+              isGroup: false
+            }
+           
+          });
+          if(!res_mutation.loading) {
+            this.props.navigation.navigate("ChatView", {
+              name: res_mutation.data.createChat.users[0].name,
+              avatar: res_mutation.data.createChat.users[0].avatar,
+              id: res_mutation.data.createChat.id
+            });
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+  };
 
   _searchQuery = async () => {
     const res = await this.props.client.query({
@@ -83,10 +130,13 @@ class ChatAddScreen extends React.Component {
   };
   render() {
     const _renderContacts = () => {
-      if (this.state.typing || this.state.loading) { // Se estiver a escrever ou o loading do search ativo
+      if (this.state.typing || this.state.loading) {
+        // Se estiver a escrever ou o loading do search ativo
         return <Loading />;
-      } else { // Se não estiver a escrever nem loading
-        if (this.state.searched) { // Se houver pesquisa mostra os dados da pesquisa
+      } else {
+        // Se não estiver a escrever nem loading
+        if (this.state.searched) {
+          // Se houver pesquisa mostra os dados da pesquisa
           if (this.state.searched_data.length > 0) {
             return this.state.searched_data.map((data, index) => {
               return (
@@ -96,7 +146,7 @@ class ChatAddScreen extends React.Component {
                       <Thumbnail
                         style={{ width: 48, height: 48 }}
                         source={{
-                          uri: data.contactID.avatar
+                          uri: data.contactID[0].avatar
                         }}
                       />
                     </CardLeft>
@@ -108,10 +158,10 @@ class ChatAddScreen extends React.Component {
                           color: "#000"
                         }}
                       >
-                        {data.contactID.name}
+                        {data.contactID[0].name}
                       </Text>
                       <Text style={{ fontSize: 14, color: "#757575" }}>
-                        {data.contactID.type == "MENTOR"
+                        {data.contactID[0].type == "MENTOR"
                           ? "Mentor"
                           : "Empreendedor"}
                       </Text>
@@ -130,7 +180,8 @@ class ChatAddScreen extends React.Component {
               </View>
             );
           }
-        } else { // Se não houver pesquisa mostra os dados dos contactos todos
+        } else {
+          // Se não houver pesquisa mostra os dados dos contactos todos
           if (this.props.allContacts && this.props.allContacts.loading) {
             return <Loading />;
           } else if (this.props.allContacts && this.props.allContacts.error) {
@@ -145,7 +196,7 @@ class ChatAddScreen extends React.Component {
                         <Thumbnail
                           style={{ width: 48, height: 48 }}
                           source={{
-                            uri: data.contactID.avatar
+                            uri: data.contactID[0].avatar
                           }}
                         />
                       </CardLeft>
@@ -157,20 +208,29 @@ class ChatAddScreen extends React.Component {
                             color: "#000"
                           }}
                         >
-                          {data.contactID.name}
+                          {data.contactID[0].name}
                         </Text>
                         <Text style={{ fontSize: 14, color: "#757575" }}>
-                          {data.contactID.type == "MENTOR"
+                          {data.contactID[0].type == "MENTOR"
                             ? "Mentor"
                             : "Empreendedor"}
                         </Text>
                       </CardBody>
                       <CardRight>
-                        <MaterialIcons
-                          name="message"
-                          size={22}
-                          color="#3F51B5"
-                        />
+                        <TouchableHighlight
+                          onPress={() =>
+                            this._goToChat(
+                              data.contactID[0].id,
+                              data.contactID[0].avatar
+                            )
+                          }
+                        >
+                          <MaterialIcons
+                            name="message"
+                            size={22}
+                            color="#3F51B5"
+                          />
+                        </TouchableHighlight>
                       </CardRight>
                     </CardContainer>
                   </Card>
@@ -229,7 +289,8 @@ const ChatAddScreenWithData = compose(
       variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" }
     }),
     name: "allContacts"
-  })
+  }),
+  graphql(CREATE_CHAT_MUTATION, { name: "createChat" })
 )(ChatAddScreen);
 export default withApollo(ChatAddScreenWithData);
 

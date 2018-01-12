@@ -9,7 +9,7 @@ const ALL_CHATS_QUERY = gql`
         content
         createdAt
       }
-      users {
+      users(filter: { id_not: "cjbjhh0f9lbfz01142sd6tvuv" }) {
         id
         avatar
         name
@@ -45,8 +45,14 @@ const ALL_INDIVIDUAL_CHATS_OF_USERS = gql`
       }
     ) {
       id
+      name
+      users(filter: { id_not: $id1 }) {
+        id
+        name
+        avatar
+      }
     }
   }
 `;
 
-export { ALL_CHATS_QUERY, ALL_MESSAGES_QUERY };
+export { ALL_CHATS_QUERY, ALL_MESSAGES_QUERY, ALL_INDIVIDUAL_CHATS_OF_USERS };

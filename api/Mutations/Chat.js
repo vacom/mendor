@@ -9,12 +9,28 @@ const CREATE_MESSAGE_MUTATION = gql`
 `;
 
 const CREATE_CHAT_MUTATION = gql`
-mutation createChat($name: String!, $usersIds: [User], $authorId:ID, $isGroup:boolean) {
-  createChat(name: "chat n", usersIds: [$usersIds], authorId: $authorId, isGroup: $isGroup) {
-    id
-    isGroup
+  mutation createChat(
+    $name: String!
+    $usersIds: [ID!]
+    $authorId: ID
+    $isGroup: Boolean
+  ) {
+    createChat(
+      name: $name
+      usersIds: $usersIds
+      authorId: $authorId
+      isGroup: $isGroup
+    ) {
+      id
+      name
+      isGroup
+      users(filter: { id_not: $authorId }) {
+        id
+        name
+        avatar
+      }
+    }
   }
-}
 `;
 
 export { CREATE_MESSAGE_MUTATION, CREATE_CHAT_MUTATION };
