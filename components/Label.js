@@ -43,7 +43,7 @@ const LabelContainerWithStyles = styled.View`
 
 const LabelContainer = (props) => {
     return (
-        <LabelContainerWithStyles>
+        <LabelContainerWithStyles {...props}>
             {props.children}
         </LabelContainerWithStyles>
     )
