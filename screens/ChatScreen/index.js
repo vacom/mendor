@@ -1,7 +1,15 @@
 import React from "react";
 import { ScrollView } from "react-native";
 import { Modal, TouchableHighlight, TouchableOpacity } from "react-native";
-import { Thumbnail, Button, Text, View, Fab, Icon } from "native-base";
+import {
+  Thumbnail,
+  Button,
+  Text,
+  View,
+  Fab,
+  Icon,
+  ActionSheet
+} from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose, withApollo } from "react-apollo";
@@ -13,7 +21,6 @@ import { ALL_CHATS_SUBSCRIPTION } from "../../api/Subscriptions/Chat";
 
 //Components
 import GradientContainer from "../../components/GradientContainer";
-import { ModalBottom } from "../../components/ModalBottom";
 import {
   HeaderRightContainer,
   HeaderRightElement
@@ -54,12 +61,28 @@ class ChatScreen extends React.Component {
     moment.locale("pt");
     this._subscribeChat();
     this.props.navigation.setParams({
-      openModal: this._setModalVisible(true)
+      openModal: this._setModalVisible
     });
   }
 
-  _setModalVisible = visible => () => {
-    this.setState({ modalVisible: visible });
+  _setModalVisible = () => {
+    var BUTTONS = [
+      "Marcar todas como lidas",
+
+    ];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 3,
+        destructiveButtonIndex: 2,
+        title: "Configurações"
+      },
+      buttonIndex => {
+        console.log(buttonIndex);
+        switch (buttonIndex) {
+        }
+      }
+    );
   };
 
   _subscribeChat = () => {
@@ -90,9 +113,9 @@ class ChatScreen extends React.Component {
         "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
       users.map((user, i) => {
         if (usersLen === i + 1) {
-          name += user.name
+          name += user.name;
         } else {
-          name += user.name + ", "
+          name += user.name + ", ";
         }
       });
     } else {
@@ -156,9 +179,9 @@ class ChatScreen extends React.Component {
       if (users.length > 1) {
         users.map((user, i) => {
           if (usersLen === i + 1) {
-            name += user.name
+            name += user.name;
           } else {
-            name += user.name + ", "
+            name += user.name + ", ";
           }
         });
       } else {
@@ -224,14 +247,6 @@ class ChatScreen extends React.Component {
                 <Icon name="add" />
               </Fab>
             </View>
-            <ModalBottom
-              visible={this.state.modalVisible}
-              close={this._setModalVisible(!this.state.modalVisible)}
-              content={[
-                { icon: "edit", text: "Editar perfil" },
-                { icon: "settings", text: "Configurações" }
-              ]}
-            />
           </ContainerView>
         );
       } else {

@@ -1,5 +1,5 @@
 import React from "react";
-import { Icon, View, Text } from "native-base";
+import { Icon, View, Text, ActionSheet } from "native-base";
 import {
   ScrollView,
   KeyboardAvoidingView,
@@ -16,7 +16,6 @@ import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
 //Components
 import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
-import { ModalBottom } from "../../../components/ModalBottom";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   HeaderRightContainer,
@@ -84,12 +83,31 @@ class ChatViewScreen extends React.Component {
     );
     this._subscribeMessages();
     this.props.navigation.setParams({
-      openModal: this._setModalVisible(true)
+      openModal: this._setModalVisible
     });
   }
 
-  _setModalVisible = visible => () => {
-    this.setState({ modalVisible: visible });
+  _setModalVisible = () => {
+    var BUTTONS = [
+      "Editar nome da conversa",
+      "Adicionar pessoas à conversa",
+      "Silenciar conversa",
+      "Sugestões de parceiros"
+    ];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 3,
+        destructiveButtonIndex: 2,
+        title: "Configurações"
+      },
+      buttonIndex => {
+        console.log(buttonIndex);
+        switch (buttonIndex) {
+          
+        }
+      }
+    );
   };
 
   _addMessage(e) {
@@ -154,16 +172,6 @@ class ChatViewScreen extends React.Component {
             avatar={this.state.avatar}
           />
           <View style={{ height: this.state.height }} />
-          <ModalBottom
-            visible={this.state.modalVisible}
-            close={this._setModalVisible(!this.state.modalVisible)}
-            content={[
-              { icon: "edit", text: "Editar nome da conversa" },
-              { icon: "person-add", text: "Adicionar pessoas à conversa" },
-              { icon: "notifications-off", text: "Silenciar conversa" },
-              { icon: "group-add", text: "Sugestões de parceiros", badge:true, notifications:"2"},
-            ]}
-          />
         </KeyboardAvoidingView>
       );
     }

@@ -47,7 +47,7 @@ class AddDiscussion extends React.Component {
       cover: null,
       description: "",
       title: "",
-      authorId: "cjbjhh0f9lbfz01142sd6tvuv"
+      userId: "cjbjhh0f9lbfz01142sd6tvuv"
     };
   }
   onPickerChange(value) {
@@ -117,7 +117,7 @@ class AddDiscussion extends React.Component {
   };
 
   _submitMutation = async () => {
-    const { title, description, categoryId, cover, authorId } = this.state;
+    const { title, description, categoryId, cover, userId } = this.state;
     try {
       await this.props.createDiscussion({
         variables: {
@@ -125,7 +125,7 @@ class AddDiscussion extends React.Component {
           description,
           categoryId,
           cover,
-          authorId
+          userId
         },
         update: (proxy, { data: { createDiscussion } }) => {
           const data = proxy.readQuery({
