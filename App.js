@@ -23,7 +23,7 @@ import { WebSocketLink } from "apollo-link-ws";
 //Utils
 import {
   GRAPHQL_ENDPOINT,
-  GRAPHQL_SUBSCRIPTION_ENDPOINT
+  GRAPHQL_SUBSCRIPTION_ENDPOINT,
 } from "./constants/Utils";
 import "./ReactotronConfig";
 
@@ -104,7 +104,7 @@ export default class App extends React.Component {
             {Platform.OS === "android" && (
               <View style={styles.statusBarUnderlay} />
             )}
-            <RootNavigation />
+            <RootNavigation/>
           </View>
         </ApolloProvider>
       );

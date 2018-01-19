@@ -36,6 +36,10 @@ const isSignedIn = () => {
   });
 };
 
+/*const getUserId = async () => {
+  return await AsyncStorage.getItem("@mendor:userId");
+};*/
+
 const allFalse = data => {
   for (var i in data) {
     if (data[i] === true) return false;

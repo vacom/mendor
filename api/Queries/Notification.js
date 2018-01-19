@@ -6,8 +6,8 @@ import gql from "graphql-tag";
 
 //collects all the notifications for the user
 const ALL_NOTIFICATIONS_QUERY = gql`
-  query {
-    allNotifications(filter: { hide_not: true }) {
+  query allNotifications($userId: ID!) {
+    allNotifications(filter: { hide_not: true, user: { id: $userId } }) {
       id
       type
       createdAt

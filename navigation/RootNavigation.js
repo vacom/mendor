@@ -1,4 +1,5 @@
 import { Notifications } from "expo";
+import { AsyncStorage } from "react-native";
 import React from "react";
 import { Root } from "native-base";
 import { StackNavigator } from "react-navigation";
@@ -31,7 +32,7 @@ import SkillStepScreen from "../screens/AuthScreen/SignupScreen/SkillStepScreen/
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
-import { isSignedIn, onSignOut } from "../constants/Utils";
+import { isSignedIn } from "../constants/Utils";
 
 export const createRootNavigator = (signedIn = false) => {
   return StackNavigator(
@@ -95,19 +96,21 @@ export const createRootNavigator = (signedIn = false) => {
 export default class RootNavigator extends React.Component {
   state = {
     signedIn: false,
-    checkedSignIn: false
+    checkedSignIn: false,
+    userId: ""
   };
   componentWillMount() {
     isSignedIn()
       .then(res => {
-        this.setState({ signedIn: res, checkedSignIn: true });
+        AsyncStorage.getItem("@mendor:userId").then(userId => {
+          this.setState({ signedIn: res, userId, checkedSignIn: true });
+        });
       })
       .catch(err => alert("An error occurred: ", err));
   }
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
   }
-
   componentWillUnmount() {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
@@ -122,7 +125,7 @@ export default class RootNavigator extends React.Component {
     const RootStackNavigator = createRootNavigator(signedIn);
     return (
       <Root>
-        <RootStackNavigator />
+        <RootStackNavigator screenProps={{ userId: this.state.userId }} />
       </Root>
     );
   }

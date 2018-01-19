@@ -68,9 +68,8 @@ export default TabNavigator(
     headerTintColor: "#ffffff",
     tabBarOptions: {
       style: {
-        backgroundColor: '#ffffff',
-      },
+        backgroundColor: "#ffffff"
+      }
     }
-    
   }
 );
