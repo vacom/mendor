@@ -185,7 +185,7 @@ class DiscoverScreen extends React.Component {
                     </UserContainer>
                     <LinksContainer>
                       <LinkContainer>
-                        <Row>
+                        <Row style={{ height: 39 }}>
                           <Col style={{ width: 40 }}>
                             <MaterialIcons
                               name="work"
@@ -201,7 +201,7 @@ class DiscoverScreen extends React.Component {
                         </Row>
                       </LinkContainer>
                       <LinkContainer>
-                        <Row>
+                        <Row style={{ height: 39 }}>
                           <Col style={{ width: 40 }}>
                             <MaterialIcons
                               name="location-on"
@@ -217,7 +217,7 @@ class DiscoverScreen extends React.Component {
                         </Row>
                       </LinkContainer>
                       <LinkContainer>
-                        <Row>
+                        <Row style={{ height: 39 }}>
                           <Col style={{ width: 40 }}>
                             <MaterialCommunityIcons
                               name="radar"
@@ -236,15 +236,17 @@ class DiscoverScreen extends React.Component {
                         <Span style={{ color: "#000000" }}>
                           {"competências".toUpperCase()}
                         </Span>
-                        <LabelsContainer>
-                          {item.competences.map(data => {
-                            return (
-                              <LabelContainer key={data.interest.id}>
-                                <Label text={data.interest.title} />
-                              </LabelContainer>
-                            );
-                          })}
-                        </LabelsContainer>
+                        <LabelsControl>
+                          <LabelsContainer>
+                              {item.competences.map(data => {
+                                  return (
+                                      <LabelContainer key={data.interest.id}>
+                                        <Label text={data.interest.title} />
+                                      </LabelContainer>
+                                  );
+                              })}
+                          </LabelsContainer>
+                        </LabelsControl>
                       </SkillsContainer>
                     </Row>
                     <Row
@@ -330,7 +332,7 @@ const LinksContainer = styled.View`
 
 //Link
 const LinkContainer = styled.View`
-  padding-bottom: 15px;
+  padding-bottom: 0;
 `;
 
 //Skills
@@ -338,4 +340,10 @@ const SkillsContainer = styled.View`
   padding-right: 15px;
   padding-left: 15px;
   margin-bottom: 30px;
+`;
+
+//Labels
+const LabelsControl = styled.View`
+  height: 140px;
+  overflow: hidden;
 `;

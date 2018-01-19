@@ -1,6 +1,6 @@
 import React from "react";
-import { TouchableOpacity, RefreshControl } from "react-native";
-import { Content, Thumbnail, ActionSheet } from "native-base";
+import { TouchableOpacity, RefreshControl, ScrollView } from "react-native";
+import { Content, Thumbnail, ActionSheet, Card } from "native-base";
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { LinearGradient } from "expo";
 import styled from "styled-components/native";
@@ -177,12 +177,12 @@ class ProfileScreen extends React.PureComponent {
             </LinearGradient>
 
             <Row>
-              <PortfolioContainer>
+              <PortfolioContainer style={{ marginTop: 30 }}>
                 <Span style={{ color: "#757575" }}>
                   {"competências".toUpperCase()}
                 </Span>
                 {Object.keys(competences).length <= 0 ? (
-                  <P style={{ color: "gray", marginTop: 10 }}>
+                  <P style={{ color: "#757575", marginTop: 10 }}>
                     Ainda não adicionou competências.
                   </P>
                 ) : (
@@ -206,12 +206,12 @@ class ProfileScreen extends React.PureComponent {
             </Row>
 
             <Row>
-              <PortfolioContainer>
+              <PortfolioContainer style={{ marginTop: 30 }}>
                 <Span style={{ color: "#757575" }}>
                   {"tecnologias".toUpperCase()}
                 </Span>
                 {Object.keys(technologies).length <= 0 ? (
-                  <P style={{ color: "gray", marginTop: 10 }}>
+                  <P style={{ color: "#757575", marginTop: 10 }}>
                     Ainda não adicionou tecnologias.
                   </P>
                 ) : (
@@ -236,39 +236,58 @@ class ProfileScreen extends React.PureComponent {
               </PortfolioContainer>
             </Row>
 
+
+            <PortfolioContainer style={{ marginTop: 30 }}>
+              <Span style={{ color: "#757575" }}>
+                {"projetos".toUpperCase()}
+              </Span>
+            </PortfolioContainer>
             <Row>
-              <PortfolioContainer>
-                <Span style={{ color: "#757575" }}>
-                  {"projetos".toUpperCase()}
-                </Span>
-                {Object.keys(technologies).length <= 0 ? (
-                  <P style={{ color: "gray", marginTop: 10 }}>
+              {Object.keys(technologies).length <= 0 ? (
+                <PortfolioContainer>
+                  <P style={{ color: "#757575", marginTop: 10 }}>
                     Ainda não adicionou projetos.
                   </P>
-                ) : (
-                  projects.map(data => {
-                    return (
-                      <ProjectContainer key={data.id}>
-                        <P style={{ color: "#000000", marginBottom: 4 }}>
-                          {data.title}
-                        </P>
-                        <Span style={{ color: "#9E9E9E", lineHeight: 22 }}>
-                          {data.description}
-                        </Span>
-                        <LabelsContainer>
-                          {data.technologies.map(res => {
-                            return (
-                              <LabelContainer key={res.id}>
-                                <Label text={res.name} />
-                              </LabelContainer>
-                            );
-                          })}
-                        </LabelsContainer>
-                      </ProjectContainer>
-                    );
-                  })
-                )}
-              </PortfolioContainer>
+                </PortfolioContainer>
+              ) : (
+                projects.map(data => {
+                  return (
+                    <ScrollView
+                        style={{ paddingTop: 10, paddingBottom: 10 }}
+                        contentContainerStyle={{paddingHorizontal: 20}}
+                        key={data.id}
+                        horizontal
+                        decelerationRate={0}
+                        snapToInterval={320}
+                        snapToAlignment={"center"}
+                    >
+                      <Card style={{ marginRight: 5 }}>
+                        <ProjectContainer>
+                          <P style={{ color: "#000000", marginBottom: 4 }}>
+                            {data.title}
+                          </P>
+                          <ProjectControler>
+                            <Span style={{ color: "#9E9E9E", lineHeight: 22 }}>
+                              {data.description}
+                            </Span>
+                          </ProjectControler>
+                          <LabelsControl>
+                            <LabelsContainer>
+                              {data.technologies.map(res => {
+                                return (
+                                  <LabelContainer key={res.id}>
+                                    <Label text={res.name} />
+                                  </LabelContainer>
+                                );
+                              })}
+                            </LabelsContainer>
+                          </LabelsControl>
+                        </ProjectContainer>
+                      </Card>
+                    </ScrollView>
+                  );
+                })
+              )}
             </Row>
 
             <ContactContainer>
@@ -276,7 +295,7 @@ class ProfileScreen extends React.PureComponent {
                 {"contactos".toUpperCase()}
               </Span>
               {Object.keys(technologies).length <= 0 ? (
-                <P style={{ color: "gray", marginTop: 10 }}>
+                <P style={{ color: "#757575", marginTop: 10 }}>
                   Ainda não adicionou contatos.
                 </P>
               ) : (
@@ -374,7 +393,6 @@ const NumberContainer = styled.View`
 --Skills Styles
 */
 const PortfolioContainer = styled.View`
-  margin-top: 30px;
   padding-left: 20px;
   padding-right: 20px;
 `;
@@ -384,8 +402,14 @@ const PortfolioContainer = styled.View`
 */
 
 const ProjectContainer = styled.View`
-  margin-top: 15px;
-  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 2px;
+  width: 300px;
+`;
+
+const ProjectControler = styled.View`
+  overflow: hidden;
+  height: 88px;
 `;
 
 /*
@@ -404,4 +428,10 @@ const LinksContainer = styled.View`
 
 const LinkContainer = styled.View`
   margin-bottom: 12px;
+`;
+
+//Labels
+const LabelsControl = styled.View`
+  height: 52px;
+  overflow: hidden;
 `;
