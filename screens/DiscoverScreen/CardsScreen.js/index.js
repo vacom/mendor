@@ -61,13 +61,13 @@ class CardsScreen extends React.Component {
   render() {
     console.log(this.props.data);
     return (
-      <CardsContainer>
+      <CardsContainer style={{ height: 200 }}>
         <DeckSwiper
           onSwipeLeft={data => this._onRemoveUser(data)}
           onSwipeRight={data => this._onAddUser(data)}
           dataSource={this.props.data}
           renderItem={item => (
-            <Card style={{ padding: 15, borderRadius: 15 }}>
+            <Card style={{ elevation: 3, padding: 15, borderRadius: 15 }}>
               <UserContainer>
                 <CardContainer>
                   <CardLeft>
@@ -206,7 +206,7 @@ const H1 = styled.Text`
 
 const P = styled.Text`
   font-size: 16px;
-  line-height: 18px;
+  line-height: 19px;
   color: #757575;
   font-weight: 400;
 `;
@@ -225,6 +225,9 @@ const UserContainer = styled.View`
 //Cards
 const CardsContainer = styled.View`
   padding: 10px;
+  flex-direction: column;
+  justify-content: center;
+  background-color: red;
 `;
 
 //Links

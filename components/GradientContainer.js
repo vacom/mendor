@@ -14,11 +14,7 @@ const GradientContainer = (props) => {
             <LinearGradient
                 colors={['#3F54AF' , '#B39DDB']}
                 style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: 0,
-                    height: Dimensions.get("window").height,
+                    flex: 1
                 }}
             >
                 {props.children}

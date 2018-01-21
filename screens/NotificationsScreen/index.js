@@ -131,7 +131,7 @@ class NotificationsScreen extends React.Component {
             />
           ) : (
             <ScrollView
-              style={{ paddingBottom: 30 }}
+              contentContainerStyle={{paddingVertical: 5}}
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.refreshing}
