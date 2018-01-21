@@ -1,5 +1,6 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
+import { ImagePicker } from "expo";
 //Components
 import {
   Text,
@@ -22,10 +23,15 @@ import {
 import { Error, Loading } from "../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
-import { UPDATE_USER_PROFILE_MUTATION } from "../../../api/Mutations/User";
+import {
+  UPDATE_USER_PROFILE_MUTATION,
+  UPDATE_USER_AVATAR_MUTATION
+} from "../../../api/Mutations/User";
 import { USER_PROFILE_QUERY } from "../../../api/Queries/User";
+import { UPLOAD_PHOTO_FUNC } from "../../../api/Functions/Upload";
 //Utils
 import Toast from "react-native-root-toast";
+import { guid } from "../../../constants/Utils";
 
 class ProfileEditScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -44,13 +50,16 @@ class ProfileEditScreen extends React.Component {
     };
   };
   state = {
+    userId: "",
     profileId: "",
     company: "",
     profession: "",
     role: "",
     about: "",
     location: "",
-    loading: true
+    loading: true,
+    avatarId: "",
+    image: null
   };
 
   componentDidMount() {
@@ -64,16 +73,10 @@ class ProfileEditScreen extends React.Component {
       this.setState({ loading: false });
       return;
     }
-    const {
-      company,
-      profession,
-      role,
-      about,
-      location,
-      id: profileId
-    } = this.props.navigation.state.params.data;
-
+    const { data, userId } = this.props.navigation.state.params;
+    const { company, profession, role, about, location, id: profileId } = data;
     this.setState({
+      userId,
       company,
       profession,
       role,
@@ -93,7 +96,7 @@ class ProfileEditScreen extends React.Component {
       location,
       profileId
     } = this.state;
-    const { updateProfile, navigation } = this.props;
+    const { updateProfile } = this.props;
     //Checks if fields are empty
     if (!company || !profession || !role || !about || !location) {
       Toast.show("Fields can not be empty!");
@@ -101,7 +104,7 @@ class ProfileEditScreen extends React.Component {
     }
 
     try {
-      //Creates a new user on the DB
+      //Updates the information of the user and executes the upload function for avatar
       await updateProfile({
         variables: {
           profileId,
@@ -110,6 +113,30 @@ class ProfileEditScreen extends React.Component {
           profession,
           role,
           location
+        },
+        update: async () => {
+          try {
+            //navigation.goBack();
+            this._onUpdateAvatar();
+          } catch (e) {
+            console.log(e);
+            Toast.show("Erro! Verifique os campos.");
+          }
+        }
+      });
+    } catch (e) {
+      Toast.show(e);
+    }
+  };
+  _onUpdateAvatar = async () => {
+    const { avatarId, userId } = this.state;
+    const { updateUserAvatar, navigation } = this.props;
+    try {
+      //Updates the user avatar and goes back
+      await updateUserAvatar({
+        variables: {
+          avatarId,
+          userId
         },
         update: async () => {
           try {
@@ -124,7 +151,21 @@ class ProfileEditScreen extends React.Component {
       Toast.show(e);
     }
   };
-
+  _onPickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3]
+    });
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+      UPLOAD_PHOTO_FUNC(result.uri, guid()).then(file => {
+        this.setState({
+          avatarId: file.id
+        });
+        console.log("fileID = ", file.id);
+      });
+    }
+  };
   render() {
     return (
       <ScreenContainer>
@@ -142,6 +183,12 @@ class ProfileEditScreen extends React.Component {
                   backgroundColor: "transparent"
                 }}
               >
+                {this.state.image && (
+                  <Image
+                    source={{ uri: this.state.image }}
+                    style={{ width: 200, height: 200 }}
+                  />
+                )}
                 <Text
                   style={{ fontSize: 16, fontWeight: "400", color: "#fff" }}
                 >
@@ -149,7 +196,10 @@ class ProfileEditScreen extends React.Component {
                 </Text>
               </Row>
               <Row style={{ height: "auto", backgroundColor: "transparent" }}>
-                <Button style={{ backgroundColor: "#3F51B5", borderRadius: 2 }}>
+                <Button
+                  onPress={this._onPickImage}
+                  style={{ backgroundColor: "#3F51B5", borderRadius: 2 }}
+                >
                   <Text
                     style={{
                       fontSize: 14,
@@ -167,45 +217,47 @@ class ProfileEditScreen extends React.Component {
           {this.state.loading ? (
             <Loading dark />
           ) : (
-            <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
-              <Form style={{ paddingBottom: 60 }}>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Empresa</Label>
-                  <Input
-                    value={this.state.company}
-                    onChangeText={company => this.setState({ company })}
-                  />
-                </Item>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Profissão</Label>
-                  <Input
-                    value={this.state.profession}
-                    onChangeText={profession => this.setState({ profession })}
-                  />
-                </Item>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Função</Label>
-                  <Input
-                    value={this.state.role}
-                    onChangeText={role => this.setState({ role })}
-                  />
-                </Item>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Localização</Label>
-                  <Input
-                    value={this.state.location}
-                    onChangeText={location => this.setState({ location })}
-                  />
-                </Item>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Sobre mim/Ideia</Label>
-                  <Input
-                    value={this.state.about}
-                    onChangeText={about => this.setState({ about })}
-                  />
-                </Item>
-              </Form>
-            </Content>
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+              <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
+                <Form style={{ paddingBottom: 60 }}>
+                  <Item style={{ marginLeft: 0 }} floatingLabel>
+                    <Label style={{ color: "#757575" }}>Empresa</Label>
+                    <Input
+                      value={this.state.company}
+                      onChangeText={company => this.setState({ company })}
+                    />
+                  </Item>
+                  <Item style={{ marginLeft: 0 }} floatingLabel>
+                    <Label style={{ color: "#757575" }}>Profissão</Label>
+                    <Input
+                      value={this.state.profession}
+                      onChangeText={profession => this.setState({ profession })}
+                    />
+                  </Item>
+                  <Item style={{ marginLeft: 0 }} floatingLabel>
+                    <Label style={{ color: "#757575" }}>Função</Label>
+                    <Input
+                      value={this.state.role}
+                      onChangeText={role => this.setState({ role })}
+                    />
+                  </Item>
+                  <Item style={{ marginLeft: 0 }} floatingLabel>
+                    <Label style={{ color: "#757575" }}>Localização</Label>
+                    <Input
+                      value={this.state.location}
+                      onChangeText={location => this.setState({ location })}
+                    />
+                  </Item>
+                  <Item style={{ marginLeft: 0 }} floatingLabel>
+                    <Label style={{ color: "#757575" }}>Sobre mim/Ideia</Label>
+                    <Input
+                      value={this.state.about}
+                      onChangeText={about => this.setState({ about })}
+                    />
+                  </Item>
+                </Form>
+              </Content>
+            </KeyboardAvoidingView>
           )}
         </Container>
       </ScreenContainer>
@@ -224,7 +276,8 @@ export default compose(
         }
       ]
     })
-  })
+  }),
+  graphql(UPDATE_USER_AVATAR_MUTATION, { name: "updateUserAvatar" })
 )(ProfileEditScreen);
 
 const ScreenContainer = styled.View`

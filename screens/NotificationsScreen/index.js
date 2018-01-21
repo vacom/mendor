@@ -22,8 +22,9 @@ import { Error, Loading, Placeholder } from "../../components/index";
 import { graphql, compose } from "react-apollo";
 import { ALL_NOTIFICATIONS_QUERY } from "../../api/Queries/Notification";
 import { DISABLE_NOTIFICATION_MUTATION } from "../../api/Mutations/Notification";
+import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils
-//import { getUserId } from "../../constants/Utils";
+import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 import Toast from "react-native-root-toast";
 
 class NotificationsScreen extends React.Component {
@@ -143,15 +144,31 @@ class NotificationsScreen extends React.Component {
                   <Card key={data.id} onPress={this._openNotification(data)}>
                     <CardContainer>
                       <CardLeft>
-                        <Thumbnail
-                          style={{ width: 48, height: 48 }}
-                          source={{
-                            uri:
-                              data.type === "REQUEST"
-                                ? data.userRequest.avatar
-                                : data.discussion.cover
-                          }}
-                        />
+                        {data.type === "REQUEST" ? (
+                          <Thumbnail
+                            style={{ width: 48, height: 48 }}
+                            source={
+                              data.userRequest.avatar != null
+                                ? {
+                                    uri: GET_AVATAR_URL(
+                                      data.userRequest.avatar.secret,
+                                      "250x250",
+                                      data.userRequest.avatar.name
+                                    )
+                                  }
+                                : {
+                                    uri: IMAGE_PLACEHOLDER
+                                  }
+                            }
+                          />
+                        ) : (
+                          <Thumbnail
+                            style={{ width: 48, height: 48 }}
+                            source={{
+                              uri: data.discussion.cover || IMAGE_PLACEHOLDER
+                            }}
+                          />
+                        )}
                       </CardLeft>
                       <CardBody>
                         <Text style={{ fontSize: 14, color: "#000" }}>

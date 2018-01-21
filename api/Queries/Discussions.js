@@ -14,14 +14,22 @@ const DISCUSSION = gql`
       createdAt
       user {
         name
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
       }
       responses {
         id
         content
         author {
           id
-          avatar
+          avatar {
+            id
+            secret
+            name
+          }
         }
       }
     }
@@ -42,7 +50,11 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
         responses {
           id
           author {
-            avatar
+            avatar {
+              id
+              secret
+              name
+            }
           }
         }
       }

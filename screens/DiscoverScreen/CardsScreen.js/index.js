@@ -19,8 +19,10 @@ import styled from "styled-components/native";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import { CREATE_NOTIFICATION_MUTATION } from "../../../api/Mutations/Notification";
+import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 //Utils
 import Toast from "react-native-root-toast";
+import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
 class CardsScreen extends React.Component {
   state = {
@@ -57,6 +59,7 @@ class CardsScreen extends React.Component {
     console.log(data);
   };
   render() {
+    console.log(this.props.data);
     return (
       <CardsContainer>
         <DeckSwiper
@@ -70,7 +73,19 @@ class CardsScreen extends React.Component {
                   <CardLeft>
                     <Thumbnail
                       style={{ width: 48, height: 48 }}
-                      source={{ uri: item.avatar }}
+                      source={
+                        item.avatar != null
+                          ? {
+                              uri: GET_AVATAR_URL(
+                                item.avatar.secret,
+                                "250x250",
+                                item.avatar.name
+                              )
+                            }
+                          : {
+                              uri: IMAGE_PLACEHOLDER
+                            }
+                      }
                     />
                   </CardLeft>
                   <CardBody>

@@ -16,8 +16,13 @@ import { Error, Loading } from "../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import { USER_PROFILE_QUERY } from "../../api/Queries/User";
+import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils
-import { SOCIAL_ICONS, onSignOut } from "../../constants/Utils";
+import {
+  SOCIAL_ICONS,
+  onSignOut,
+  IMAGE_PLACEHOLDER
+} from "../../constants/Utils";
 
 class ProfileScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -125,7 +130,19 @@ class ProfileScreen extends React.PureComponent {
                   <CardLeft>
                     <Thumbnail
                       style={{ width: 48, height: 48 }}
-                      source={{ uri: User.avatar }}
+                      source={
+                        User.avatar != null
+                          ? {
+                              uri: GET_AVATAR_URL(
+                                User.avatar.secret,
+                                "250x250",
+                                User.avatar.name
+                              )
+                            }
+                          : {
+                              uri: IMAGE_PLACEHOLDER
+                            }
+                      }
                     />
                   </CardLeft>
                   <CardBody>
@@ -252,14 +269,14 @@ class ProfileScreen extends React.PureComponent {
                 projects.map(data => {
                   return (
                     <ScrollView
-                        key={data.id}
-                        style={{ paddingTop: 10, paddingBottom: 10 }}
-                        contentContainerStyle={{paddingHorizontal: 20}}
-                        horizontal
-                        decelerationRate={0}
-                        snapToInterval={320}
-                        snapToAlignment={"center"}
-                        showsHorizontalScrollIndicator={false}
+                      key={data.id}
+                      style={{ paddingTop: 10, paddingBottom: 10 }}
+                      contentContainerStyle={{ paddingHorizontal: 20 }}
+                      horizontal
+                      decelerationRate={0}
+                      snapToInterval={320}
+                      snapToAlignment={"center"}
+                      showsHorizontalScrollIndicator={false}
                     >
                       <Card style={{ marginRight: 5 }}>
                         <ProjectContainer>

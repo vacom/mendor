@@ -11,7 +11,11 @@ const ALL_CHATS_QUERY = gql`
       }
       users(filter: { id_not: "cjbjhh0f9lbfz01142sd6tvuv" }) {
         id
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
         name
       }
     }
@@ -26,7 +30,11 @@ const ALL_MESSAGES_QUERY = gql`
       createdAt
       author {
         id
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
       }
     }
   }
@@ -49,7 +57,11 @@ const ALL_INDIVIDUAL_CHATS_OF_USERS = gql`
       users(filter: { id_not: $id1 }) {
         id
         name
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
       }
     }
   }

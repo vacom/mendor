@@ -9,7 +9,11 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
     type
     email
     name
-    avatar
+    avatar {
+      id
+      secret
+      name
+    }
   }
 `;
 

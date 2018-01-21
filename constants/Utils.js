@@ -1,6 +1,9 @@
 import { AsyncStorage } from "react-native";
 
+const GRAPHCOOL_PROJECT_ID = "ciz8v8u9te5130123ovajklml";
 const GRAPHQL_ENDPOINT = "https://api.graph.cool/simple/v1/mendor";
+const GRAPHQL_FILE_ENDPOINT = "https://api.graph.cool/file/v1/mendor";
+const GRAPHQL_IMAGE_ENDPOINT = "https://images.graph.cool/v1";
 const GRAPHQL_SUBSCRIPTION_ENDPOINT =
   "wss://subscriptions.graph.cool/v1/mendor";
 
@@ -14,6 +17,8 @@ const SOCIAL_ICONS = {
   OTHER: "information",
   TRELLO: "trello"
 };
+
+const IMAGE_PLACEHOLDER = "https://ui-avatars.com/api/?size=128&name=mendor";
 
 //const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
 
@@ -57,12 +62,26 @@ const countAllTrue = data => {
   return count;
 };
 
+const guid = () => {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4() + "" + s4() + "" + s4() + "" + s4();
+};
+
 export {
+  GRAPHCOOL_PROJECT_ID,
   GRAPHQL_ENDPOINT,
   GRAPHQL_SUBSCRIPTION_ENDPOINT,
+  GRAPHQL_IMAGE_ENDPOINT,
   SOCIAL_ICONS,
+  IMAGE_PLACEHOLDER,
   isSignedIn,
   onSignOut,
   allFalse,
-  countAllTrue
+  countAllTrue,
+  GRAPHQL_FILE_ENDPOINT,
+  guid
 };

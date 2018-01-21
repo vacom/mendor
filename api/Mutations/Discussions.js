@@ -10,7 +10,11 @@ const CREATE_RESPONSE_MUTATION = gql`
       content
       id
       author {
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
         id
       }
     }
@@ -39,7 +43,11 @@ const CREATE_DISCUSSION_MUTATION = gql`
       responses {
         id
         author {
-          avatar
+          avatar {
+            id
+            secret
+            name
+          }
         }
       }
     }

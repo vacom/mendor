@@ -94,9 +94,19 @@ const UPDATE_USER_PROFILE_MUTATION = gql`
   }
 `;
 
+//Updates a new profile for the user
+const UPDATE_USER_AVATAR_MUTATION = gql`
+  mutation($userId: ID!, $fileId: ID!) {
+    updateUser(id: $userId, avatarId: $fileId) {
+      id
+    }
+  }
+`;
+
 export {
   SIGNIN_USER_MUTATION,
   CREATE_USER_MUTATION,
   CREATE_USER_PROFILE_MUTATION,
-  UPDATE_USER_PROFILE_MUTATION
+  UPDATE_USER_PROFILE_MUTATION,
+  UPDATE_USER_AVATAR_MUTATION
 };

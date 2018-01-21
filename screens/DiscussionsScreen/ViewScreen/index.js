@@ -6,9 +6,10 @@ import Accordion from "react-native-collapsible/Accordion";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose, withApollo } from "react-apollo";
 
-//Requests
+//GraphQL
 import { DISCUSSION } from "../../../api/Queries/Discussions";
 import { CREATE_RESPONSE_MUTATION } from "../../../api/Mutations/Discussions";
+import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 
 //Components
 import Chat from "../../../components/Chat";
@@ -18,6 +19,8 @@ import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../../components/HeaderRight";
+//utils
+import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
 class DiscussionViewScreen extends React.Component {
   constructor(props) {
@@ -136,9 +139,19 @@ class DiscussionViewScreen extends React.Component {
         <Header>
           <ViewAvatar>
             <Avatar
-              source={{
-                uri: discussion.user.avatar
-              }}
+              source={
+                discussion.user.avatar != null
+                  ? {
+                      uri: GET_AVATAR_URL(
+                        discussion.user.avatar.secret,
+                        "250x250",
+                        discussion.user.avatar.name
+                      )
+                    }
+                  : {
+                      uri: IMAGE_PLACEHOLDER
+                    }
+              }
             />
           </ViewAvatar>
           <ViewInput>

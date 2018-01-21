@@ -17,7 +17,9 @@ import {
   BASIC_USER_QUERY,
   ALL_USERS_DISCOVERY_QUERY
 } from "../../api/Queries/User";
+import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils
+import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 //import Toast from "react-native-root-toast";
 //Containers
 import Cards from "./CardsScreen.js";
@@ -71,11 +73,15 @@ class DiscoverScreen extends React.Component {
   _getBasicUserInfo = async () => {
     const res = await this.props.client.query({ query: BASIC_USER_QUERY });
     if (!res.loading) {
+      const { avatar } = res.data.user;
+
+      console.log(GET_AVATAR_URL(avatar.secret, "250x250", avatar.name));
+
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,
         avatar:
-          res.data.user.avatar ||
-          "https://ui-avatars.com/api/?size=128&name=mendor"
+          GET_AVATAR_URL(avatar.secret, "250x250", avatar.name) ||
+          IMAGE_PLACEHOLDER
       });
       this.setState({
         userId: res.data.user.id

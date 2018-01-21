@@ -18,7 +18,11 @@ const ALL_NOTIFICATIONS_QUERY = gql`
       }
       userRequest {
         id
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
         name
       }
     }

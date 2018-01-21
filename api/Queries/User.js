@@ -27,7 +27,11 @@ const USER_PROFILE_QUERY = gql`
       id
       type
       name
-      avatar
+      avatar {
+        id
+        secret
+        name
+      }
       profile {
         id
         about
@@ -91,7 +95,11 @@ const ALL_USERS_DISCOVERY_QUERY = gql`
     ) {
       id
       name
-      avatar
+      avatar {
+        id
+        secret
+        name
+      }
       profile {
         id
         role
