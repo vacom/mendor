@@ -13,10 +13,10 @@ const Card = props => {
       <NativeBaseCard
           style={{
               backgroundColor: "#ffffff",
-              marginTop: 10,
+              marginTop: 5,
               marginRight: 10,
               marginLeft: 10,
-              marginBottom: 0,
+              marginBottom: 5,
               borderRadius: 2
           }}>{props.children}</NativeBaseCard>
     </TouchableWithoutFeedback>

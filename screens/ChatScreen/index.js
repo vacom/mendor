@@ -203,7 +203,7 @@ class ChatScreen extends React.Component {
           <ContainerView>
             <GradientContainer>
               <View>
-                <ScrollView style={{ paddingBottom: 30 }}>
+                <ScrollView contentContainerStyle={{paddingVertical: 5}}>
                   {chats.map(data => {
                     return (
                       <View key={data.id}>
