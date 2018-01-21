@@ -236,7 +236,6 @@ class ProfileScreen extends React.PureComponent {
               </PortfolioContainer>
             </Row>
 
-
             <PortfolioContainer style={{ marginTop: 30 }}>
               <Span style={{ color: "#757575" }}>
                 {"projetos".toUpperCase()}
@@ -253,13 +252,14 @@ class ProfileScreen extends React.PureComponent {
                 projects.map(data => {
                   return (
                     <ScrollView
+                        key={data.id}
                         style={{ paddingTop: 10, paddingBottom: 10 }}
                         contentContainerStyle={{paddingHorizontal: 20}}
-                        key={data.id}
                         horizontal
                         decelerationRate={0}
                         snapToInterval={320}
                         snapToAlignment={"center"}
+                        showsHorizontalScrollIndicator={false}
                     >
                       <Card style={{ marginRight: 5 }}>
                         <ProjectContainer>
@@ -434,4 +434,5 @@ const LinkContainer = styled.View`
 const LabelsControl = styled.View`
   height: 52px;
   overflow: hidden;
+  background-color: #ffffff;
 `;

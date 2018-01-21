@@ -1,22 +1,24 @@
 import React from "react";
 import { TouchableWithoutFeedback } from "react-native";
+import { Card as NativeBaseCard } from "native-base";
 import styled from "styled-components/native";
 import { Col, Row } from "react-native-easy-grid";
 
 /*
 -- Card Styles
 */
-const CardWithStyles = styled.View`
-  background-color: #ffffff;
-  elevation: 3;
-  margin: 10px 10px 0 10px;
-  border-radius: 2px;
-`;
-
 const Card = props => {
   return (
     <TouchableWithoutFeedback {...props}>
-      <CardWithStyles>{props.children}</CardWithStyles>
+      <NativeBaseCard
+          style={{
+              backgroundColor: "#ffffff",
+              marginTop: 10,
+              marginRight: 10,
+              marginLeft: 10,
+              marginBottom: 0,
+              borderRadius: 2
+          }}>{props.children}</NativeBaseCard>
     </TouchableWithoutFeedback>
   );
 };

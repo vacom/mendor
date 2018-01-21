@@ -64,7 +64,7 @@ class CardsScreen extends React.Component {
           onSwipeRight={data => this._onAddUser(data)}
           dataSource={this.props.data}
           renderItem={item => (
-            <Card style={{ elevation: 3, padding: 15, borderRadius: 15 }}>
+            <Card style={{ padding: 15, borderRadius: 15 }}>
               <UserContainer>
                 <CardContainer>
                   <CardLeft>
