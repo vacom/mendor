@@ -1,6 +1,10 @@
 // @flow
 import { AsyncStorage } from "react-native";
 
+/**
+ * USER FUNCTIONS
+ */
+
 //this functions login in the user
 const USER_SIGNIN_FUNC = async (
   email: string,
@@ -30,4 +34,35 @@ const USER_SIGNIN_FUNC = async (
   }
 };
 
-export { USER_SIGNIN_FUNC };
+/**
+ * CONTACTS FUNCTIONS
+ */
+
+//Creates a new Contact
+const CREATE_CONTACT_FUNC = async (
+  userId: string,
+  contactID: string,
+  mutationObject: any
+) => {
+  try {
+    let id = "";
+    await mutationObject({
+      variables: {
+        contactID,
+        userId
+      },
+      update: (store, { data: { createContact } }) => {
+        try {
+          id = createContact.id;
+        } catch (e) {
+          return e;
+        }
+      }
+    });
+    return { status: true, id };
+  } catch (e) {
+    return { status: false, error: e };
+  }
+};
+
+export { USER_SIGNIN_FUNC, CREATE_CONTACT_FUNC };

@@ -59,7 +59,6 @@ class CardsScreen extends React.Component {
     console.log(data);
   };
   render() {
-    console.log(this.props.data);
     return (
       <CardsContainer style={{ height: 200 }}>
         <DeckSwiper
@@ -225,9 +224,6 @@ const UserContainer = styled.View`
 //Cards
 const CardsContainer = styled.View`
   padding: 10px;
-  flex-direction: column;
-  justify-content: center;
-  background-color: red;
 `;
 
 //Links

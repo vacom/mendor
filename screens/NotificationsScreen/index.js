@@ -18,11 +18,17 @@ import {
   CardRight
 } from "../../components/Card";
 import { Error, Loading, Placeholder } from "../../components/index";
-//GraphQL
+/**
+ * GraphQL
+ */
 import { graphql, compose } from "react-apollo";
+//Notifications
 import { ALL_NOTIFICATIONS_QUERY } from "../../api/Queries/Notification";
 import { DISABLE_NOTIFICATION_MUTATION } from "../../api/Mutations/Notification";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
+import { CREATE_CONTACT_FUNC } from "../../api/Functions/User";
+//contacts
+import { CREATE_CONTACT_MUTATION } from "../../api/Mutations/Contacts";
 //Utils
 import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 import Toast from "react-native-root-toast";
@@ -70,7 +76,10 @@ class NotificationsScreen extends React.Component {
       }
     );
   };
-  _onDisableNotification = async notificationId => {
+  _onDisableNotification = async (
+    notificationId,
+    msg = "Notificação ocultada."
+  ) => {
     const { disableNotification } = this.props;
     try {
       //disables notification on the DB
@@ -81,7 +90,7 @@ class NotificationsScreen extends React.Component {
         update: async () => {
           try {
             this._onRefresh();
-            Toast.show("Notificação ocultada.");
+            Toast.show(msg);
           } catch (e) {
             console.log(e);
             Toast.show("Erro! Verifique os campos.");
@@ -90,6 +99,33 @@ class NotificationsScreen extends React.Component {
       });
     } catch (e) {
       Toast.show(e);
+    }
+  };
+  _onCreateContact = async data => {
+    const contactID = data.userRequest.id;
+    const { createContact, screenProps } = this.props;
+    //Creates a new contact for the user
+    const result = await CREATE_CONTACT_FUNC(
+      screenProps.userId,
+      contactID,
+      createContact
+    );
+    //if success creates a new user for the requested user
+    if (result.status) {
+      //saves the contact
+      const request = await CREATE_CONTACT_FUNC(
+        contactID,
+        screenProps.userId,
+        createContact
+      );
+      //Both users accounts are created and disables the notification
+      if (request.status) {
+        this._onDisableNotification(data.id, "Pedido aceito!");
+      } else {
+        Toast.show("Erro! Tente Novamente.");
+      }
+    } else {
+      Toast.show("Erro! Tente Novamente.");
     }
   };
   _onRefresh = () => {
@@ -124,22 +160,22 @@ class NotificationsScreen extends React.Component {
     return (
       <Container>
         <GradientContainer>
-          {Object.keys(allNotifications).length <= 0 ? (
-            <Placeholder
-              text="Sem Notificações"
-              IconName="notifications-none"
-            />
-          ) : (
-            <ScrollView
-              contentContainerStyle={{paddingVertical: 5}}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.refreshing}
-                  onRefresh={this._onRefresh}
-                />
-              }
-            >
-              {allNotifications.map(data => {
+          <ScrollView
+            contentContainerStyle={{ paddingVertical: 5 }}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
+          >
+            {Object.keys(allNotifications).length <= 0 ? (
+              <Placeholder
+                text="Sem Notificações"
+                IconName="notifications-none"
+              />
+            ) : (
+              allNotifications.map(data => {
                 return (
                   <Card key={data.id} onPress={this._openNotification(data)}>
                     <CardContainer>
@@ -184,6 +220,7 @@ class NotificationsScreen extends React.Component {
                       <CardRight>
                         {data.type === "REQUEST" ? (
                           <Button
+                            onPress={() => this._onCreateContact(data)}
                             small
                             style={{
                               backgroundColor: "#3F51B5",
@@ -213,9 +250,9 @@ class NotificationsScreen extends React.Component {
                     </CardContainer>
                   </Card>
                 );
-              })}
-            </ScrollView>
-          )}
+              })
+            )}
+          </ScrollView>
         </GradientContainer>
       </Container>
     );
@@ -232,6 +269,9 @@ export default compose(
   }),
   graphql(DISABLE_NOTIFICATION_MUTATION, {
     name: "disableNotification"
+  }),
+  graphql(CREATE_CONTACT_MUTATION, {
+    name: "createContact"
   })
 )(NotificationsScreen);
 
