@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Input, Thumbnail } from "native-base";
 import styled from "styled-components/native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import GradientContainer from "../../../components/GradientContainer";
 import { ScrollView, TouchableOpacity, TouchableHighlight } from "react-native";
 import { Error, Loading } from "../../../components/index";
@@ -19,6 +19,11 @@ import { ALL_CONTACTS_QUERY } from "../../../api/Queries/Contacts";
 import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
 import { ALL_INDIVIDUAL_CHATS_OF_USERS } from "../../../api/Queries/Chat";
 import { CREATE_CHAT_MUTATION } from "../../../api/Mutations/Chat";
+import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
+
+//Utils
+import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+
 class ChatAddScreen extends React.Component {
   static navigationOptions = {
     header: null
@@ -95,9 +100,8 @@ class ChatAddScreen extends React.Component {
               authorId: "cjbjhh0f9lbfz01142sd6tvuv",
               isGroup: false
             }
-           
           });
-          if(!res_mutation.loading) {
+          if (!res_mutation.loading) {
             this.props.navigation.navigate("ChatView", {
               name: res_mutation.data.createChat.users[0].name,
               avatar: res_mutation.data.createChat.users[0].avatar,
@@ -145,9 +149,19 @@ class ChatAddScreen extends React.Component {
                     <CardLeft>
                       <Thumbnail
                         style={{ width: 48, height: 48 }}
-                        source={{
-                          uri: data.contactID[0].avatar
-                        }}
+                        source={
+                          data.contactID[0].avatar != null
+                            ? {
+                                uri: GET_AVATAR_URL(
+                                  data.contactID[0].avatar.secret,
+                                  "250x250",
+                                  data.contactID[0].avatar.name
+                                )
+                              }
+                            : {
+                                uri: IMAGE_PLACEHOLDER
+                              }
+                        }
                       />
                     </CardLeft>
                     <CardBody>
@@ -283,7 +297,8 @@ class ChatAddScreen extends React.Component {
   }
 }
 
-const ChatAddScreenWithData = compose(
+export default compose(
+  withApollo,
   graphql(ALL_CONTACTS_QUERY, {
     options: props => ({
       variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" }
@@ -292,7 +307,7 @@ const ChatAddScreenWithData = compose(
   }),
   graphql(CREATE_CHAT_MUTATION, { name: "createChat" })
 )(ChatAddScreen);
-export default withApollo(ChatAddScreenWithData);
+
 
 const Container = styled.View`
   flex: 1;

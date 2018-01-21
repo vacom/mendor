@@ -47,15 +47,14 @@ class NotificationsScreen extends React.Component {
   state = {
     refreshing: false
   };
-  _openNotification = data => e => {
-    e.preventDefault();
+  _openNotification(data) {
+    //e.preventDefault();
     const route = data.type === "REQUEST" ? "Profile" : "DiscussionView";
     const id =
       data.type === "REQUEST" ? data.userRequest.id : data.discussion.id;
     this.props.navigation.navigate(route, { id });
-  };
+  }
   _onOpenActions = data => () => {
-    console.log(data);
     var BUTTONS = ["Ocultar Notificação", "Ver Discussão", "Cancelar"];
     ActionSheet.show(
       {
@@ -70,6 +69,8 @@ class NotificationsScreen extends React.Component {
             this._onDisableNotification(data.id);
             break;
           case 1:
+            console.log("GOooooooOoooooooo");
+
             this._openNotification(data);
             break;
         }
@@ -154,7 +155,7 @@ class NotificationsScreen extends React.Component {
       this.props.allNotificationsQuery &&
       this.props.allNotificationsQuery.error
     ) {
-      return <Error />;
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
     const { allNotifications } = this.props.allNotificationsQuery;
     return (
@@ -177,7 +178,10 @@ class NotificationsScreen extends React.Component {
             ) : (
               allNotifications.map(data => {
                 return (
-                  <Card key={data.id} onPress={this._openNotification(data)}>
+                  <Card
+                    key={data.id}
+                    onPress={() => this._openNotification(data)}
+                  >
                     <CardContainer>
                       <CardLeft>
                         {data.type === "REQUEST" ? (

@@ -1,27 +1,26 @@
 import React from "react";
-import { Icon, View, Text, ActionSheet } from "native-base";
-import {
-  ScrollView,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableOpacity
-} from "react-native";
+import { View, ActionSheet } from "native-base";
+import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 
+//GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_MESSAGES_QUERY } from "../../../api/Queries/Chat";
 import { ALL_MESSAGES_SUBSCRIPTION } from "../../../api/Subscriptions/Chat";
 import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
 
 //Components
-import InputMessageBar from "../../../components/InputMessageBar";
+//import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../../components/HeaderRight";
-import { Error, Loading } from "../../../components/index";
+import { Placeholder, Loading } from "../../../components/index";
+
+//Utils
+import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
 class ChatViewScreen extends React.Component {
   constructor(props) {
@@ -68,11 +67,11 @@ class ChatViewScreen extends React.Component {
     height: 0,
     modalVisible: false,
     userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv",
-    avatar:
-      "https://scontent.fopo2-1.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=0c486e7b1b615efadcfdb3c9f6e08780&oe=5AE5B338"
+    avatar: IMAGE_PLACEHOLDER
   };
 
   componentDidMount() {
+    console.log(this.props.navigation.state.params);
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this._keyboardDidShow
@@ -92,19 +91,21 @@ class ChatViewScreen extends React.Component {
       "Editar nome da conversa",
       "Adicionar pessoas à conversa",
       "Silenciar conversa",
-      "Sugestões de parceiros"
+      "Sugestões de parceiros",
+      "Cancelar"
     ];
     ActionSheet.show(
       {
         options: BUTTONS,
-        cancelButtonIndex: 3,
+        cancelButtonIndex: 4,
         destructiveButtonIndex: 2,
-        title: "Configurações"
+        title: "Ações"
       },
       buttonIndex => {
-        console.log(buttonIndex);
         switch (buttonIndex) {
-          
+          case 0:
+            console.log("Editar nome da conversa");
+            break;
         }
       }
     );
@@ -114,8 +115,7 @@ class ChatViewScreen extends React.Component {
     this._createMessageMutation(e);
   }
 
-  _createMessageMutation = async e => {
-    const content = e;
+  _createMessageMutation = async content => {
     const authorId = this.state.userIdLogged;
     const chatId = this.props.navigation.state.params.id;
     console.log(content, authorId, chatId);
@@ -160,25 +160,27 @@ class ChatViewScreen extends React.Component {
   render() {
     if (this.props.allMessages && this.props.allMessages.loading) {
       return <Loading />;
-    } else if (this.props.allMessages && this.props.allMessages.error) {
-      return <Error />;
-    } else {
-      return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-          <Chat
-            userIdLogged={this.state.userIdLogged}
-            messages={this.props.allMessages.allMessages}
-            addMessage={this._addMessage}
-            avatar={this.state.avatar}
-          />
-          <View style={{ height: this.state.height }} />
-        </KeyboardAvoidingView>
-      );
     }
+    if (this.props.allMessages && this.props.allMessages.error) {
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
+    }
+    //console.log(this.props.allMessages.allMessages);
+    return (
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <Chat
+          userIdLogged={this.state.userIdLogged}
+          messages={this.props.allMessages.allMessages}
+          addMessage={this._addMessage}
+          avatar={this.state.avatar}
+        />
+        <View style={{ height: this.state.height }} />
+      </KeyboardAvoidingView>
+    );
   }
 }
 
-const ChatViewScreenWithData = compose(
+export default compose(
+  withApollo,
   graphql(ALL_MESSAGES_QUERY, {
     options: props => ({
       variables: { id: props.navigation.state.params.id }
@@ -189,43 +191,6 @@ const ChatViewScreenWithData = compose(
     name: "createMessage"
   })
 )(ChatViewScreen);
-export default withApollo(ChatViewScreenWithData);
-
-const Avatar = styled.Image`
-  border-radius: 50px;
-  width: 45px;
-  height: 45px;
-`;
-
-const ViewAvatar = styled.View`
-  padding-right: 15px;
-  justify-content: center;
-`;
-const ViewInput = styled.View`
-  flex: 1;
-  justify-content: center;
-  padding-right: 15px;
-`;
-
-const Username = styled.Text`
-  font-weight: bold;
-  font-size: 18px;
-`;
-
-const Span = styled.Text`
-  font-size: 16px;
-  color: #757575;
-`;
-
-const InputMessage = styled.TextInput`
-  width: 100%;
-  font-size: 18px;
-  border: 0 !important;
-`;
-
-const ViewIcon = styled.View`
-  justify-content: center;
-`;
 
 const ImageUser = styled.Image`
   border-radius: 50px;

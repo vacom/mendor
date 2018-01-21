@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  Image,
-  View,
-  TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView
-} from "react-native";
+import { Image, View, TouchableOpacity, Alert } from "react-native";
 import { LinearGradient } from "expo";
 import { Row } from "react-native-easy-grid";
 import { ImagePicker } from "expo";
 import styled from "styled-components/native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
 import { graphql, compose, withApollo } from "react-apollo";
 import {
@@ -37,25 +31,12 @@ import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../../components/HeaderRight";
-import { Error, Loading } from "../../../components/index";
+import { Placeholder, Loading } from "../../../components/index";
+
+//Utils
+import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
 class AddDiscussion extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      categoryId: "0",
-      cover: null,
-      description: "",
-      title: "",
-      userId: "cjbjhh0f9lbfz01142sd6tvuv"
-    };
-  }
-  onPickerChange(value) {
-    this.setState({
-      categoryId: value
-    });
-  }
-
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -75,6 +56,19 @@ class AddDiscussion extends React.Component {
       )
     };
   };
+
+  state = {
+    categoryId: "0",
+    cover: IMAGE_PLACEHOLDER,
+    description: "",
+    title: "",
+    userId: "cjbjhh0f9lbfz01142sd6tvuv"
+  };
+  onPickerChange(value) {
+    this.setState({
+      categoryId: value
+    });
+  }
 
   componentDidMount() {
     this.props.navigation.setParams({
@@ -155,132 +149,122 @@ class AddDiscussion extends React.Component {
   render() {
     if (this.props.Categories && this.props.Categories.loading) {
       return <Loading />;
-    } else if (this.props.Categories && this.props.Categories.error) {
-      return <Error />;
-    } else {
-      let { cover } = this.state;
-      const resizeMode = "cover";
-      return (
-        <ScreenContainer>
-          <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
-            <ContentContainer>
-              <DashedContainer>
-                {cover != null && (
-                  <Background>
-                    <Image
-                      style={{
-                        flex: 1,
-                        borderRadius: 3,
-                        resizeMode
-                      }}
-                      source={{ uri: cover }}
-                    />
-                  </Background>
-                )}
-                <View style={{ padding: 30, alignItems: 'center' }}>
-                  <Row
-                    style={{ height: "auto", backgroundColor: "transparent" }}
-                  >
-                    <MaterialIcons
-                      name="file-upload"
-                      size={42}
-                      color="#ffffff"
-                    />
-                  </Row>
-                  <Row
+    }
+    if (this.props.Categories && this.props.Categories.error) {
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
+    }
+    let { cover } = this.state;
+    const resizeMode = "cover";
+    return (
+      <ScreenContainer>
+        <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
+          <ContentContainer>
+            <DashedContainer>
+              {cover != null && (
+                <Background>
+                  <Image
                     style={{
-                      height: "auto",
-                      marginBottom: 15,
-                      marginTop: 6,
-                      backgroundColor: "transparent"
+                      flex: 1,
+                      borderRadius: 3,
+                      resizeMode
                     }}
+                    source={{ uri: cover }}
+                  />
+                </Background>
+              )}
+              <View style={{ padding: 30, alignItems: "center" }}>
+                <Row style={{ height: "auto", backgroundColor: "transparent" }}>
+                  <MaterialIcons name="file-upload" size={42} color="#ffffff" />
+                </Row>
+                <Row
+                  style={{
+                    height: "auto",
+                    marginBottom: 15,
+                    marginTop: 6,
+                    backgroundColor: "transparent"
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontWeight: "400",
+                      color: "#fff"
+                    }}
+                  >
+                    Carregar imagem de fundo
+                  </Text>
+                </Row>
+                <Row style={{ height: "auto", backgroundColor: "transparent" }}>
+                  <Button
+                    style={{ backgroundColor: "#3F51B5", borderRadius: 2 }}
+                    onPress={this._pickImage}
                   >
                     <Text
                       style={{
-                        fontSize: 16,
-                        fontWeight: "400",
-                        color: "#fff"
+                        fontSize: 14,
+                        fontWeight: "600"
                       }}
                     >
-                      Carregar imagem de fundo
+                      {"carregar".toUpperCase()}
                     </Text>
-                  </Row>
-                  <Row
-                    style={{ height: "auto", backgroundColor: "transparent" }}
+                  </Button>
+                </Row>
+              </View>
+            </DashedContainer>
+          </ContentContainer>
+        </LinearGradient>
+        <Container>
+          {this.state.loading ? (
+            <Loading dark />
+          ) : (
+            <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
+              <Form style={{ paddingBottom: 60 }}>
+                <Item style={{ marginLeft: 0 }} floatingLabel>
+                  <Label style={{ color: "#757575" }}>Título</Label>
+                  <Input
+                    onChangeText={title => this.setState({ title })}
+                    value={this.state.title}
+                  />
+                </Item>
+                <Item style={{ marginLeft: 0 }} floatingLabel>
+                  <Label style={{ color: "#757575" }}>Descrição</Label>
+                  <Input
+                    multiline={true}
+                    numberOfLines={6}
+                    value={this.state.description}
+                    onChangeText={description => this.setState({ description })}
+                  />
+                </Item>
+                <StyledPickerView>
+                  <Picker
+                    style={{ color: "#6B6A6F" }}
+                    mode="dropdown"
+                    onValueChange={this.onPickerChange.bind(this)}
+                    selectedValue={this.state.categoryId}
                   >
-                    <Button
-                      style={{ backgroundColor: "#3F51B5", borderRadius: 2 }}
-                      onPress={this._pickImage}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: "600"
-                        }}
-                      >
-                        {"carregar".toUpperCase()}
-                      </Text>
-                    </Button>
-                  </Row>
-                </View>
-              </DashedContainer>
-            </ContentContainer>
-          </LinearGradient>
-          <Container>
-            {this.state.loading ? (
-              <Loading dark />
-            ) : (
-              <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
-                <Form style={{ paddingBottom: 60 }}>
-                  <Item style={{ marginLeft: 0 }} floatingLabel>
-                    <Label style={{ color: "#757575" }}>Título</Label>
-                    <Input
-                      onChangeText={title => this.setState({ title })}
-                      value={this.state.title}
+                    <Item
+                      style={{ fontSize: 20, margin: 0 }}
+                      label="Categoria"
+                      value="0"
                     />
-                  </Item>
-                  <Item style={{ marginLeft: 0 }} floatingLabel>
-                    <Label style={{ color: "#757575" }}>Descrição</Label>
-                    <Input
-                      multiline={true}
-                      numberOfLines={6}
-                      value={this.state.description}
-                      onChangeText={description =>
-                        this.setState({ description })
-                      }
-                    />
-                  </Item>
-                  <StyledPickerView>
-                    <Picker
-                      style={{ color: "#6B6A6F" }}
-                      mode="dropdown"
-                      onValueChange={this.onPickerChange.bind(this)}
-                      selectedValue={this.state.categoryId}
-                    >
-                      <Item
-                        style={{ fontSize: 20, margin: 0 }}
-                        label="Categoria"
-                        value="0"
-                      />
-                      {this.props.Categories.allCategories.map(data => {
-                        return (
-                          <Item
-                            style={{ fontSize: 20 }}
-                            label={data.title}
-                            value={data.id}
-                            key={data.id}
-                          />
-                        );
-                      })}
-                    </Picker>
-                  </StyledPickerView>
-                </Form>
-              </Content>
-            )}
-          </Container>
-        </ScreenContainer>
-      );
-    }
+                    {this.props.Categories.allCategories.map(data => {
+                      return (
+                        <Item
+                          style={{ fontSize: 20 }}
+                          label={data.title}
+                          value={data.id}
+                          key={data.id}
+                        />
+                      );
+                    })}
+                  </Picker>
+                </StyledPickerView>
+              </Form>
+            </Content>
+          )}
+        </Container>
+      </ScreenContainer>
+    );
   }
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -293,14 +277,13 @@ class AddDiscussion extends React.Component {
   };
 }
 
-const AddDiscussionWithData = compose(
+export default compose(
+  withApollo,
   graphql(ALL_CATEGORIES_QUERY, {
     name: "Categories"
   }),
   graphql(CREATE_DISCUSSION_MUTATION, { name: "createDiscussion" })
 )(AddDiscussion);
-
-export default withApollo(AddDiscussionWithData);
 
 const ScreenContainer = styled.View`
   flex: 1;

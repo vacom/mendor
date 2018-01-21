@@ -49,18 +49,22 @@ class ContactsScreen extends React.Component {
     return (
       <Container>
         <Tabs
-            initialPage={0}
-            tabBarUnderlineStyle={{borderBottomWidth:2, borderBottomColor: "#ffffff", height: 2}}
+          initialPage={0}
+          tabBarUnderlineStyle={{
+            borderBottomWidth: 2,
+            borderBottomColor: "#ffffff",
+            height: 2
+          }}
         >
           <Tab
-              heading="Mentores"
-              tabStyle={{backgroundColor: "#3F51B5"}}
-              textStyle={{color: '#ffffff', fontWeight: "400"}}
-              activeTabStyle={{backgroundColor: "#3F51B5"}}
-              activeTextStyle={{color: "#ffffff", fontWeight: "400"}}
+            heading="Mentores"
+            tabStyle={{ backgroundColor: "#3F51B5" }}
+            textStyle={{ color: "#ffffff", fontWeight: "400" }}
+            activeTabStyle={{ backgroundColor: "#3F51B5" }}
+            activeTextStyle={{ color: "#ffffff", fontWeight: "400" }}
           >
             <GradientContainer>
-              <ScrollView contentContainerStyle={{paddingVertical: 5}}>
+              <ScrollView contentContainerStyle={{ paddingVertical: 5 }}>
                 <Card>
                   <CardContainer>
                     <CardLeft>
@@ -239,14 +243,14 @@ class ContactsScreen extends React.Component {
             </GradientContainer>
           </Tab>
           <Tab
-              heading="Empreendedores"
-              tabStyle={{backgroundColor: "#3F51B5"}}
-              textStyle={{color: '#ffffff', fontWeight: "400"}}
-              activeTabStyle={{backgroundColor: "#3F51B5"}}
-              activeTextStyle={{color: "#ffffff", fontWeight: "400"}}
+            heading="Empreendedores"
+            tabStyle={{ backgroundColor: "#3F51B5" }}
+            textStyle={{ color: "#ffffff", fontWeight: "400" }}
+            activeTabStyle={{ backgroundColor: "#3F51B5" }}
+            activeTextStyle={{ color: "#ffffff", fontWeight: "400" }}
           >
             <GradientContainer>
-              <ScrollView contentContainerStyle={{paddingVertical: 5}}>
+              <ScrollView contentContainerStyle={{ paddingVertical: 5 }}>
                 <Card>
                   <CardContainer>
                     <CardLeft>

@@ -2,7 +2,10 @@ import React from "react";
 import { Image } from "react-native";
 import { Icon, View } from "native-base";
 import styled from "styled-components/native";
-import { Col, Row, Grid } from "react-native-easy-grid";
+//GraphQL
+import { GET_AVATAR_URL } from "../api/Functions/Upload";
+//Utils
+import { IMAGE_PLACEHOLDER } from "../constants/Utils";
 
 const resizeMode = "cover";
 
@@ -40,9 +43,19 @@ const Discussion = props => {
               return (
                 <ImageUser
                   key={data.id}
-                  source={{
-                    uri: data.author.avatar
-                  }}
+                  source={
+                    data.author.avatar != null
+                      ? {
+                          uri: GET_AVATAR_URL(
+                            data.author.avatar.secret,
+                            "250x250",
+                            data.author.avatar.name
+                          )
+                        }
+                      : {
+                          uri: IMAGE_PLACEHOLDER
+                        }
+                  }
                 />
               );
             })}

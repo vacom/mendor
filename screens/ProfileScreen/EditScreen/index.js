@@ -21,7 +21,7 @@ import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../../components/HeaderRight";
-import { Error, Loading } from "../../../components/index";
+import { Loading } from "../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import {
@@ -59,7 +59,7 @@ class ProfileEditScreen extends React.Component {
     about: "",
     location: "",
     loading: true,
-    avatarId: "",
+    fileId: "",
     image: IMAGE_PLACEHOLDER
   };
 
@@ -74,7 +74,7 @@ class ProfileEditScreen extends React.Component {
       this.setState({ loading: false });
       return;
     }
-    const { data, userId } = this.props.navigation.state.params;
+    const { data, userId, image } = this.props.navigation.state.params;
     const { company, profession, role, about, location, id: profileId } = data;
     this.setState({
       userId,
@@ -84,6 +84,7 @@ class ProfileEditScreen extends React.Component {
       about,
       location,
       profileId,
+      image,
       loading: false
     });
   };
@@ -103,7 +104,6 @@ class ProfileEditScreen extends React.Component {
       Toast.show("Fields can not be empty!");
       return;
     }
-
     try {
       //Updates the information of the user and executes the upload function for avatar
       await updateProfile({
@@ -117,7 +117,6 @@ class ProfileEditScreen extends React.Component {
         },
         update: async () => {
           try {
-            //navigation.goBack();
             this._onUpdateAvatar();
           } catch (e) {
             console.log(e);
@@ -126,18 +125,19 @@ class ProfileEditScreen extends React.Component {
         }
       });
     } catch (e) {
+      console.log(e);
       Toast.show(e);
     }
   };
   _onUpdateAvatar = async () => {
-    const { avatarId, userId } = this.state;
+    const { fileId, userId } = this.state;
     const { updateUserAvatar, navigation } = this.props;
     try {
       //Updates the user avatar and goes back
       await updateUserAvatar({
         variables: {
-          avatarId,
-          userId
+          userId,
+          fileId
         },
         update: async () => {
           try {
@@ -149,6 +149,7 @@ class ProfileEditScreen extends React.Component {
         }
       });
     } catch (e) {
+      console.log(e);
       Toast.show(e);
     }
   };
@@ -161,9 +162,8 @@ class ProfileEditScreen extends React.Component {
       this.setState({ image: result.uri });
       UPLOAD_PHOTO_FUNC(result.uri, guid()).then(file => {
         this.setState({
-          avatarId: file.id
+          fileId: file.id
         });
-        console.log("fileID = ", file.id);
       });
     }
   };
@@ -173,13 +173,19 @@ class ProfileEditScreen extends React.Component {
         <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
           <ContentContainer>
             <DashedContainer>
-              <Row style={{ height: "auto", backgroundColor: "transparent", marginBottom: 15 }}>
-                  {this.state.image && (
-                      <Thumbnail
-                          source={{ uri: this.state.image }}
-                          style={{ width: 64, height: 64 }}
-                      />
-                  )}
+              <Row
+                style={{
+                  height: "auto",
+                  backgroundColor: "transparent",
+                  marginBottom: 15
+                }}
+              >
+                {this.state.image && (
+                  <Thumbnail
+                    source={{ uri: this.state.image }}
+                    style={{ width: 64, height: 64 }}
+                  />
+                )}
               </Row>
               <Row style={{ height: "auto", backgroundColor: "transparent" }}>
                 <Button
@@ -263,7 +269,17 @@ export default compose(
       ]
     })
   }),
-  graphql(UPDATE_USER_AVATAR_MUTATION, { name: "updateUserAvatar" })
+  graphql(UPDATE_USER_AVATAR_MUTATION, {
+    name: "updateUserAvatar",
+    options: props => ({
+      refetchQueries: [
+        {
+          query: USER_PROFILE_QUERY,
+          variables: { id: props.navigation.state.params.userId }
+        }
+      ]
+    })
+  })
 )(ProfileEditScreen);
 
 const ScreenContainer = styled.View`

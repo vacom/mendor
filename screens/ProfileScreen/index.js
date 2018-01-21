@@ -80,9 +80,17 @@ class ProfileScreen extends React.PureComponent {
     }
   };
   _goToEditProfile = () => {
-    const data = this.props.userProfileQuery.User.profile;
-    const userId = this.props.userProfileQuery.User.id;
-    this.props.navigation.navigate("EditProfile", { data, userId });
+    const {
+      profile: data,
+      avatar,
+      id: userId
+    } = this.props.userProfileQuery.User;
+    const image =
+      avatar != null
+        ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
+        : IMAGE_PLACEHOLDER;
+
+    this.props.navigation.navigate("EditProfile", { data, userId, image });
   };
   _onUserSignOut = () => {
     //clears the user session id and token

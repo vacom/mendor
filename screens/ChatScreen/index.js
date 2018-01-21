@@ -1,25 +1,15 @@
 import React from "react";
-import { ScrollView } from "react-native";
-import { Modal, TouchableHighlight, TouchableOpacity } from "react-native";
-import {
-  Thumbnail,
-  Button,
-  Text,
-  View,
-  Fab,
-  Icon,
-  ActionSheet
-} from "native-base";
+import { ScrollView, TouchableOpacity } from "react-native";
+//Styles
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
+//GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
-import moment from "moment/min/moment-with-locales";
-
-//Requests
 import { ALL_CHATS_QUERY } from "../../api/Queries/Chat";
 import { ALL_CHATS_SUBSCRIPTION } from "../../api/Subscriptions/Chat";
-
+import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Components
+import { Text, View, Fab, Icon, ActionSheet } from "native-base";
 import GradientContainer from "../../components/GradientContainer";
 import {
   HeaderRightContainer,
@@ -32,7 +22,16 @@ import {
   CardBody,
   CardRight
 } from "../../components/Card";
-import { Error, Loading } from "../../components/index";
+import { Placeholder, Loading } from "../../components/index";
+import {
+  MessageContent,
+  MessageDate,
+  MessageAvatar,
+  MessageName
+} from "../../components/ChatComponents";
+//Utils
+import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
+import moment from "moment/min/moment-with-locales";
 
 class ChatScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -66,27 +65,26 @@ class ChatScreen extends React.Component {
   }
 
   _setModalVisible = () => {
-    var BUTTONS = [
-      "Marcar todas como lidas",
-
-    ];
+    var BUTTONS = ["Marcar todas como lidas", "Cancelar"];
     ActionSheet.show(
       {
         options: BUTTONS,
-        cancelButtonIndex: 3,
-        destructiveButtonIndex: 2,
-        title: "Configurações"
+        cancelButtonIndex: 1,
+        destructiveButtonIndex: 0,
+        title: "Ações"
       },
       buttonIndex => {
-        console.log(buttonIndex);
         switch (buttonIndex) {
+          case 0:
+            console.log("Marcar");
+            break;
         }
       }
     );
   };
 
   _subscribeChat = () => {
-    this.props.AllChats.subscribeToMore({
+    this.props.AllChatsQuery.subscribeToMore({
       document: ALL_CHATS_SUBSCRIPTION,
       variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" },
       updateQuery: (previous, { subscriptionData }) => {
@@ -105,21 +103,28 @@ class ChatScreen extends React.Component {
     this.props.navigation.navigate("AddChat", {});
   };
   _goToChatView = (id, users) => {
-    let avatar = "";
-    let name = "";
-    const usersLen = users.length;
-    if (users.length > 1) {
-      avatar =
-        "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
+    let avatar,
+      name = "";
+    const userlength = Object.keys(users).length;
+    if (userlength > 1) {
+      avatar = IMAGE_PLACEHOLDER;
       users.map((user, i) => {
-        if (usersLen === i + 1) {
+        if (userlength === i + 1) {
           name += user.name;
         } else {
           name += user.name + ", ";
         }
       });
     } else {
-      avatar = users[0].avatar;
+      avatar =
+        users[0].avatar != null
+          ? GET_AVATAR_URL(
+              users[0].avatar.secret,
+              "250x250",
+              users[0].avatar.name
+            )
+          : IMAGE_PLACEHOLDER;
+
       name = users[0].name;
     }
     this.props.navigation.navigate("ChatView", {
@@ -129,152 +134,77 @@ class ChatScreen extends React.Component {
     });
   };
   render() {
-    const _renderMessageContent = data => {
-      if (data.messages.length > 0) {
-        return (
-          <Text numberOfLines={1} style={{ fontSize: 14, color: "#757575" }}>
-            {data.messages[0].content}
-          </Text>
-        );
-      } else {
-        return (
-          <Text numberOfLines={1} style={{ fontSize: 14, color: "#757575" }}>
-            Sem mensagens.
-          </Text>
-        );
-      }
-    };
-    const _renderMessageDate = data => {
-      if (data.messages.length > 0) {
-        return (
-          <Text style={{ fontSize: 14, color: "#757575" }}>
-            {moment(data.messages[0].createdAt).fromNow()}
-          </Text>
-        );
-      } else {
-        return <Text style={{ fontSize: 14, color: "#757575" }}> </Text>;
-      }
-    };
-    const _renderMessageAvatar = data => {
-      let avatar = "";
-      if (data.users.length > 1) {
-        avatar =
-          "https://www.pinnaclepeople.com.au/media/pinnacle-people/images/image7.jpg";
-      } else {
-        avatar = data.users[0].avatar;
-      }
-      return (
-        <Thumbnail
-          style={{ width: 48, height: 48 }}
-          source={{
-            uri: avatar
-          }}
-        />
-      );
-    };
-
-    const _renderMessageName = users => {
-      let name = "";
-      const usersLen = users.length;
-      if (users.length > 1) {
-        users.map((user, i) => {
-          if (usersLen === i + 1) {
-            name += user.name;
-          } else {
-            name += user.name + ", ";
-          }
-        });
-      } else {
-        name = users[0].name;
-      }
-      return name;
-    };
-
-    const { AllChats } = this.props;
-    if (AllChats && AllChats.loading) {
+    const { AllChatsQuery } = this.props;
+    if (AllChatsQuery && AllChatsQuery.loading) {
       return <Loading />;
     }
-    if (AllChats && AllChats.error) {
-      return <Error />;
-    } else {
-      if (AllChats.allChats.length > 0) {
-        const chats = AllChats.allChats;
-        return (
-          <ContainerView>
-            <GradientContainer>
-              <View>
-                <ScrollView contentContainerStyle={{paddingVertical: 5}}>
-                  {chats.map(data => {
-                    return (
-                      <View key={data.id}>
-                        <Card
-                          onPress={() =>
-                            this._goToChatView(data.id, data.users)
-                          }
-                        >
-                          <CardContainer>
-                            <CardLeft>{_renderMessageAvatar(data)}</CardLeft>
-                            <CardBody>
-                              <Text
-                                numberOfLines={1}
-                                style={{
-                                  fontSize: 16,
-                                  color: "#000",
-                                  fontWeight: "600"
-                                }}
-                              >
-                                {_renderMessageName(data.users)}
-                              </Text>
-                              {_renderMessageContent(data)}
-                            </CardBody>
-                            <CardRight>{_renderMessageDate(data)}</CardRight>
-                          </CardContainer>
-                        </Card>
-                      </View>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-            </GradientContainer>
-            <View>
-              <Fab
-                onPress={() => this._goToAddChat()}
-                direction="up"
-                containerStyle={{ borderRadius: 10 }}
-                style={{ backgroundColor: "#3F51B5", elevation: 0 }}
-                position="bottomRight"
-              >
-                <Icon name="add" />
-              </Fab>
-            </View>
-          </ContainerView>
-        );
-      } else {
-        return (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text>Ainda não existem conversas.</Text>
-            <Fab
-              onPress={this.setModalVisible(true)}
-              direction="up"
-              containerStyle={{}}
-              style={{ backgroundColor: "#3F51B5" }}
-              position="bottomRight"
-            >
-              <Icon name="add" />
-            </Fab>
-          </View>
-        );
-      }
+    if (AllChatsQuery && AllChatsQuery.error) {
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
+
+    const { allChats } = AllChatsQuery;
+    return (
+      <ContainerView>
+        <GradientContainer>
+          <ScrollView contentContainerStyle={{ paddingVertical: 5 }}>
+            {Object.keys(AllChatsQuery.allChats).length > 0 ? (
+              allChats.map(data => {
+                return (
+                  <View key={data.id}>
+                    <Card
+                      onPress={() => this._goToChatView(data.id, data.users)}
+                    >
+                      <CardContainer>
+                        <CardLeft>
+                          <MessageAvatar data={data} />
+                        </CardLeft>
+                        <CardBody>
+                          <MessageName users={data.users} />
+
+                          <MessageContent data={data} />
+                        </CardBody>
+                        <CardRight>
+                          <MessageDate data={data} />
+                        </CardRight>
+                      </CardContainer>
+                    </Card>
+                  </View>
+                );
+              })
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text>Ainda não existem conversas.</Text>
+              </View>
+            )}
+          </ScrollView>
+        </GradientContainer>
+        <View>
+          <Fab
+            onPress={() => this._goToAddChat()}
+            direction="up"
+            containerStyle={{ borderRadius: 10 }}
+            style={{ backgroundColor: "#3F51B5", elevation: 0 }}
+            position="bottomRight"
+          >
+            <Icon name="add" />
+          </Fab>
+        </View>
+      </ContainerView>
+    );
   }
 }
 
-const ChatScreenWithData = compose(
+export default compose(
+  withApollo,
   graphql(
     ALL_CHATS_QUERY,
-    { name: "AllChats" },
+    { name: "AllChatsQuery" },
     {
       options: () => ({
         variables: {
@@ -284,8 +214,6 @@ const ChatScreenWithData = compose(
     }
   )
 )(ChatScreen);
-
-export default withApollo(ChatScreenWithData);
 
 const ContainerView = styled.View`
   flex: 1;

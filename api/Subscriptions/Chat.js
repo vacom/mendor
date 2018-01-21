@@ -17,7 +17,7 @@ const ALL_CHATS_SUBSCRIPTION = gql`
         }
         users {
           id
-          avatar
+          avatar 
           name
         }
       }

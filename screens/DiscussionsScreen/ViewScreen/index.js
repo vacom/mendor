@@ -1,9 +1,9 @@
 import React from "react";
-import { Icon, View, Text, Spinner } from "native-base";
-import { ScrollView, KeyboardAvoidingView, Keyboard } from "react-native";
+import { Icon, View } from "native-base";
+import { KeyboardAvoidingView, Keyboard } from "react-native";
 import styled from "styled-components/native";
 import Accordion from "react-native-collapsible/Accordion";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose, withApollo } from "react-apollo";
 
 //GraphQL
@@ -14,7 +14,7 @@ import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 //Components
 import Chat from "../../../components/Chat";
 import CategoryGroup from "../../../components/CategoryGroup";
-import { Error, Loading } from "../../../components/index";
+import { Placeholder, Loading } from "../../../components/index";
 import {
   HeaderRightContainer,
   HeaderRightElement
@@ -42,7 +42,9 @@ class DiscussionViewScreen extends React.Component {
   };
 
   state = {
-    height: 0
+    height: 0,
+    userIdLogged: "",
+    avatar: ""
   };
 
   componentDidMount() {
@@ -55,9 +57,11 @@ class DiscussionViewScreen extends React.Component {
       this._keyboardDidHide
     );
 
+    const { userIdLogged, avatar } = this.props.navigation.state.params;
+
     this.setState({
-      userIdLogged: this.props.navigation.state.params.userIdLogged,
-      avatar: this.props.navigation.state.params.avatar
+      userIdLogged,
+      avatar
     });
   }
 
@@ -108,44 +112,45 @@ class DiscussionViewScreen extends React.Component {
   render() {
     if (this.props.Discussion && this.props.Discussion.loading) {
       return <Loading />;
-    } else if (this.props.Discussion && this.props.Discussion.error) {
-      return <Error />;
-    } else {
-      return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-          <Accordion
-            duration={600}
-            sections={["Section1"]}
-            renderHeader={this._renderHeader.bind(this)}
-            renderContent={this._renderContent.bind(this)}
-          />
-          <Chat
-            userIdLogged={this.state.userIdLogged}
-            messages={this.props.Discussion.Discussion.responses}
-            addMessage={this._addMessage}
-            avatar={this.state.avatar}
-          />
-          <View ref="marginBar" style={{ height: this.state.height }} />
-        </KeyboardAvoidingView>
-      );
     }
+    if (this.props.Discussion && this.props.Discussion.error) {
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
+    }
+
+    return (
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+        <Accordion
+          duration={600}
+          sections={["Section1"]}
+          renderHeader={this._renderHeader.bind(this)}
+          renderContent={this._renderContent.bind(this)}
+        />
+        <Chat
+          userIdLogged={this.state.userIdLogged}
+          messages={this.props.Discussion.Discussion.responses}
+          addMessage={this._addMessage}
+          avatar={this.state.avatar}
+        />
+        <View ref="marginBar" style={{ height: this.state.height }} />
+      </KeyboardAvoidingView>
+    );
   }
 
   //Cabeçalho Accordion
   _renderHeader() {
-    const discussion = this.props.Discussion.Discussion;
+    const { user, responses, title } = this.props.Discussion.Discussion;
     return (
       <ContainerDiscussion>
         <Header>
           <ViewAvatar>
             <Avatar
               source={
-                discussion.user.avatar != null
+                user.avatar != null
                   ? {
                       uri: GET_AVATAR_URL(
-                        discussion.user.avatar.secret,
+                        user.avatar.secret,
                         "250x250",
-                        discussion.user.avatar.name
+                        user.avatar.name
                       )
                     }
                   : {
@@ -155,14 +160,14 @@ class DiscussionViewScreen extends React.Component {
             />
           </ViewAvatar>
           <ViewInput>
-            <Username>{discussion.user.name}</Username>
-            <Span>{discussion.responses.length} respostas</Span>
+            <Username>{user.name}</Username>
+            <Span>{Object.keys(responses).length} respostas</Span>
           </ViewInput>
           <ViewIcon>
             <Icon name="arrow-dropdown" style={{ fontSize: 20 }} />
           </ViewIcon>
         </Header>
-        <Title>{discussion.title}</Title>
+        <Title>{title}</Title>
         <Desc>2 de Dezembro de 2017 - Atualizado há uma semana</Desc>
       </ContainerDiscussion>
     );
@@ -170,10 +175,10 @@ class DiscussionViewScreen extends React.Component {
 
   //Conteudo Accordion
   _renderContent() {
-    const discussion = this.props.Discussion.Discussion;
+    const { description } = this.props.Discussion.Discussion;
     return (
       <ContentDiscussion>
-        <ContentDesc>{discussion.description}</ContentDesc>
+        <ContentDesc>{description}</ContentDesc>
       </ContentDiscussion>
     );
   }

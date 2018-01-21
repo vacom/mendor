@@ -2,16 +2,18 @@ import React from "react";
 import { Container, Icon, Fab, View, Text } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
+//GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { DISCUSSIONS_BY_CATEGORIES_QUERY } from "../../api/Queries/Discussions";
-
 //Components
 import CategoryGroup from "../../components/CategoryGroup";
 import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../components/HeaderRight";
-import { Error, Loading } from "../../components/index";
+import { Placeholder, Loading } from "../../components/index";
+//Utils
+import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 
 class DiscussionsScreen extends React.Component {
   static navigationOptions = {
@@ -25,10 +27,15 @@ class DiscussionsScreen extends React.Component {
     )
   };
   state = {
-    avatar: "https://ui-avatars.com/api/?size=128&name=mendor",
+    avatar: IMAGE_PLACEHOLDER,
     userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
   };
-  _goToDiscussion = (id, title, avatar, userIdLogged) => () => {
+  _goToDiscussion = (
+    id,
+    title,
+    avatar = IMAGE_PLACEHOLDER,
+    userIdLogged
+  ) => () => {
     this.props.navigation.navigate("DiscussionView", {
       id: id,
       title: title,
@@ -52,13 +59,13 @@ class DiscussionsScreen extends React.Component {
       this.props.DiscussionsByCategories &&
       this.props.DiscussionsByCategories.error
     ) {
-      return <Error />;
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
     const { allCategories } = this.props.DiscussionsByCategories;
-    if (allCategories.length > 0) {
-      return (
-        <Container>
-          <ScrollView>
+    return (
+      <Container>
+        <ScrollView>
+          {Object.keys(allCategories).length > 0 ? (
             <View style={{ marginBottom: 15 }}>
               {allCategories.map(data => {
                 return (
@@ -74,42 +81,34 @@ class DiscussionsScreen extends React.Component {
                 );
               })}
             </View>
-          </ScrollView>
-          <Fab
-            onPress={this._goToAddDiscussion}
-            direction="up"
-            containerStyle={{}}
-            style={{ backgroundColor: "#3F51B5" }}
-            position="bottomRight"
-          >
-            <Icon name="add" />
-          </Fab>
-        </Container>
-      );
-    } else {
-      return (
-        <Container>
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text>Ainda não existem discussões.</Text>
-          </View>
-          <Fab
-            onPress={this._goToAddDiscussion}
-            direction="up"
-            containerStyle={{}}
-            style={{ backgroundColor: "#3F51B5" }}
-            position="bottomRight"
-          >
-            <Icon name="add" />
-          </Fab>
-        </Container>
-      );
-    }
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text>Ainda não existem discussões.</Text>
+            </View>
+          )}
+        </ScrollView>
+        <Fab
+          onPress={this._goToAddDiscussion}
+          direction="up"
+          containerStyle={{}}
+          style={{ backgroundColor: "#3F51B5" }}
+          position="bottomRight"
+        >
+          <Icon name="add" />
+        </Fab>
+      </Container>
+    );
   }
 }
 
-const DiscussionsScreenWithData = compose(
+export default compose(
+  withApollo,
   graphql(
     DISCUSSIONS_BY_CATEGORIES_QUERY,
     { name: "DiscussionsByCategories" },
@@ -122,8 +121,6 @@ const DiscussionsScreenWithData = compose(
     }
   )
 )(DiscussionsScreen);
-
-export default withApollo(DiscussionsScreenWithData);
 
 const ScrollView = styled.ScrollView`
   flex: 1;
