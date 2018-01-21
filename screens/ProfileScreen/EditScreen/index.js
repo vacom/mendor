@@ -1,5 +1,6 @@
 import React from "react";
 import { TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
+import { Thumbnail } from "native-base";
 import { ImagePicker } from "expo";
 //Components
 import {
@@ -31,7 +32,7 @@ import { USER_PROFILE_QUERY } from "../../../api/Queries/User";
 import { UPLOAD_PHOTO_FUNC } from "../../../api/Functions/Upload";
 //Utils
 import Toast from "react-native-root-toast";
-import { guid } from "../../../constants/Utils";
+import { guid, IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
 class ProfileEditScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -59,7 +60,7 @@ class ProfileEditScreen extends React.Component {
     location: "",
     loading: true,
     avatarId: "",
-    image: null
+    image: IMAGE_PLACEHOLDER
   };
 
   componentDidMount() {
@@ -172,28 +173,13 @@ class ProfileEditScreen extends React.Component {
         <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
           <ContentContainer>
             <DashedContainer>
-              <Row style={{ height: "auto", backgroundColor: "transparent" }}>
-                <MaterialIcons name="file-upload" size={42} color="#ffffff" />
-              </Row>
-              <Row
-                style={{
-                  height: "auto",
-                  marginBottom: 15,
-                  marginTop: 6,
-                  backgroundColor: "transparent"
-                }}
-              >
-                {this.state.image && (
-                  <Image
-                    source={{ uri: this.state.image }}
-                    style={{ width: 200, height: 200 }}
-                  />
-                )}
-                <Text
-                  style={{ fontSize: 16, fontWeight: "400", color: "#fff" }}
-                >
-                  Carregar foto de perfil
-                </Text>
+              <Row style={{ height: "auto", backgroundColor: "transparent", marginBottom: 15 }}>
+                  {this.state.image && (
+                      <Thumbnail
+                          source={{ uri: this.state.image }}
+                          style={{ width: 64, height: 64 }}
+                      />
+                  )}
               </Row>
               <Row style={{ height: "auto", backgroundColor: "transparent" }}>
                 <Button
