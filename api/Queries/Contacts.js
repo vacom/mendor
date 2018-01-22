@@ -6,7 +6,11 @@ const ALL_CONTACTS_QUERY = gql`
     allContacts(filter: { user: { id: $id } }) {
       contactID {
         id
-        avatar
+        avatar {
+          id
+          name
+          secret
+        }
         name
         type
       }
@@ -16,7 +20,7 @@ const ALL_CONTACTS_QUERY = gql`
 
 const ALL_CONTACTS_ENTREPENEURS_QUERY = gql`
   query allContactsEntrepeneurs($id: ID) {
-    allContacts(filter: { id: $id, user: { type: ENTREPRENEUR } }) {
+    allContacts(filter: { user: { type: ENTREPRENEUR, id: $id } }) {
       contactID {
         id
         avatar {
@@ -32,7 +36,7 @@ const ALL_CONTACTS_ENTREPENEURS_QUERY = gql`
 
 const ALL_CONTACTS_MENTORS_QUERY = gql`
   query allContactsMentors($id: ID) {
-    allContacts(filter: { id: $id, user: { type: MENTOR } }) {
+    allContacts(filter: { user: { type: MENTOR, id: $id } }) {
       contactID {
         id
         avatar {
