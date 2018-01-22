@@ -5,10 +5,14 @@ import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tab, Tabs } from "native-base";
 //Graphql
-import { ALL_CONTACTS_QUERY, ALL_CONTACTS_ENTREPENEURS_QUERY, ALL_CONTACTS_MENTORS_QUERY } from "../../api/Queries/Contacts";
+import {
+  ALL_CONTACTS_QUERY,
+  ALL_CONTACTS_ENTREPENEURS_QUERY,
+  ALL_CONTACTS_MENTORS_QUERY
+} from "../../api/Queries/Contacts";
 //Components
 import GradientContainer from "../../components/GradientContainer";
-import ContactList from "../../components/ContactList"
+import ContactList from "../../components/ContactList";
 import {
   HeaderRightContainer,
   HeaderRightElement
@@ -45,7 +49,9 @@ class ContactsScreen extends React.Component {
       )
     };
   };
-
+  _goToProfile = id => () => {
+    this.props.navigation.navigate("Profile", { id: id });
+  };
   componentDidMount() {
     this.props.navigation.setParams({
       goToSearch: this._goToSearch
@@ -81,9 +87,9 @@ class ContactsScreen extends React.Component {
               >
                 <ContainerTab>
                   <ContactList
+                    goToProfile={this._goToProfile}
                     contacts={this.props.allContactsMentors.allContacts}
                   />
-                  
                 </ContainerTab>
               </Tab>
               <Tab
@@ -91,9 +97,10 @@ class ContactsScreen extends React.Component {
                 style={{ backgroundColor: "transparent" }}
               >
                 <ContainerTab>
-                <ContactList
-                contacts={this.props.allContactsEntrepeneurs.allContacts}
-              />
+                  <ContactList
+                    goToProfile={this._goToProfile}
+                    contacts={this.props.allContactsEntrepeneurs.allContacts}
+                  />
                 </ContainerTab>
               </Tab>
             </Tabs>
