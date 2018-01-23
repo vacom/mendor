@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 //Components
 import { Thumbnail, Button, DeckSwiper, Card, Text } from "native-base";
 import {
@@ -13,23 +14,84 @@ import {
   CardRight
 } from "../../../components/Card";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { Loading, Placeholder, Error } from "../../../components/index";
 //Styles
 import { Col, Row } from "react-native-easy-grid";
 import styled from "styled-components/native";
 //GraphQL
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 import { CREATE_NOTIFICATION_MUTATION } from "../../../api/Mutations/Notification";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
+import { ALL_USERS_DISCOVERY_QUERY } from "../../../api/Queries/User";
 //Utils
 import Toast from "react-native-root-toast";
-import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+import {
+  IMAGE_PLACEHOLDER,
+  GET_DISTANCE_FROM_LAT_LON_IN_KM
+} from "../../../constants/Utils";
 
 class CardsScreen extends React.Component {
   state = {
-    notificationType: "REQUEST"
+    notificationType: "REQUEST",
+    data: [],
+    loading: true,
+    error: false
+  };
+
+  componentDidMount() {
+    this._onLoadDiscovery();
+  }
+  _onLoadDiscovery = async () => {
+    const { type, userId, contactsIds, competencesIds, distance } = this.props;
+
+
+    console.log("contactsIds = ", contactsIds);
+
+
+    const res = await this.props.client.query({
+      query: ALL_USERS_DISCOVERY_QUERY,
+      variables: { userId, type, contactsIds, competencesIds }
+    });
+    //error handling
+    if (res.error) {
+      this.setState({
+        error: true
+      });
+      return;
+    }
+    //if stops loading the data from DB
+    if (!res.loading) {
+       //console.log("res.data.allUsers = ", res.data.allUsers);
+      this._onFilterDiscovery(distance, res.data);
+      /*this.setState({
+        data: res.data.allUsers,
+        loading: false
+      });*/
+      return;
+    }
+  };
+  _onFilterDiscovery = (distance, object) => {
+    const { latitude, longitude } = this.props.userLocation;
+    //get closer users by distance
+    const data = object.allUsers.filter(user => {
+      return (
+        GET_DISTANCE_FROM_LAT_LON_IN_KM(
+          latitude,
+          longitude,
+          user.profile.coordinates.latitude,
+          user.profile.coordinates.longitude
+        ) <= distance
+      );
+    });
+    //updates the data
+    this.setState({
+      data,
+      loading: false
+    });
   };
   _onConnectUser = async userId => {
-    const { notificationType: type, userId: userRequestId } = this.state;
+    const { notificationType: type } = this.state;
+    const { userId: userRequestId } = this.props;
     const { createNotification } = this.props;
     try {
       //Creates a new notification of type request
@@ -41,6 +103,7 @@ class CardsScreen extends React.Component {
         },
         update: async () => {
           try {
+            this._onRemoveUser(userId);
             Toast.show("Pedido Enviado.");
           } catch (e) {
             console.log(e);
@@ -52,144 +115,181 @@ class CardsScreen extends React.Component {
       Toast.show(e);
     }
   };
-  _onAddUser = data => {
-    this._onConnectUser(data.id);
-  };
-  _onRemoveUser = data => {
-    console.log(data);
-  };
+
+  _onAddUser(userId) {
+    //this._onConnectUser(userId);
+  }
+  _onRemoveUser(userId) {
+    //TODO need a bug fix for the last user, when only has 2 users it removes both
+    /* const data = this.state.data.filter(user => {
+      return user.id !== userId;
+    });
+    this.setState({
+      data
+    });*/
+  }
+
   render() {
     return (
-      <CardsContainer style={{ height: 200 }}>
-        <DeckSwiper
-          onSwipeLeft={data => this._onRemoveUser(data)}
-          onSwipeRight={data => this._onAddUser(data)}
-          dataSource={this.props.data}
-          renderItem={item => (
-            <Card style={{ elevation: 3, padding: 15, borderRadius: 15 }}>
-              <UserContainer>
-                <CardContainer>
-                  <CardLeft>
-                    <Thumbnail
-                      style={{ width: 48, height: 48 }}
-                      source={
-                        item.avatar != null
-                          ? {
-                              uri: GET_AVATAR_URL(
-                                item.avatar.secret,
-                                "250x250",
-                                item.avatar.name
-                              )
-                            }
-                          : {
-                              uri: IMAGE_PLACEHOLDER
-                            }
-                      }
-                    />
-                  </CardLeft>
-                  <CardBody>
-                    <H1>{item.name}</H1>
-                    <P style={{ paddingTop: 1 }}>{`${item.profile.role} na ${
-                      item.profile.company
-                    }`}</P>
-                  </CardBody>
-                  <CardRight>
-                    <MaterialIcons
-                      name="arrow-drop-down"
-                      size={24}
-                      color="#000000"
-                    />
-                  </CardRight>
-                </CardContainer>
-              </UserContainer>
-              <LinksContainer>
-                <LinkContainer>
-                  <Row style={{ height: 39 }}>
-                    <Col style={{ width: 40 }}>
-                      <MaterialIcons name="work" size={24} color="#757575" />
-                    </Col>
-                    <Col>
-                      <P style={{ marginTop: 4 }}>{item.profile.profession}</P>
-                    </Col>
+      <View>
+        {this.state.error ? (
+          <Error />
+        ) : this.state.loading ? (
+          <Loading text="A procurar pessoas..." />
+        ) : Object.keys(this.state.data) <= 0 ? (
+          <Placeholder IconName="people" text="Não há ninguém perto de si." />
+        ) : (
+          <CardsContainer style={{ height: 200 }}>
+            <DeckSwiper
+              onSwipeLeft={data => this._onRemoveUser(data.id)}
+              onSwipeRight={data => this._onAddUser(data.id)}
+              dataSource={this.state.data}
+              renderItem={item => (
+                <Card style={{ elevation: 3, padding: 15, borderRadius: 15 }}>
+                  <UserContainer>
+                    <CardContainer>
+                      <CardLeft>
+                        <Thumbnail
+                          style={{ width: 48, height: 48 }}
+                          source={{
+                            uri: IMAGE_PLACEHOLDER
+                          }}
+                          /* source={
+                            item.avatar != null
+                              ? {
+                                  uri: GET_AVATAR_URL(
+                                    item.avatar.secret,
+                                    "250x250",
+                                    item.avatar.name
+                                  )
+                                }
+                              : {
+                                  uri: IMAGE_PLACEHOLDER
+                                }
+                          }*/
+                        />
+                      </CardLeft>
+                      <CardBody>
+                        <H1>{item.name}</H1>
+                        <P style={{ paddingTop: 1 }}>{`${
+                          item.profile.role
+                        } na ${item.profile.company}`}</P>
+                      </CardBody>
+                      <CardRight>
+                        <MaterialIcons
+                          name="arrow-drop-down"
+                          size={24}
+                          color="#000000"
+                        />
+                      </CardRight>
+                    </CardContainer>
+                  </UserContainer>
+                  <LinksContainer>
+                    <LinkContainer>
+                      <Row style={{ height: 39 }}>
+                        <Col style={{ width: 40 }}>
+                          <MaterialIcons
+                            name="work"
+                            size={24}
+                            color="#757575"
+                          />
+                        </Col>
+                        <Col>
+                          <P style={{ marginTop: 4 }}>
+                            {item.profile.profession}
+                          </P>
+                        </Col>
+                      </Row>
+                    </LinkContainer>
+                    <LinkContainer>
+                      <Row style={{ height: 39 }}>
+                        <Col style={{ width: 40 }}>
+                          <MaterialIcons
+                            name="location-on"
+                            size={24}
+                            color="#757575"
+                          />
+                        </Col>
+                        <Col>
+                          <P style={{ marginTop: 4 }}>
+                            {item.profile.location}
+                          </P>
+                        </Col>
+                      </Row>
+                    </LinkContainer>
+                    <LinkContainer>
+                      <Row style={{ height: 39 }}>
+                        <Col style={{ width: 40 }}>
+                          <MaterialCommunityIcons
+                            name="radar"
+                            size={24}
+                            color="#757575"
+                          />
+                        </Col>
+                        <Col>
+                          <P style={{ marginTop: 4 }}>
+                            {`${GET_DISTANCE_FROM_LAT_LON_IN_KM(
+                              this.props.userLocation.latitude,
+                              this.props.userLocation.longitude,
+                              item.profile.coordinates.latitude,
+                              item.profile.coordinates.longitude
+                            )} km`}
+                          </P>
+                        </Col>
+                      </Row>
+                    </LinkContainer>
+                  </LinksContainer>
+                  <Row>
+                    <SkillsContainer>
+                      <Span style={{ color: "#000000" }}>
+                        {"competências".toUpperCase()}
+                      </Span>
+                      <LabelsControl>
+                        <LabelsContainer>
+                          {item.competences.map(data => {
+                            return (
+                              <LabelContainer key={data.interest.id}>
+                                <Label text={data.interest.title} />
+                              </LabelContainer>
+                            );
+                          })}
+                        </LabelsContainer>
+                      </LabelsControl>
+                    </SkillsContainer>
                   </Row>
-                </LinkContainer>
-                <LinkContainer>
-                  <Row style={{ height: 39 }}>
-                    <Col style={{ width: 40 }}>
-                      <MaterialIcons
-                        name="location-on"
-                        size={24}
-                        color="#757575"
-                      />
-                    </Col>
-                    <Col>
-                      <P style={{ marginTop: 4 }}>{item.profile.location}</P>
-                    </Col>
-                  </Row>
-                </LinkContainer>
-                <LinkContainer>
-                  <Row style={{ height: 39 }}>
-                    <Col style={{ width: 40 }}>
-                      <MaterialCommunityIcons
-                        name="radar"
-                        size={24}
-                        color="#757575"
-                      />
-                    </Col>
-                    <Col>
-                      <P style={{ marginTop: 4 }}>{"20"}</P>
-                    </Col>
-                  </Row>
-                </LinkContainer>
-              </LinksContainer>
-              <Row>
-                <SkillsContainer>
-                  <Span style={{ color: "#000000" }}>
-                    {"competências".toUpperCase()}
-                  </Span>
-                  <LabelsControl>
-                    <LabelsContainer>
-                      {item.competences.map(data => {
-                        return (
-                          <LabelContainer key={data.interest.id}>
-                            <Label text={data.interest.title} />
-                          </LabelContainer>
-                        );
-                      })}
-                    </LabelsContainer>
-                  </LabelsControl>
-                </SkillsContainer>
-              </Row>
-              <Row
-                style={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginBottom: 15
-                }}
-              >
-                <Button
-                  onPress={() => this._onConnectUser(item.id)}
-                  style={{ backgroundColor: "#3F51B5", borderRadius: 2 }}
-                >
-                  <Text
+                  <Row
                     style={{
-                      fontSize: 14,
-                      fontWeight: "600"
+                      alignItems: "center",
+                      justifyContent: "center",
+                      marginBottom: 15
                     }}
                   >
-                    {"conectar".toUpperCase()}
-                  </Text>
-                </Button>
-              </Row>
-            </Card>
-          )}
-        />
-      </CardsContainer>
+                    <Button
+                      onPress={() => this._onConnectUser(item.id)}
+                      style={{ backgroundColor: "#3F51B5", borderRadius: 2 }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          fontWeight: "600"
+                        }}
+                      >
+                        {"conectar".toUpperCase()}
+                      </Text>
+                    </Button>
+                  </Row>
+                </Card>
+              )}
+            />
+          </CardsContainer>
+        )}
+      </View>
     );
   }
 }
 
 export default compose(
+  withApollo,
   graphql(CREATE_NOTIFICATION_MUTATION, { name: "createNotification" })
 )(CardsScreen);
 

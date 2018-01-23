@@ -14,6 +14,20 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
       secret
       name
     }
+    profile {
+      id
+      location
+    }
+    contacts {
+      contactID{
+        id
+      }
+    }
+    competences {
+      interest {
+        id
+      }
+    }
   }
 `;
 
