@@ -85,12 +85,18 @@ const USER_PROFILE_QUERY = gql`
  */
 
 const ALL_USERS_DISCOVERY_QUERY = gql`
-  query allUsers($userId: ID!, $type: UserType!, $location: String!) {
+  query allUsers(
+    $userId: ID!
+    $type: UserType!
+    $contactsIds: [ID!]
+    $competencesIds: [ID!]
+  ) {
     allUsers(
       filter: {
         id_not: $userId
         type: $type
-        profile: { location_contains: $location }
+        contacts_every: { user: { id_not_in: $contactsIds } }
+        competences_some: { interest: { id_in: $competencesIds } }
       }
     ) {
       id
@@ -106,6 +112,8 @@ const ALL_USERS_DISCOVERY_QUERY = gql`
         company
         profession
         location
+        coordinates
+        distance
       }
       competences(first: 10) {
         interest {

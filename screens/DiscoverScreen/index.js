@@ -1,5 +1,6 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, ScrollView, RefreshControl } from "react-native";
+import { Location, Permissions } from "expo";
 import { Thumbnail } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -10,24 +11,21 @@ import {
   HeaderRightElement
 } from "../../components/HeaderRight";
 
-import { Loading, Placeholder, Error } from "../../components/index";
+import { Loading, Placeholder } from "../../components/index";
 //GraphQL
-import { withApollo } from "react-apollo";
-import {
-  BASIC_USER_QUERY,
-  ALL_USERS_DISCOVERY_QUERY
-} from "../../api/Queries/User";
+import { withApollo, compose, graphql } from "react-apollo";
+import { BASIC_USER_QUERY } from "../../api/Queries/User";
+import { UPDATE_USER_COORDINATES_MUTATION } from "../../api/Mutations/User";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils
 import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
-//import Toast from "react-native-root-toast";
+import Toast from "react-native-root-toast";
 //Containers
 import Cards from "./CardsScreen.js";
 
 class DiscoverScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
-
     return {
       title: "Descobrir",
       headerStyle: {
@@ -52,86 +50,164 @@ class DiscoverScreen extends React.Component {
       )
     };
   };
-
   state = {
     userId: "",
-    type: "MENTOR",
-    location: "aveiro",
-    data: [],
+    profileId: "",
     loading: true,
-    error: false
+    error: false,
+    location: null,
+    contactsIds: [],
+    competencesIds: [],
+    distance: 50,
+    type: "MENTOR",
+    refreshing: false
   };
-
   componentDidMount() {
     this._getBasicUserInfo();
-    this._onLoadDiscovery();
   }
-
   _goToProfile = () => {
     this.props.navigation.navigate("Profile", { id: this.state.userId });
   };
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    //gets new content from the DB
+    this._getBasicUserInfo();
+  };
   _getBasicUserInfo = async () => {
+    //Gets the user basic information from the DB
     const res = await this.props.client.query({ query: BASIC_USER_QUERY });
     if (!res.loading) {
-      const { avatar } = res.data.user;
-
-      console.log(GET_AVATAR_URL(avatar.secret, "250x250", avatar.name));
-
+      const { avatar, profile, contacts, competences } = res.data.user;
+      //Sets the navigation params to navigate to profile
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,
         avatar:
           GET_AVATAR_URL(avatar.secret, "250x250", avatar.name) ||
           IMAGE_PLACEHOLDER
       });
+      //Updates the state with the user and profile ID
       this.setState({
-        userId: res.data.user.id
+        userId: res.data.user.id,
+        profileId: profile.id
+      });
+
+      //Groups all of his contacts
+      if (this._onGroupIds(contacts, "contactsIds")) {
+        //Groups all of his competences
+        if (this._onGroupIds(competences, "competencesIds")) {
+          //Gets the user current location;
+          this._getUserLocation();
+        }
+      }
+    } else {
+      //If a something wrong shows the error
+      this.setState({
+        loading: false,
+        error: true,
+        refreshing: false
       });
     }
   };
-  _onLoadDiscovery = async () => {
-    const { userId, type, location } = this.state;
-
-    const res = await this.props.client.query({
-      query: ALL_USERS_DISCOVERY_QUERY,
-      variables: { userId, type, location }
+  _getUserLocation = async () => {
+    const { profileId } = this.state;
+    //Gets the user permission to access is location
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== "granted") {
+      this.setState({
+        errorMessage: "Permission to access location was denied"
+      });
+    }
+    let location = await Location.getCurrentPositionAsync({});
+    //Saves the location and stops the loading state
+    this.setState({
+      location: location.coords,
+      loading: false,
+      refreshing: false
     });
-    //error handling
-    if (res.error) {
-      this.setState({
-        error: true
+    //Updates the user location on the DB
+    this._onUpdateUserCoords(profileId, location.coords);
+  };
+
+  _onUpdateUserCoords = async (profileId, coordinates, distance) => {
+    try {
+      const { updateUserCoords } = this.props;
+      //updates the user location
+      await updateUserCoords({
+        variables: {
+          profileId,
+          coordinates,
+          distance
+        },
+        update: async () => {
+          try {
+            console.log("Guardou localização");
+          } catch (e) {
+            console.log(e);
+            Toast.show("Erro! Em encontrar a sua localização.");
+          }
+        }
       });
-      return;
-    }
-    //if stops loading the data from DB
-    if (!res.loading) {
-      this.setState({
-        data: res.data.allUsers,
-        loading: false
-      });
-      return;
+    } catch (e) {
+      Toast.show(e);
     }
   };
 
+  _onGroupIds = (object, type) => {
+    const data = [];
+    //grupos all of the ids of user contacts and their interests
+    object.map(res => {
+      data.push(
+        type === "competencesIds" ? res.interest.id : res.contactID[0].id
+      );
+    });
+    this.setState({
+      [type]: data
+    });
+    return true;
+  };
   render() {
+    const {
+      userId,
+      type,
+      location,
+      contactsIds,
+      competencesIds,
+      distance
+    } = this.state;
     return (
-      <Container>
-        <GradientContainer>
+      <GradientContainer>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
           {this.state.error ? (
-            <Error />
+            <Placeholder text="Erro! Tente novamente" IconName="error" />
           ) : this.state.loading ? (
-            <Loading text="A procurar pessoas..." />
-          ) : Object.keys(this.state.data) <= 0 ? (
-            <Placeholder IconName="people" text="Não há ninguém perto de si." />
+            <Loading text="A obter a sua localização..." />
           ) : (
-            <Cards data={this.state.data} />
+            <Cards
+              userId={userId}
+              type={type}
+              userLocation={location}
+              contactsIds={contactsIds}
+              competencesIds={competencesIds}
+              distance={distance}
+            />
           )}
-        </GradientContainer>
-      </Container>
+        </ScrollView>
+      </GradientContainer>
     );
   }
 }
 
-export default withApollo(DiscoverScreen);
+export default compose(
+  withApollo,
+  graphql(UPDATE_USER_COORDINATES_MUTATION, { name: "updateUserCoords" })
+)(DiscoverScreen);
 
 const Container = styled.View`
   flex: 1;
