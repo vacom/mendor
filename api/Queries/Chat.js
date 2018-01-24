@@ -1,15 +1,15 @@
 import gql from "graphql-tag";
 
 const ALL_CHATS_QUERY = gql`
-  query allChats {
-    allChats(filter: { users_some: { id: "cjbjhh0f9lbfz01142sd6tvuv" } }) {
+  query allChats($id: ID) {
+    allChats(filter: { users_some: { id: $id } }) {
       id
       name
       messages(last: 1) {
         content
         createdAt
       }
-      users(filter: { id_not: "cjbjhh0f9lbfz01142sd6tvuv" }) {
+      users(filter: { id_not: $id }) {
         id
         avatar {
           id
@@ -28,6 +28,16 @@ const ALL_MESSAGES_QUERY = gql`
       id
       content
       createdAt
+      type
+      project {
+        id
+        title
+        description
+        technologies {
+          id
+          name
+        }
+      }
       author {
         id
         avatar {

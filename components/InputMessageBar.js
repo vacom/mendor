@@ -1,23 +1,46 @@
 import React from "react";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Icon } from "native-base";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
+import { graphql, compose, withApollo } from "react-apollo";
+import { BASIC_USER_QUERY } from "../api/Queries/User";
+import { GET_AVATAR_URL } from "../api/Functions/Upload";
+import { IMAGE_PLACEHOLDER } from "../constants/Utils";
 
 class InputMessageBar extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      //ALTERAR
-      avatar:
-        "https://scontent.fopo2-2.fna.fbcdn.net/v/t1.0-9/25498263_1521972947849794_5674696303839555748_n.jpg?oh=e027e305b330218e0780f28c2cdc1a31&oe=5ABE2638"
-    };
     this._addMessage = this._addMessage.bind(this);
+    this._openShareCards = this._openShareCards.bind(this);
+    this.state = {
+      avatar: IMAGE_PLACEHOLDER
+    };
   }
+
   _addMessage() {
     if (this.state.text && this.state.text != "")
       this.props.addMessage(this.state.text);
     this.setState({
       text: ""
+    });
+  }
+
+  _openShareCards() {
+    this.props.openShareCards();
+  }
+
+  componentDidMount() {
+    const userLoggedData = this.props.client.readQuery({
+      query: BASIC_USER_QUERY
+    });
+    let avatarData = userLoggedData.user.avatar;
+    let avatar =
+      avatarData != null
+        ? GET_AVATAR_URL(avatarData.secret, "250x250", avatarData.name)
+        : IMAGE_PLACEHOLDER;
+    this.setState({
+      avatar: avatar
     });
   }
   render() {
@@ -40,17 +63,28 @@ class InputMessageBar extends React.Component {
             onChangeText={text => {
               this.setState({ text }), console.log(text);
             }}
+            ref="input"
           />
         </ViewInput>
+        {this.props.share_cards && (
+          <TouchableOpacity onPress={this._openShareCards}>
+            <MaterialIcons
+              name="add"
+              size={25}
+              color="#6A6A6A"
+              style={{ marginRight: 15 }}
+            />
+          </TouchableOpacity>
+        )}
         <TouchableOpacity onPress={this._addMessage}>
-          <Icon name="send" style={{ color: "#3F51B5", fontSize: 30 }} />
+          <Icon name="send" style={{ color: "#3F51B5", fontSize: 25 }} />
         </TouchableOpacity>
       </Message>
     );
   }
 }
 
-export default InputMessageBar;
+export default compose(withApollo)(InputMessageBar);
 
 const Message = styled.View`
   background: #fff;

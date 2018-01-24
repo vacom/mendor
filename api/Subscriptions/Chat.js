@@ -17,7 +17,11 @@ const ALL_CHATS_SUBSCRIPTION = gql`
         }
         users {
           id
-          avatar 
+          avatar {
+            id
+            secret
+            name
+          }
           name
         }
       }
@@ -37,9 +41,23 @@ const ALL_MESSAGES_SUBSCRIPTION = gql`
         id
         content
         createdAt
+        type
+        project {
+          id
+          title
+          description
+          technologies {
+            id
+            name
+          }
+        }
         author {
           id
-          avatar
+          avatar {
+            id
+            secret
+            name
+          }
         }
       }
     }

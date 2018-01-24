@@ -117,4 +117,22 @@ const ALL_USERS_DISCOVERY_QUERY = gql`
   }
 `;
 
-export { BASIC_USER_QUERY, USER_PROFILE_QUERY, ALL_USERS_DISCOVERY_QUERY };
+/**
+ * PROJECTS CARDS QUERIES
+ */
+
+const ALL_PROJECTS_OF_USER = gql`
+  query allProjects($id: ID) {
+    allProjects(filter: { user: { id: $id } }) {
+      id
+      title
+      description
+      technologies {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export { BASIC_USER_QUERY, USER_PROFILE_QUERY, ALL_USERS_DISCOVERY_QUERY, ALL_PROJECTS_OF_USER };

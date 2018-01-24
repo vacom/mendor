@@ -1,10 +1,16 @@
 import React from "react";
-import { View, Text, Input, Thumbnail } from "native-base";
+import { View, Text, Input, Thumbnail, Content } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import GradientContainer from "../../../components/GradientContainer";
-import { ScrollView, TouchableOpacity, TouchableHighlight } from "react-native";
-import { Error, Loading } from "../../../components/index";
+import {
+  ScrollView,
+  TouchableOpacity,
+  TouchableHighlight,
+  RefreshControl
+} from "react-native";
+import { Error, Loading, Placeholder } from "../../../components/index";
+import { withNavigation } from "react-navigation";
 import {
   Card,
   CardContainer,
@@ -31,11 +37,13 @@ class ChatAddScreen extends React.Component {
   constructor(props) {
     super(props);
   }
+
   state = {
     search_value: "",
     typing: false,
     loading: false,
-    searched: false
+    searched: false,
+    refreshing: false
   };
 
   handleChange() {
@@ -56,6 +64,16 @@ class ChatAddScreen extends React.Component {
       }, 500);
     }
   }
+
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    //gets new content from the DB
+    this.props.allContacts.refetch();
+    //clears the loading
+    if (!this.props.allContacts.loading) {
+      this.setState({ refreshing: false });
+    }
+  };
 
   _searchValue() {
     if (!this.state.typing) {
@@ -80,7 +98,7 @@ class ChatAddScreen extends React.Component {
     const res = await this.props.client.query({
       query: ALL_INDIVIDUAL_CHATS_OF_USERS,
       variables: {
-        id1: "cjbjhh0f9lbfz01142sd6tvuv", // id1 -> Sempre o id logado!!!
+        id1: this.props.screenProps.userId, // id1 -> Sempre o id logado!!!
         id2: id
       }
     });
@@ -88,7 +106,10 @@ class ChatAddScreen extends React.Component {
       if (res.data.allChats.length > 0) {
         this.props.navigation.navigate("ChatView", {
           name: res.data.allChats[0].users[0].name,
-          avatar: avatar,
+          avatar:
+            avatar != null
+              ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
+              : IMAGE_PLACEHOLDER,
           id: res.data.allChats[0].id
         });
       } else {
@@ -96,15 +117,22 @@ class ChatAddScreen extends React.Component {
           const res_mutation = await this.props.createChat({
             variables: {
               name: "created",
-              usersIds: [id, "cjbjhh0f9lbfz01142sd6tvuv"],
-              authorId: "cjbjhh0f9lbfz01142sd6tvuv",
+              usersIds: [id, this.props.screenProps.userId],
+              authorId: this.props.screenProps.userId,
               isGroup: false
             }
           });
           if (!res_mutation.loading) {
             this.props.navigation.navigate("ChatView", {
               name: res_mutation.data.createChat.users[0].name,
-              avatar: res_mutation.data.createChat.users[0].avatar,
+              avatar:
+                res_mutation.data.createChat.users[0].avatar != null
+                  ? GET_AVATAR_URL(
+                      res_mutation.data.createChat.users[0].avatar.secret,
+                      "250x250",
+                      res_mutation.data.createChat.users[0].avatar.name
+                    )
+                  : IMAGE_PLACEHOLDER,
               id: res_mutation.data.createChat.id
             });
           }
@@ -119,7 +147,7 @@ class ChatAddScreen extends React.Component {
     const res = await this.props.client.query({
       query: SEARCH_CONTACTS,
       variables: {
-        id: "cjbjhh0f9lbfz01142sd6tvuv",
+        id: this.props.screenProps.userId,
         query: this.state.search_value
       }
     });
@@ -181,25 +209,23 @@ class ChatAddScreen extends React.Component {
                       </Text>
                     </CardBody>
                     <CardRight>
-                      <MaterialIcons name="message" size={22} color="#3F51B5" />
+                      <TouchableOpacity>
+                        <MaterialIcons name="send" size={22} color="#3F51B5" />
+                      </TouchableOpacity>
                     </CardRight>
                   </CardContainer>
                 </Card>
               );
             });
           } else {
-            return (
-              <View>
-                <Text>Sem resultados.</Text>
-              </View>
-            );
+            return <Placeholder text="Sem resultados!" IconName="error" />;
           }
         } else {
           // Se não houver pesquisa mostra os dados dos contactos todos
           if (this.props.allContacts && this.props.allContacts.loading) {
             return <Loading />;
           } else if (this.props.allContacts && this.props.allContacts.error) {
-            return <Error />;
+            return <Placeholder text="Erro! Tente novamente" IconName="error" />;
           } else {
             if (this.props.allContacts.allContacts.length > 0) {
               return this.props.allContacts.allContacts.map((data, index) => {
@@ -209,9 +235,19 @@ class ChatAddScreen extends React.Component {
                       <CardLeft>
                         <Thumbnail
                           style={{ width: 48, height: 48 }}
-                          source={{
-                            uri: data.contactID[0].avatar
-                          }}
+                          source={
+                            data.contactID[0].avatar != null
+                              ? {
+                                  uri: GET_AVATAR_URL(
+                                    data.contactID[0].avatar.secret,
+                                    "250x250",
+                                    data.contactID[0].avatar.name
+                                  )
+                                }
+                              : {
+                                  uri: IMAGE_PLACEHOLDER
+                                }
+                          }
                         />
                       </CardLeft>
                       <CardBody>
@@ -231,7 +267,7 @@ class ChatAddScreen extends React.Component {
                         </Text>
                       </CardBody>
                       <CardRight>
-                        <TouchableHighlight
+                        <TouchableOpacity
                           onPress={() =>
                             this._goToChat(
                               data.contactID[0].id,
@@ -240,22 +276,18 @@ class ChatAddScreen extends React.Component {
                           }
                         >
                           <MaterialIcons
-                            name="message"
+                            name="send"
                             size={22}
                             color="#3F51B5"
                           />
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                       </CardRight>
                     </CardContainer>
                   </Card>
                 );
               });
             } else {
-              return (
-                <View>
-                  <Text>Sem resultados.</Text>
-                </View>
-              );
+              return <Placeholder text="Sem resultados!" IconName="error" />;
             }
           }
         }
@@ -289,7 +321,16 @@ class ChatAddScreen extends React.Component {
         </Header>
         <View style={{ flex: 1 }}>
           <GradientContainer>
-            <ScrollView>{_renderContacts()}</ScrollView>
+            <Content
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={this._onRefresh}
+                />
+              }
+            >
+              <ScrollView>{_renderContacts()}</ScrollView>
+            </Content>
           </GradientContainer>
         </View>
       </Container>
@@ -299,15 +340,15 @@ class ChatAddScreen extends React.Component {
 
 export default compose(
   withApollo,
+  withNavigation,
   graphql(ALL_CONTACTS_QUERY, {
     options: props => ({
-      variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" }
+      variables: { id: props.screenProps.userId }
     }),
     name: "allContacts"
   }),
   graphql(CREATE_CHAT_MUTATION, { name: "createChat" })
 )(ChatAddScreen);
-
 
 const Container = styled.View`
   flex: 1;

@@ -10,11 +10,12 @@ class Chat extends React.Component {
   constructor(props) {
     super(props);
     this._addMessage = this._addMessage.bind(this);
+    this._openShareCards = this._openShareCards.bind(this);
   }
   state = {
     messages: this.props.messages,
     avatar: this.props.avatar,
-    userIdLogged:this.props.userIdLogged
+    userIdLogged: this.props.userIdLogged
   };
   componentDidMount() {
     if (this.props.messages.length > 0) {
@@ -34,8 +35,11 @@ class Chat extends React.Component {
   }
 
   _addMessage(e) {
-    console.log("children" + e);
     this.props.addMessage(e);
+  }
+
+  _openShareCards() {
+    this.props.openShareCards();
   }
   render() {
     if (this.state.messages.length > 0) {
@@ -49,12 +53,21 @@ class Chat extends React.Component {
                   userId={data.author.id}
                   userIdLogged={this.props.userIdLogged}
                   message={data.content}
+                  createdAt={data.createdAt}
                   avatar={data.author.avatar}
+                  type={data.type}
+                  project={data.project}
                 />
               );
             })}
           </ScrollView>
-          <InputMessageBar avatar={this.state.avatar} userIdLogged={this.state.userIdLogged} addMessage={this._addMessage} />
+          <InputMessageBar
+            openShareCards={this._openShareCards}
+            share_cards={true}
+            avatar={this.state.avatar}
+            userIdLogged={this.state.userIdLogged}
+            addMessage={this._addMessage}
+          />
         </View>
       );
     } else {
@@ -63,7 +76,13 @@ class Chat extends React.Component {
           <NoMessages ref="ScrollView">
             <Text>No messages...</Text>
           </NoMessages>
-          <InputMessageBar avatar={this.state.avatar} userIdLogged={this.state.userIdLogged} addMessage={this._addMessage} />
+          <InputMessageBar
+            openShareCards={this._openShareCards}
+            share_cards={true}
+            avatar={this.state.avatar}
+            userIdLogged={this.state.userIdLogged}
+            addMessage={this._addMessage}
+          />
         </View>
       );
     }

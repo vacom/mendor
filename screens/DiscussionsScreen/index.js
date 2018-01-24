@@ -28,7 +28,7 @@ class DiscussionsScreen extends React.Component {
   };
   state = {
     avatar: IMAGE_PLACEHOLDER,
-    userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv"
+    userIdLogged: this.props.screenProps.userId,
   };
   _goToDiscussion = (
     id,

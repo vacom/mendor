@@ -1,5 +1,6 @@
 import React from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { ScrollView, TouchableOpacity, RefreshControl } from "react-native";
+import { withNavigation } from "react-navigation";
 //Styles
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -9,7 +10,7 @@ import { ALL_CHATS_QUERY } from "../../api/Queries/Chat";
 import { ALL_CHATS_SUBSCRIPTION } from "../../api/Subscriptions/Chat";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Components
-import { Text, View, Fab, Icon, ActionSheet } from "native-base";
+import { Text, View, Icon, Content } from "native-base";
 import GradientContainer from "../../components/GradientContainer";
 import {
   HeaderRightContainer,
@@ -30,7 +31,7 @@ import {
   MessageName
 } from "../../components/ChatComponents";
 //Utils
-import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
+import { IMAGE_PLACEHOLDER, IMAGE_GROUP_CHAT } from "../../constants/Utils";
 import moment from "moment/min/moment-with-locales";
 
 class ChatScreen extends React.Component {
@@ -41,11 +42,13 @@ class ChatScreen extends React.Component {
       headerRight: (
         <HeaderRightContainer>
           <HeaderRightElement>
-            <MaterialIcons name="search" size={24} color="#ffffff" />
+            <TouchableOpacity onPress={params.openSearch}>
+              <MaterialIcons name="search" size={24} color="#ffffff" />
+            </TouchableOpacity>
           </HeaderRightElement>
           <HeaderRightElement>
-            <TouchableOpacity onPress={params.openModal}>
-              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+            <TouchableOpacity onPress={params.openAddChat}>
+              <MaterialIcons name="add" size={24} color="#ffffff" />
             </TouchableOpacity>
           </HeaderRightElement>
         </HeaderRightContainer>
@@ -53,40 +56,36 @@ class ChatScreen extends React.Component {
     };
   };
   state = {
-    userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv",
-    modalVisible: false
+    modalVisible: false,
+    refreshing: false
   };
+
   componentDidMount() {
     moment.locale("pt");
     this._subscribeChat();
     this.props.navigation.setParams({
-      openModal: this._setModalVisible
+      openAddChat: this._goToAddChat,
+      openSearch: this._goToSearch
+    });
+    this.setState({
+      userIdLogged: this.props.screenProps.userId
     });
   }
 
-  _setModalVisible = () => {
-    var BUTTONS = ["Marcar todas como lidas", "Cancelar"];
-    ActionSheet.show(
-      {
-        options: BUTTONS,
-        cancelButtonIndex: 1,
-        destructiveButtonIndex: 0,
-        title: "Ações"
-      },
-      buttonIndex => {
-        switch (buttonIndex) {
-          case 0:
-            console.log("Marcar");
-            break;
-        }
-      }
-    );
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    //gets new content from the DB
+    this.props.AllChatsQuery.refetch();
+    //clears the loading
+    if (!this.props.AllChatsQuery.loading) {
+      this.setState({ refreshing: false });
+    }
   };
 
   _subscribeChat = () => {
     this.props.AllChatsQuery.subscribeToMore({
       document: ALL_CHATS_SUBSCRIPTION,
-      variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" },
+      variables: { id: this.state.userIdLogged },
       updateQuery: (previous, { subscriptionData }) => {
         if (!subscriptionData.data) {
           return previous;
@@ -99,15 +98,19 @@ class ChatScreen extends React.Component {
       }
     });
   };
+  _goToSearch = () => {
+    console.log("hey");
+  };
   _goToAddChat = () => {
     this.props.navigation.navigate("AddChat", {});
   };
   _goToChatView = (id, users) => {
-    let avatar,
-      name = "";
     const userlength = Object.keys(users).length;
+    console.log(userlength);
+    let name = "";
+    let avatar = "";
     if (userlength > 1) {
-      avatar = IMAGE_PLACEHOLDER;
+      avatar = IMAGE_GROUP_CHAT;
       users.map((user, i) => {
         if (userlength === i + 1) {
           name += user.name;
@@ -116,6 +119,7 @@ class ChatScreen extends React.Component {
         }
       });
     } else {
+      name = users[0].name;
       avatar =
         users[0].avatar != null
           ? GET_AVATAR_URL(
@@ -124,8 +128,6 @@ class ChatScreen extends React.Component {
               users[0].avatar.name
             )
           : IMAGE_PLACEHOLDER;
-
-      name = users[0].name;
     }
     this.props.navigation.navigate("ChatView", {
       name: name,
@@ -146,73 +148,62 @@ class ChatScreen extends React.Component {
     return (
       <ContainerView>
         <GradientContainer>
-          <ScrollView contentContainerStyle={{ paddingVertical: 5 }}>
-            {Object.keys(AllChatsQuery.allChats).length > 0 ? (
-              allChats.map(data => {
-                return (
-                  <View key={data.id}>
-                    <Card
-                      onPress={() => this._goToChatView(data.id, data.users)}
-                    >
-                      <CardContainer>
-                        <CardLeft>
-                          <MessageAvatar data={data} />
-                        </CardLeft>
-                        <CardBody>
-                          <MessageName users={data.users} />
-
-                          <MessageContent data={data} />
-                        </CardBody>
-                        <CardRight>
-                          <MessageDate data={data} />
-                        </CardRight>
-                      </CardContainer>
-                    </Card>
-                  </View>
-                );
-              })
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <Text>Ainda não existem conversas.</Text>
-              </View>
-            )}
-          </ScrollView>
-        </GradientContainer>
-        <View>
-          <Fab
-            onPress={() => this._goToAddChat()}
-            direction="up"
-            containerStyle={{ borderRadius: 10 }}
-            style={{ backgroundColor: "#3F51B5", elevation: 0 }}
-            position="bottomRight"
+          <Content
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
           >
-            <Icon name="add" />
-          </Fab>
-        </View>
+            <ScrollView contentContainerStyle={{ paddingVertical: 5 }}>
+              {Object.keys(AllChatsQuery.allChats).length > 0 ? (
+                allChats.map(data => {
+                  return (
+                    <View key={data.id}>
+                      <Card
+                        onPress={() => this._goToChatView(data.id, data.users)}
+                      >
+                        <CardContainer>
+                          <CardLeft>
+                            <MessageAvatar data={data.users} />
+                          </CardLeft>
+                          <CardBody>
+                            <MessageName users={data.users} />
+
+                            <MessageContent data={data} />
+                          </CardBody>
+                          <CardRight>
+                            <MessageDate data={data} />
+                          </CardRight>
+                        </CardContainer>
+                      </Card>
+                    </View>
+                  );
+                })
+              ) : (
+                <Placeholder text="Não existem conversas." IconName="error" />
+              )}
+            </ScrollView>
+          </Content>
+        </GradientContainer>
       </ContainerView>
     );
   }
 }
 
 export default compose(
+  withNavigation,
   withApollo,
-  graphql(
-    ALL_CHATS_QUERY,
-    { name: "AllChatsQuery" },
-    {
-      options: () => ({
-        variables: {
-          id: "cjbjhh0f9lbfz01142sd6tvuv"
-        }
-      })
-    }
-  )
+  graphql(ALL_CHATS_QUERY, {
+    options: props => ({
+      variables: {
+        id: props.screenProps.userId
+      },
+      pollInterval: 2000
+    }),
+    name: "AllChatsQuery"
+  })
 )(ChatScreen);
 
 const ContainerView = styled.View`

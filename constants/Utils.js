@@ -19,6 +19,8 @@ const SOCIAL_ICONS = {
 };
 
 const IMAGE_PLACEHOLDER = "https://ui-avatars.com/api/?size=128&name=mendor";
+const IMAGE_GROUP_CHAT =
+  "https://ui-avatars.com/api/?size=128&name=group";
 
 //const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
 
@@ -78,6 +80,7 @@ export {
   GRAPHQL_IMAGE_ENDPOINT,
   SOCIAL_ICONS,
   IMAGE_PLACEHOLDER,
+  IMAGE_GROUP_CHAT,
   isSignedIn,
   onSignOut,
   allFalse,

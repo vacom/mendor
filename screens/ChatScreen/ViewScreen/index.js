@@ -1,15 +1,23 @@
 import React from "react";
-import { View, ActionSheet } from "native-base";
-import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
+import { View, ActionSheet, Container } from "native-base";
+import {
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableOpacity,
+  ScrollView
+} from "react-native";
 import styled from "styled-components/native";
+import { withNavigation } from "react-navigation";
 
 //GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
+import { BASIC_USER_QUERY } from "../../../api/Queries/User";
 import { ALL_MESSAGES_QUERY } from "../../../api/Queries/Chat";
 import { ALL_MESSAGES_SUBSCRIPTION } from "../../../api/Subscriptions/Chat";
 import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
+import { ALL_CHATS_QUERY } from "../../../api/Queries/Chat";
+import { ALL_PROJECTS_OF_USER } from "../../../api/Queries/User";
 
-//Components
 //import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -18,6 +26,7 @@ import {
   HeaderRightElement
 } from "../../../components/HeaderRight";
 import { Placeholder, Loading } from "../../../components/index";
+import ProjectsList from "../../../components/ProjectsList";
 
 //Utils
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
@@ -26,6 +35,7 @@ class ChatViewScreen extends React.Component {
   constructor(props) {
     super(props);
     this._addMessage = this._addMessage.bind(this);
+    this._openShareCards = this._openShareCards.bind(this);
   }
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
@@ -65,13 +75,13 @@ class ChatViewScreen extends React.Component {
 
   state = {
     height: 0,
+    heightViewShareCards: 0,
     modalVisible: false,
-    userIdLogged: "cjbjhh0f9lbfz01142sd6tvuv",
+    userIdLogged: this.props.screenProps.userId,
     avatar: IMAGE_PLACEHOLDER
   };
 
   componentDidMount() {
-    console.log(this.props.navigation.state.params);
     this.keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
       this._keyboardDidShow
@@ -150,11 +160,23 @@ class ChatViewScreen extends React.Component {
   };
 
   _keyboardDidShow = () => {
-    this.setState({ height: 75 });
+    if (this.refs.viewMargin) this.setState({ height: 75 });
+    if (this.refs.viewShareCards) this.setState({ heightViewShareCards: 0 });
   };
 
   _keyboardDidHide = () => {
-    this.setState({ height: 0 });
+    if (this.refs.viewMargin) this.setState({ height: 0 });
+  };
+
+  _openShareCards = () => {
+    if (this.state.heightViewShareCards == 200 && this.refs.viewShareCards) {
+      this.setState({ heightViewShareCards: 0 });
+    } else if (
+      this.state.heightViewShareCards == 0 &&
+      this.refs.viewShareCards
+    ) {
+      this.setState({ heightViewShareCards: 200 });
+    }
   };
 
   render() {
@@ -166,21 +188,36 @@ class ChatViewScreen extends React.Component {
     }
     //console.log(this.props.allMessages.allMessages);
     return (
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <Chat
-          userIdLogged={this.state.userIdLogged}
-          messages={this.props.allMessages.allMessages}
-          addMessage={this._addMessage}
-          avatar={this.state.avatar}
-        />
-        <View style={{ height: this.state.height }} />
-      </KeyboardAvoidingView>
+      <Container>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+          <View style={{ flex: 1 }}>
+            <Chat
+              style={{ flex: 0.8 }}
+              userIdLogged={this.state.userIdLogged}
+              messages={this.props.allMessages.allMessages}
+              addMessage={this._addMessage}
+              openShareCards={this._openShareCards}
+              avatar={this.state.avatar}
+            />
+          </View>
+          <View
+            ref="viewShareCards"
+            style={{ height: this.state.heightViewShareCards }}
+          >
+            <ScrollView>
+              <ProjectsList userId={this.props.screenProps.userId} />
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
+        <View ref="viewMargin" style={{ height: this.state.height }} />
+      </Container>
     );
   }
 }
 
 export default compose(
   withApollo,
+  withNavigation,
   graphql(ALL_MESSAGES_QUERY, {
     options: props => ({
       variables: { id: props.navigation.state.params.id }
@@ -188,7 +225,17 @@ export default compose(
     name: "allMessages"
   }),
   graphql(CREATE_MESSAGE_MUTATION, {
-    name: "createMessage"
+    name: "createMessage",
+    options: props => ({
+      refetchQueries: [
+        {
+          query: ALL_CHATS_QUERY,
+          variables: {
+            id: props.screenProps.userId
+          }
+        }
+      ]
+    })
   })
 )(ChatViewScreen);
 

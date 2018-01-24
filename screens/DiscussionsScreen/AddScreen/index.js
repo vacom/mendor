@@ -62,7 +62,7 @@ class AddDiscussion extends React.Component {
     cover: IMAGE_PLACEHOLDER,
     description: "",
     title: "",
-    userId: "cjbjhh0f9lbfz01142sd6tvuv"
+    userId: this.props.screenProps.userId,
   };
   onPickerChange(value) {
     this.setState({

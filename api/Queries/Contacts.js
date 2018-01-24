@@ -6,7 +6,11 @@ const ALL_CONTACTS_QUERY = gql`
     allContacts(filter: { user: { id: $id } }) {
       contactID {
         id
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
         name
         type
       }

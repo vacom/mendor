@@ -27,7 +27,11 @@ const CREATE_CHAT_MUTATION = gql`
       users(filter: { id_not: $authorId }) {
         id
         name
-        avatar
+        avatar {
+          id
+          secret
+          name
+        }
       }
     }
   }
