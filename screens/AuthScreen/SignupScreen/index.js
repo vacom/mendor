@@ -14,17 +14,15 @@ import {
   CheckBox,
   Body
 } from "native-base";
-import { Row } from "react-native-easy-grid";
 import styled from "styled-components/native";
-import { LinearGradient } from "expo";
 import { MaterialIcons } from "@expo/vector-icons";
-import { NavigationActions } from "react-navigation";
 import { SignUpHeader } from "../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import {
   CREATE_USER_MUTATION,
-  SIGNIN_USER_MUTATION
+  SIGNIN_USER_MUTATION,
+  CREATE_USER_CONFIG_MUTATION
 } from "../../../api/Mutations/User";
 import { USER_SIGNIN_FUNC } from "../../../api/Functions/User";
 //Utils
@@ -45,7 +43,7 @@ class SignupScreen extends React.Component {
 
   _onUserSignUp = async () => {
     const { name, email, password, repeatPassword, type } = this.state;
-    const { signinUser, createUser, navigation } = this.props;
+    const { signinUser, createUser } = this.props;
 
     //Checks if fields are empty
     if (!name || !email || !password) {
@@ -76,11 +74,35 @@ class SignupScreen extends React.Component {
             const result = await USER_SIGNIN_FUNC(email, password, signinUser);
             //If it passes goes to the next screen
             if (result.status) {
-              navigation.navigate("SignUpProfileStep", { userId });
+              //create a configuration for the user
+              this._onCreateUserConfig(userId);
+              //navigation.navigate("SignUpProfileStep", { userId });
             } else {
               console.log("error = ", result.error);
               Toast.show("Erro! Verifique os campos.");
             }
+          } catch (e) {
+            console.log(e);
+            Toast.show("Erro! Verifique os campos.");
+          }
+        }
+      });
+    } catch (e) {
+      Toast.show(e);
+    }
+  };
+  _onCreateUserConfig = async (userId) => {
+    const { createUserConfig, navigation } = this.props;
+    try {
+      //Creates a new user on the DB
+      await createUserConfig({
+        variables: {
+          userId
+        },
+        update: async (store, { data: { createUser } }) => {
+          try {
+             //If it passes goes to the next screen
+            navigation.navigate("SignUpProfileStep", { userId });
           } catch (e) {
             console.log(e);
             Toast.show("Erro! Verifique os campos.");
@@ -167,7 +189,8 @@ class SignupScreen extends React.Component {
 
 export default compose(
   graphql(SIGNIN_USER_MUTATION, { name: "signinUser" }),
-  graphql(CREATE_USER_MUTATION, { name: "createUser" })
+  graphql(CREATE_USER_MUTATION, { name: "createUser" }),
+  graphql(CREATE_USER_CONFIG_MUTATION, { name: "createUserConfig" })
 )(SignupScreen);
 
 const ScreenContainer = styled.View`

@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, KeyboardAvoidingView, Image } from "react-native";
+import { TouchableOpacity, KeyboardAvoidingView } from "react-native";
 import { Thumbnail } from "native-base";
 import { ImagePicker } from "expo";
 //Components

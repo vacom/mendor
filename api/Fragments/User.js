@@ -19,7 +19,7 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
       location
     }
     contacts {
-      contactID{
+      contactID {
         id
       }
     }
@@ -27,6 +27,12 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
       interest {
         id
       }
+    }
+    configuration {
+      id
+      type
+      distance
+      interests
     }
   }
 `;

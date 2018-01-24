@@ -112,11 +112,45 @@ const UPDATE_USER_COORDINATES_MUTATION = gql`
   }
 `;
 
+/**
+ * CONFIG MUTATIONS
+ */
+
+//creates a new configuration for the user
+const CREATE_USER_CONFIG_MUTATION = gql`
+  mutation($userId: ID!) {
+    createConfiguration(userId: $userId) {
+      id
+    }
+  }
+`;
+
+//updates the user configuration
+const UPDATE_USER_CONFIG_MUTATION = gql`
+  mutation(
+    $configId: ID!
+    $type: UserType!
+    $distance: Float!
+    $interests: InterestType!
+  ) {
+    updateConfiguration(
+      id: $configId
+      type: $type
+      distance: $distance
+      interests: $interests
+    ) {
+      id
+    }
+  }
+`;
+
 export {
   SIGNIN_USER_MUTATION,
   CREATE_USER_MUTATION,
   CREATE_USER_PROFILE_MUTATION,
   UPDATE_USER_PROFILE_MUTATION,
   UPDATE_USER_AVATAR_MUTATION,
-  UPDATE_USER_COORDINATES_MUTATION
+  UPDATE_USER_COORDINATES_MUTATION,
+  CREATE_USER_CONFIG_MUTATION,
+  UPDATE_USER_CONFIG_MUTATION
 };

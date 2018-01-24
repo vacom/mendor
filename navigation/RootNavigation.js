@@ -6,29 +6,38 @@ import { StackNavigator } from "react-navigation";
 //Main Tab Navigation
 import MainTabNavigator from "./MainTabNavigator";
 //Screen Containers
-//AddDisciussionScreen
-import AddDiscussion from "../screens/DiscussionsScreen/AddScreen/index";
 /**
  * ProfileScreens
  */
 import ProfileScreen from "../screens/ProfileScreen/index";
 import EditProfileScreen from "../screens/ProfileScreen/EditScreen/index";
-//DiscussionScreens
+/**
+ *  DiscussionScreens
+ */
 import DiscussionViewScreen from "../screens/DiscussionsScreen/ViewScreen/index";
-//ChatScreens
+import AddDiscussion from "../screens/DiscussionsScreen/AddScreen/index";
+/**
+ * ChatScreens
+ */
 import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 import ChatAddScreen from "../screens/ChatScreen/AddScreen/index";
-//SearchScreens
+/**
+ * SearchScreens
+ */
 import SearchScreen from "../screens/SearchScreen/index";
 /**
  * AuthScreens
  */
 import AuthScreen from "../screens/AuthScreen/index";
 import SigninScreen from "../screens/AuthScreen/SigninScreen/index";
-//SignUp Screens and Steps
 import SignupScreen from "../screens/AuthScreen/SignupScreen/index";
 import ProfileStepScreen from "../screens/AuthScreen/SignupScreen/ProfileStepScreen/index";
 import SkillStepScreen from "../screens/AuthScreen/SignupScreen/SkillStepScreen/index";
+/**
+ * Configuration Screen
+ */
+import ConfigScreen from "../screens/ConfigScreen/index";
+
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
@@ -75,6 +84,9 @@ export const createRootNavigator = (signedIn = false) => {
       },
       Search: {
         screen: SearchScreen
+      },
+      Config: {
+        screen: ConfigScreen
       }
     },
     {

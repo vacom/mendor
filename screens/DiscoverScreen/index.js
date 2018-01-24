@@ -58,8 +58,9 @@ class DiscoverScreen extends React.Component {
     location: null,
     contactsIds: [],
     competencesIds: [],
-    distance: 50,
+    distance: 20,
     type: "MENTOR",
+    interests: "COMMON",
     refreshing: false
   };
   componentDidMount() {
@@ -77,7 +78,14 @@ class DiscoverScreen extends React.Component {
     //Gets the user basic information from the DB
     const res = await this.props.client.query({ query: BASIC_USER_QUERY });
     if (!res.loading) {
-      const { avatar, profile, contacts, competences } = res.data.user;
+      const {
+        avatar,
+        profile,
+        contacts,
+        competences,
+        configuration
+      } = res.data.user;
+      const { distance, interests, type } = configuration;
       //Sets the navigation params to navigate to profile
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,
@@ -88,9 +96,11 @@ class DiscoverScreen extends React.Component {
       //Updates the state with the user and profile ID
       this.setState({
         userId: res.data.user.id,
-        profileId: profile.id
+        profileId: profile.id,
+        distance,
+        type,
+        interests
       });
-
       //Groups all of his contacts
       if (this._onGroupIds(contacts, "contactsIds")) {
         //Groups all of his competences
@@ -172,7 +182,8 @@ class DiscoverScreen extends React.Component {
       location,
       contactsIds,
       competencesIds,
-      distance
+      distance,
+      interests
     } = this.state;
     return (
       <GradientContainer>
@@ -196,6 +207,7 @@ class DiscoverScreen extends React.Component {
               contactsIds={contactsIds}
               competencesIds={competencesIds}
               distance={distance}
+              interests={interests}
             />
           )}
         </ScrollView>
