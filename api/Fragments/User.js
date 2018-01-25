@@ -46,6 +46,11 @@ const USER_ITEMS_FRAGMENT = gql`
       secret
       name
     }
+    profile {
+      id
+      role
+      company
+    }
   }
 `;
 

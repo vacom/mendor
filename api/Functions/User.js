@@ -65,4 +65,26 @@ const CREATE_CONTACT_FUNC = async (
   }
 };
 
-export { USER_SIGNIN_FUNC, CREATE_CONTACT_FUNC };
+//deletes a Contact
+const DELETE_CONTACT_FUNC = async (contactId: string, mutationObject: any) => {
+  try {
+    let id = "";
+    await mutationObject({
+      variables: {
+        contactId
+      },
+      update: (store, { data: { deleteContact } }) => {
+        try {
+          id = deleteContact.id;
+        } catch (e) {
+          return e;
+        }
+      }
+    });
+    return { status: true, id };
+  } catch (e) {
+    return { status: false, error: e };
+  }
+};
+
+export { USER_SIGNIN_FUNC, CREATE_CONTACT_FUNC, DELETE_CONTACT_FUNC };

@@ -167,7 +167,7 @@ class DiscoverScreen extends React.Component {
     //grupos all of the ids of user contacts and their interests
     object.map(res => {
       data.push(
-        type === "competencesIds" ? res.interest.id : res.contactID[0].id
+        type === "competencesIds" ? res.interest.id : res.contactID.id
       );
     });
     this.setState({
@@ -220,8 +220,3 @@ export default compose(
   withApollo,
   graphql(UPDATE_USER_COORDINATES_MUTATION, { name: "updateUserCoords" })
 )(DiscoverScreen);
-
-const Container = styled.View`
-  flex: 1;
-  background-color: #fff;
-`;

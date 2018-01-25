@@ -4,7 +4,7 @@ import gql from "graphql-tag";
  * CONTACT MUTATIONS
  */
 
-//collects all the notifications for the user
+//creates a new contact for the user
 const CREATE_CONTACT_MUTATION = gql`
   mutation($contactID: [ID!], $userId: ID!) {
     createContact(contactIDIds: $contactID, userId: $userId) {
@@ -13,4 +13,13 @@ const CREATE_CONTACT_MUTATION = gql`
   }
 `;
 
-export { CREATE_CONTACT_MUTATION };
+//deletes a contact for the user
+const DELETE_CONTACT_MUTATION = gql`
+  mutation($contactId: ID!) {
+    deleteContact(id: $contactId) {
+      id
+    }
+  }
+`;
+
+export { CREATE_CONTACT_MUTATION, DELETE_CONTACT_MUTATION };
