@@ -3,9 +3,17 @@ import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_PROJECTS_OF_USER } from "../api/Queries/User";
 import { View } from "react-native";
 import { Placeholder, Loading } from "./index";
-import { ProjectCard } from "./ProjectCard";
+import ProjectCard from "./ProjectCard";
 
 class ProjectsList extends React.Component {
+  constructor(props) {
+    super(props);
+    this._addProjectMessage = this._addProjectMessage.bind(this);
+  }
+  _addProjectMessage(e) {
+    this.props.addProjectMessage(e);
+    console.log(e);
+  }
   render() {
     if (this.props.projects && this.props.projects.loading) {
       return <Loading />;
@@ -17,7 +25,11 @@ class ProjectsList extends React.Component {
       <View style={{ flex: 1, padding: 5 }}>
         {this.props.projects.allProjects.map((data, key) => {
           return (
-              <ProjectCard project={data} key={key}/>
+            <ProjectCard
+              addProjectMessage={this._addProjectMessage}
+              project={data}
+              key={key}
+            />
           );
         })}
       </View>

@@ -1,8 +1,20 @@
 import gql from "graphql-tag";
 
 const CREATE_MESSAGE_MUTATION = gql`
-  mutation createMessage($authorId: ID, $chatId: ID, $content: String!) {
-    createMessage(authorId: $authorId, chatId: $chatId, content: $content) {
+  mutation createMessage(
+    $authorId: ID
+    $chatId: ID
+    $content: String!
+    $type: MessageType
+    $projectId: ID
+  ) {
+    createMessage(
+      authorId: $authorId
+      chatId: $chatId
+      content: $content
+      type: $type
+      projectId: $projectId
+    ) {
       id
     }
   }

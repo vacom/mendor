@@ -19,7 +19,7 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
       location
     }
     contacts {
-      contactID{
+      contactID {
         id
       }
     }
@@ -31,4 +31,16 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
   }
 `;
 
-export { BASIC_USER_FIELDS_FRAGMENT };
+const USER_ITEMS_FRAGMENT = gql`
+  fragment userItems on User {
+    id
+    name
+    avatar {
+      id
+      secret
+      name
+    }
+  }
+`;
+
+export { BASIC_USER_FIELDS_FRAGMENT, USER_ITEMS_FRAGMENT };

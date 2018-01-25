@@ -17,8 +17,6 @@ import { ALL_MESSAGES_SUBSCRIPTION } from "../../../api/Subscriptions/Chat";
 import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
 import { ALL_CHATS_QUERY } from "../../../api/Queries/Chat";
 import { ALL_PROJECTS_OF_USER } from "../../../api/Queries/User";
-
-//import InputMessageBar from "../../../components/InputMessageBar";
 import Chat from "../../../components/Chat";
 import { MaterialIcons } from "@expo/vector-icons";
 import {
@@ -35,6 +33,7 @@ class ChatViewScreen extends React.Component {
   constructor(props) {
     super(props);
     this._addMessage = this._addMessage.bind(this);
+    this._addProjectMessage = this._addProjectMessage.bind(this);
     this._openShareCards = this._openShareCards.bind(this);
   }
   static navigationOptions = ({ navigation }) => {
@@ -78,7 +77,8 @@ class ChatViewScreen extends React.Component {
     heightViewShareCards: 0,
     modalVisible: false,
     userIdLogged: this.props.screenProps.userId,
-    avatar: IMAGE_PLACEHOLDER
+    avatar: IMAGE_PLACEHOLDER,
+    scrollBottomChat: false
   };
 
   componentDidMount() {
@@ -121,20 +121,25 @@ class ChatViewScreen extends React.Component {
     );
   };
 
+  _addProjectMessage(projectId) {
+    this.setState({ scrollBottomChat: true });
+    this._createMessageMutation("", "PROJECT", projectId);
+  }
   _addMessage(e) {
-    this._createMessageMutation(e);
+    this._createMessageMutation(e, "MESSAGE", null);
   }
 
-  _createMessageMutation = async content => {
+  _createMessageMutation = async (content, type, projectId) => {
     const authorId = this.state.userIdLogged;
     const chatId = this.props.navigation.state.params.id;
-    console.log(content, authorId, chatId);
     try {
       await this.props.createMessage({
         variables: {
           content,
           authorId,
-          chatId
+          chatId,
+          type,
+          projectId
         }
       });
     } catch (e) {
@@ -186,12 +191,15 @@ class ChatViewScreen extends React.Component {
     if (this.props.allMessages && this.props.allMessages.error) {
       return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
-    //console.log(this.props.allMessages.allMessages);
     return (
       <Container>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={{ flex: 1 }}>
             <Chat
+              stopScroll={() => {
+                this.setState({ scrollBottomChat: false });
+              }}
+              scrollBottom={this.state.scrollBottomChat}
               style={{ flex: 0.8 }}
               userIdLogged={this.state.userIdLogged}
               messages={this.props.allMessages.allMessages}
@@ -205,7 +213,10 @@ class ChatViewScreen extends React.Component {
             style={{ height: this.state.heightViewShareCards }}
           >
             <ScrollView>
-              <ProjectsList userId={this.props.screenProps.userId} />
+              <ProjectsList
+                addProjectMessage={this._addProjectMessage}
+                userId={this.props.screenProps.userId}
+              />
             </ScrollView>
           </View>
         </KeyboardAvoidingView>

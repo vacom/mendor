@@ -5,11 +5,7 @@ import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Tab, Tabs } from "native-base";
 //Graphql
-import {
-  ALL_CONTACTS_QUERY,
-  ALL_CONTACTS_ENTREPENEURS_QUERY,
-  ALL_CONTACTS_MENTORS_QUERY
-} from "../../api/Queries/Contacts";
+import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
 //Components
 import GradientContainer from "../../components/GradientContainer";
 import ContactList from "../../components/ContactList";
@@ -26,7 +22,7 @@ import {
 } from "../../components/Card";
 import { graphql, compose, withApollo } from "react-apollo";
 
-import { Error, Loading } from "../../components/index";
+import { Error, Loading, Placeholder } from "../../components/index";
 
 class ContactsScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -62,20 +58,10 @@ class ContactsScreen extends React.Component {
   };
 
   render() {
-    if (
-      this.props.allContactsEntrepeneurs &&
-      this.props.allContactsMentors &&
-      this.props.allContactsEntrepeneurs.loading &&
-      this.props.allContactsMentors.loading
-    ) {
+    if (this.props.allContacts && this.props.allContacts.loading) {
       return <Loading />;
-    } else if (
-      this.props.allContactsEntrepeneurs &&
-      this.props.allContactsEntrepeneurs &&
-      this.props.allContactsEntrepeneurs.error &&
-      this.props.allContactsMentors.error
-    ) {
-      return <Error />;
+    } else if (this.props.allContacts && this.props.allContacts.error) {
+      return <Placeholder text="Ocorreu um erro." IconName="error" />;
     } else {
       return (
         <Container>
@@ -88,7 +74,7 @@ class ContactsScreen extends React.Component {
                 <ContainerTab>
                   <ContactList
                     goToProfile={this._goToProfile}
-                    contacts={this.props.allContactsMentors.allContacts}
+                    contacts={this.props.allContacts.allContactsMentors}
                   />
                 </ContainerTab>
               </Tab>
@@ -99,7 +85,7 @@ class ContactsScreen extends React.Component {
                 <ContainerTab>
                   <ContactList
                     goToProfile={this._goToProfile}
-                    contacts={this.props.allContactsEntrepeneurs.allContacts}
+                    contacts={this.props.allContacts.allContactsEntrepeneurs}
                   />
                 </ContainerTab>
               </Tab>
@@ -114,18 +100,11 @@ class ContactsScreen extends React.Component {
 const ContainerTab = styled.ScrollView``;
 
 const ContactsScreenWithData = compose(
-  graphql(ALL_CONTACTS_ENTREPENEURS_QUERY, {
+  graphql(ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY, {
     options: props => ({
       variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" }
     }),
-    name: "allContactsEntrepeneurs"
-  }),
-
-  graphql(ALL_CONTACTS_MENTORS_QUERY, {
-    options: props => ({
-      variables: { id: "cjbjhh0f9lbfz01142sd6tvuv" }
-    }),
-    name: "allContactsMentors"
+    name: "allContacts"
   })
 )(ContactsScreen);
 

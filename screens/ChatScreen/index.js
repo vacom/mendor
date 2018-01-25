@@ -171,7 +171,7 @@ class ChatScreen extends React.Component {
                           <CardBody>
                             <MessageName users={data.users} />
 
-                            <MessageContent data={data} />
+                            <MessageContent data={data} userId={this.props.screenProps.userId} />
                           </CardBody>
                           <CardRight>
                             <MessageDate data={data} />

@@ -8,6 +8,11 @@ const ALL_CHATS_QUERY = gql`
       messages(last: 1) {
         content
         createdAt
+        type
+        author {
+          id
+          name
+        }
       }
       users(filter: { id_not: $id }) {
         id

@@ -2,36 +2,48 @@ import React from "react";
 import styled from "styled-components/native";
 import { Label, LabelContainer, LabelsContainer } from "./Label";
 import { Card } from "native-base";
+import { TouchableOpacity } from "react-native";
 
-const ProjectCard = props => {
-  return (
-    <Card>
-      <ProjectContainer>
-        <P style={{ color: "#000000", marginBottom: 4 }}>
-          {props.project.title}
-        </P>
-        <ProjectControler>
-          <Span style={{ color: "#9E9E9E", lineHeight: 22 }}>
-            {props.project.description}
-          </Span>
-        </ProjectControler>
-        <LabelsControl>
-          <LabelsContainer>
-            {props.project.technologies.map(res => {
-              return (
-                <LabelContainer key={res.id}>
-                  <Label text={res.name} />
-                </LabelContainer>
-              );
-            })}
-          </LabelsContainer>
-        </LabelsControl>
-      </ProjectContainer>
-    </Card>
-  );
-};
+class ProjectCard extends React.Component {
+  constructor(props) {
+    super(props);
+    this._addProjectMessage = this._addProjectMessage.bind(this);
+  }
+  _addProjectMessage() {
+    this.props.addProjectMessage(this.props.project.id);
+  }
+  render() {
+    return (
+      <TouchableOpacity onPress={this._addProjectMessage}>
+        <Card>
+          <ProjectContainer>
+            <P style={{ color: "#000000", marginBottom: 4 }}>
+              {this.props.project.title}
+            </P>
+            <ProjectControler>
+              <Span style={{ color: "#9E9E9E", lineHeight: 22 }}>
+                {this.props.project.description}
+              </Span>
+            </ProjectControler>
+            <LabelsControl>
+              <LabelsContainer>
+                {this.props.project.technologies.map(res => {
+                  return (
+                    <LabelContainer key={res.id}>
+                      <Label text={res.name} />
+                    </LabelContainer>
+                  );
+                })}
+              </LabelsContainer>
+            </LabelsControl>
+          </ProjectContainer>
+        </Card>
+      </TouchableOpacity>
+    );
+  }
+}
 
-export { ProjectCard };
+export default ProjectCard;
 
 const ProjectContainer = styled.View`
   padding: 10px;

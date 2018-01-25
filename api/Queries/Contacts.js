@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { USER_ITEMS_FRAGMENT } from "../Fragments/User";
 
 // Collect all contacts of a user
 const ALL_CONTACTS_QUERY = gql`
@@ -18,36 +19,22 @@ const ALL_CONTACTS_QUERY = gql`
   }
 `;
 
-const ALL_CONTACTS_ENTREPENEURS_QUERY = gql`
-  query allContactsEntrepeneurs($id: ID) {
-    allContacts(filter: { user: { type: ENTREPRENEUR, id: $id } }) {
+const ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY = gql`
+  query allContacts($id: ID) {
+    mentors: allContactsMentors(filter: { user: { type: MENTOR, id: $id } }) {
       contactID {
-        id
-        avatar {
-          id
-          secret
-          name
-        }
-        name
+        ...userItems
+      }
+    }
+    entrepeneurs: allContactsEntrepeneurs(
+      filter: { user: { type: ENTREPRENEUR, id: $id } }
+    ) {
+      contactID {
+        ...userItems
       }
     }
   }
-`;
-
-const ALL_CONTACTS_MENTORS_QUERY = gql`
-  query allContactsMentors($id: ID) {
-    allContacts(filter: { user: { type: MENTOR, id: $id } }) {
-      contactID {
-        id
-        avatar {
-          id
-          secret
-          name
-        }
-        name
-      }
-    }
-  }
+  ${USER_ITEMS_FRAGMENT}
 `;
 
 const SEARCH_CONTACTS = gql`
@@ -76,7 +63,6 @@ const SEARCH_CONTACTS = gql`
 
 export {
   ALL_CONTACTS_QUERY,
-  ALL_CONTACTS_ENTREPENEURS_QUERY,
-  ALL_CONTACTS_MENTORS_QUERY,
+  ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY,
   SEARCH_CONTACTS
 };

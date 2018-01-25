@@ -6,7 +6,7 @@ import { LinearGradient } from "expo";
 import moment from "moment/min/moment-with-locales";
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
 import { IMAGE_PLACEHOLDER } from "../constants/Utils";
-import { ProjectCard } from "./ProjectCard";
+import ProjectCard from "./ProjectCard";
 
 const Message = props => {
   let message = null;
@@ -28,9 +28,11 @@ const Message = props => {
       );
     } else if (props.type == "PROJECT") {
       message = (
-        <ViewMessageLogged>
-          <ProjectCard project={props.project} />
-        </ViewMessageLogged>
+        <ViewCardLogged>
+          <View style={{width:250}}>
+            <ProjectCard project={props.project} />
+          </View>
+        </ViewCardLogged>
       );
     }
   } else {
@@ -68,9 +70,10 @@ const Message = props => {
                 }}
               />
             </ViewAvatar>
-            <ProjectCard project={props.project} />
+            <View style={{ width: 250 }}>
+              <ProjectCard project={props.project} />
+            </View>
           </ViewMessageNotLogged>
-          <TextDate>{moment(props.createdAt).fromNow()}</TextDate>
         </ViewMessage>
       );
     }
@@ -101,6 +104,12 @@ const TextNotLogged = styled.Text`
   color: #fff;
   font-size: 16px;
   text-align: justify;
+`;
+
+const ViewCardLogged = styled.View`
+  align-items: flex-end;
+  padding: 5px 10px;
+  width: 100%;
 `;
 
 const ViewMessageLogged = styled.View`

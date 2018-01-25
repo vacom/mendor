@@ -23,6 +23,12 @@ class Chat extends React.Component {
         this.refs.ScrollView.scrollToEnd({ animated: true });
       }, 50);
     }
+    if (this.props.scrollBottom) {
+      setTimeout(() => {
+        this.refs.ScrollView.scrollToEnd({ animated: true });
+      }, 50);
+      this.props.stopScroll();
+    }
   }
 
   componentWillReceiveProps(nextProps) {

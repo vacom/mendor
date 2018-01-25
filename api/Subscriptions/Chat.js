@@ -14,6 +14,11 @@ const ALL_CHATS_SUBSCRIPTION = gql`
         messages(last: 1) {
           content
           createdAt
+          type
+          author {
+            id
+            name
+          }
         }
         users {
           id

@@ -7,7 +7,7 @@ import { Placeholder } from "../components";
 import { TouchableHighlight } from "react-native";
 
 const ContactList = props => {
-  if (props.contacts.length > 0) {
+  if (Object.keys(props.contacts).length > 0) {
     return props.contacts.map((data, index) => {
       return (
           <Card key={index} onPress={props.goToProfile(data.contactID[0].id)}>
