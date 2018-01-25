@@ -212,12 +212,10 @@ class ChatViewScreen extends React.Component {
             ref="viewShareCards"
             style={{ height: this.state.heightViewShareCards }}
           >
-            <ScrollView>
-              <ProjectsList
-                addProjectMessage={this._addProjectMessage}
-                userId={this.props.screenProps.userId}
-              />
-            </ScrollView>
+            <ProjectsList
+              addProjectMessage={this._addProjectMessage}
+              userId={this.props.screenProps.userId}
+            />
           </View>
         </KeyboardAvoidingView>
         <View ref="viewMargin" style={{ height: this.state.height }} />

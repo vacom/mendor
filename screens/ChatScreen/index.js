@@ -72,6 +72,10 @@ class ChatScreen extends React.Component {
     });
   }
 
+  _onScroll = () => {
+    console.log("scroll");
+  };
+
   _onRefresh = () => {
     this.setState({ refreshing: true });
     //gets new content from the DB
@@ -100,6 +104,9 @@ class ChatScreen extends React.Component {
   };
   _goToSearch = () => {
     console.log("hey");
+  };
+  _goToProfile = id => () => {
+    this.props.navigation.navigate("Profile", { id: id });
   };
   _goToAddChat = () => {
     this.props.navigation.navigate("AddChat", {});
@@ -166,12 +173,24 @@ class ChatScreen extends React.Component {
                       >
                         <CardContainer>
                           <CardLeft>
-                            <MessageAvatar data={data.users} />
+                            <TouchableOpacity
+                              onPress={
+                                Object.keys(data.users).length < 2
+                                  ? this._goToProfile(data.users[0].id)
+                                  : () =>
+                                      this._goToChatView(data.id, data.users)
+                              }
+                            >
+                              <MessageAvatar data={data.users} />
+                            </TouchableOpacity>
                           </CardLeft>
                           <CardBody>
                             <MessageName users={data.users} />
 
-                            <MessageContent data={data} userId={this.props.screenProps.userId} />
+                            <MessageContent
+                              data={data}
+                              userId={this.props.screenProps.userId}
+                            />
                           </CardBody>
                           <CardRight>
                             <MessageDate data={data} />

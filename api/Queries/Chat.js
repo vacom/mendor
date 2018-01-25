@@ -29,7 +29,7 @@ const ALL_CHATS_QUERY = gql`
 
 const ALL_MESSAGES_QUERY = gql`
   query allMessages($id: ID) {
-    allMessages(filter: { chat: { id: $id } }) {
+    allMessages(filter: { chat: { id: $id } }, last: 15) {
       id
       content
       createdAt

@@ -17,6 +17,7 @@ class Chat extends React.Component {
     avatar: this.props.avatar,
     userIdLogged: this.props.userIdLogged
   };
+
   componentDidMount() {
     if (this.props.messages.length > 0) {
       setTimeout(() => {

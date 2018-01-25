@@ -10,7 +10,8 @@ class ProjectCard extends React.Component {
     this._addProjectMessage = this._addProjectMessage.bind(this);
   }
   _addProjectMessage() {
-    this.props.addProjectMessage(this.props.project.id);
+    if (this.props.allowSend)
+      this.props.addProjectMessage(this.props.project.id);
   }
   render() {
     return (

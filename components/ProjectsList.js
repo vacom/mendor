@@ -1,7 +1,7 @@
 import React from "react";
 import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_PROJECTS_OF_USER } from "../api/Queries/User";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { Placeholder, Loading } from "./index";
 import ProjectCard from "./ProjectCard";
 
@@ -22,17 +22,18 @@ class ProjectsList extends React.Component {
       return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
     return (
-      <View style={{ flex: 1, padding: 5 }}>
+      <ScrollView style={{ flex: 1, flexDirection: "row" }} horizontal>
         {this.props.projects.allProjects.map((data, key) => {
           return (
             <ProjectCard
               addProjectMessage={this._addProjectMessage}
               project={data}
               key={key}
+              allowSend={true}
             />
           );
         })}
-      </View>
+      </ScrollView>
     );
   }
 }
