@@ -100,7 +100,7 @@ export const createRootNavigator = (signedIn = false) => {
           fontWeight: "normal"
         }
       }),
-      initialRouteName: signedIn ? "Config" : "AuthScreen"
+      initialRouteName: signedIn ? "Main" : "AuthScreen"
     }
   );
 };
