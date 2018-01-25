@@ -22,7 +22,10 @@ import styled from "styled-components/native";
 import { graphql, compose, withApollo } from "react-apollo";
 import { CREATE_NOTIFICATION_MUTATION } from "../../../api/Mutations/Notification";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
-import { ALL_USERS_DISCOVERY_QUERY } from "../../../api/Queries/User";
+import {
+  ALL_USERS_DISCOVERY_QUERY,
+  ALL_COMMON_USERS_DISCOVERY_QUERY
+} from "../../../api/Queries/User";
 //Utils
 import Toast from "react-native-root-toast";
 import {
@@ -42,14 +45,19 @@ class CardsScreen extends React.Component {
     this._onLoadDiscovery();
   }
   _onLoadDiscovery = async () => {
-    const { type, userId, contactsIds, competencesIds, distance } = this.props;
-
-
-    console.log("contactsIds = ", contactsIds);
-
-
+    const {
+      type,
+      userId,
+      contactsIds,
+      competencesIds,
+      distance,
+      interests
+    } = this.props;
+    //choose the type of users to discover
+    const query = ALL_USERS_DISCOVERY_QUERY(interests);
+    //Fetch the data from DB
     const res = await this.props.client.query({
-      query: ALL_USERS_DISCOVERY_QUERY,
+      query,
       variables: { userId, type, contactsIds, competencesIds }
     });
     //error handling
@@ -61,7 +69,8 @@ class CardsScreen extends React.Component {
     }
     //if stops loading the data from DB
     if (!res.loading) {
-       //console.log("res.data.allUsers = ", res.data.allUsers);
+      //console.log("res.data.allUsers = ", res.data.allUsers);
+      console.log("count = ", Object.keys(res.data.allUsers).length);
       this._onFilterDiscovery(distance, res.data);
       /*this.setState({
         data: res.data.allUsers,

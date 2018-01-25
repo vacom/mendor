@@ -49,19 +49,22 @@ class ProfileScreen extends React.PureComponent {
     });
   }
   _onOpenActions = () => {
-    var BUTTONS = ["Editar Perfil", "Termos e Condições", "Sair", "Cancelar"];
+    var BUTTONS = ["Editar Perfil", "Configurações", "Sair", "Cancelar"];
     ActionSheet.show(
       {
         options: BUTTONS,
         cancelButtonIndex: 3,
         destructiveButtonIndex: 2,
-        title: "Configurações"
+        title: "Ações"
       },
       buttonIndex => {
         console.log(buttonIndex);
         switch (buttonIndex) {
           case 0:
             this._goToEditProfile();
+            break;
+          case 1:
+            this._gotToConfigs();
             break;
           case 2:
             this._onUserSignOut();
@@ -78,6 +81,14 @@ class ProfileScreen extends React.PureComponent {
     if (!this.props.userProfileQuery.loading) {
       this.setState({ refreshing: false });
     }
+  };
+  _gotToConfigs = () => {
+    const {
+      configuration: data,
+      id: userId
+    } = this.props.userProfileQuery.User;
+
+    this.props.navigation.navigate("Config", { data, userId });
   };
   _goToEditProfile = () => {
     const {
@@ -274,19 +285,18 @@ class ProfileScreen extends React.PureComponent {
                   </P>
                 </PortfolioContainer>
               ) : (
-                projects.map(data => {
-                  return (
-                    <ScrollView
-                      key={data.id}
-                      style={{ paddingTop: 10, paddingBottom: 10 }}
-                      contentContainerStyle={{ paddingHorizontal: 20 }}
-                      horizontal
-                      decelerationRate={0}
-                      snapToInterval={320}
-                      snapToAlignment={"center"}
-                      showsHorizontalScrollIndicator={false}
-                    >
-                      <Card style={{ marginRight: 5 }}>
+                <ScrollView
+                  style={{ paddingTop: 10, paddingBottom: 10 }}
+                  contentContainerStyle={{ paddingHorizontal: 20 }}
+                  horizontal
+                  decelerationRate={0}
+                  snapToInterval={320}
+                  snapToAlignment={"center"}
+                  showsHorizontalScrollIndicator={false}
+                >
+                  {projects.map(data => {
+                    return (
+                      <Card key={data.id} style={{ marginRight: 5 }}>
                         <ProjectContainer>
                           <P style={{ color: "#000000", marginBottom: 4 }}>
                             {data.title}
@@ -309,9 +319,9 @@ class ProfileScreen extends React.PureComponent {
                           </LabelsControl>
                         </ProjectContainer>
                       </Card>
-                    </ScrollView>
-                  );
-                })
+                    );
+                  })}
+                </ScrollView>
               )}
             </Row>
 

@@ -28,6 +28,12 @@ const BASIC_USER_FIELDS_FRAGMENT = gql`
         id
       }
     }
+    configuration {
+      id
+      type
+      distance
+      interests
+    }
   }
 `;
 

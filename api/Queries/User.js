@@ -59,6 +59,12 @@ const USER_PROFILE_QUERY = gql`
           name
         }
       }
+      configuration {
+        id
+        type
+        distance
+        interests
+      }
       socials {
         id
         content
@@ -84,46 +90,53 @@ const USER_PROFILE_QUERY = gql`
  * DISCOVERY QUERIES
  */
 
-const ALL_USERS_DISCOVERY_QUERY = gql`
-  query allUsers(
-    $userId: ID!
-    $type: UserType!
-    $contactsIds: [ID!]
-    $competencesIds: [ID!]
-  ) {
-    allUsers(
-      filter: {
-        id_not: $userId
-        type: $type
-        contacts_every: { user: { id_not_in: $contactsIds } }
-        competences_some: { interest: { id_in: $competencesIds } }
-      }
+//Collects all the users for discovery
+const ALL_USERS_DISCOVERY_QUERY = interests => {
+  const competences =
+    interests === "COMMON"
+      ? "competences_some: { interest: { id_in: $competencesIds } }"
+      : "";
+  return gql`
+    query allUsers(
+      $userId: ID!
+      $type: UserType!
+      $contactsIds: [ID!]
+      ${interests === "COMMON" ? "$competencesIds: [ID!]" : ""}
     ) {
-      id
-      name
-      avatar {
+      allUsers(
+        filter: {
+          id_not: $userId
+          type: $type
+          contacts_every: { user: { id_not_in: $contactsIds } }
+          ${competences}
+        }
+      ) {
         id
-        secret
         name
-      }
-      profile {
-        id
-        role
-        company
-        profession
-        location
-        coordinates
-        distance
-      }
-      competences(first: 10) {
-        interest {
+        avatar {
           id
-          title
+          secret
+          name
+        }
+        profile {
+          id
+          role
+          company
+          profession
+          location
+          coordinates
+          distance
+        }
+        competences(first: 10) {
+          interest {
+            id
+            title
+          }
         }
       }
     }
-  }
-`;
+  `;
+};
 
 /**
  * PROJECTS CARDS QUERIES
@@ -143,4 +156,9 @@ const ALL_PROJECTS_OF_USER = gql`
   }
 `;
 
-export { BASIC_USER_QUERY, USER_PROFILE_QUERY, ALL_USERS_DISCOVERY_QUERY, ALL_PROJECTS_OF_USER };
+export {
+  BASIC_USER_QUERY,
+  USER_PROFILE_QUERY,
+  ALL_USERS_DISCOVERY_QUERY,
+  ALL_PROJECTS_OF_USER
+};
