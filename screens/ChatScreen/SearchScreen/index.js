@@ -14,14 +14,10 @@ import { withNavigation } from "react-navigation";
 
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
-import { ALL_CONTACTS_QUERY } from "../../../api/Queries/Contacts";
-import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
-import { ALL_INDIVIDUAL_CHATS_OF_USERS } from "../../../api/Queries/Chat";
-import { CREATE_CHAT_MUTATION } from "../../../api/Mutations/Chat";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 
 //Utils
-import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+import { IMAGE_PLACEHOLDER, IMAGE_GROUP_CHAT } from "../../../constants/Utils";
 
 // Components
 import {
@@ -29,9 +25,9 @@ import {
   SearchContent,
   SearchCard
 } from "../../../components/SearchComponents";
-import SearchChatRooms from "../../SearchScreen/SearchChatRooms/index";
+import SearchChat from "../../SearchScreen/SearchChat/index";
 
-class ChatAddScreen extends React.Component {
+class SearchChatScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -62,55 +58,35 @@ class ChatAddScreen extends React.Component {
     }
   }
 
-  _goToChat = (id, avatar) => async () => {
-    console.log(id);
-    const res = await this.props.client.query({
-      query: ALL_INDIVIDUAL_CHATS_OF_USERS,
-      variables: {
-        id1: "cjbjhh0f9lbfz01142sd6tvuv", // id1 -> Sempre o id logado!!!
-        id2: id
-      }
-    });
-    if (!res.loading) {
-      console.log(res);
-      if (res.data.allChats.length > 0) {
-        this.props.navigation.navigate("ChatView", {
-          name: res.data.allChats[0].users[0].name,
-          avatar:
-            avatar != null
-              ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
-              : IMAGE_PLACEHOLDER,
-          id: res.data.allChats[0].id
-        });
-      } else {
-        try {
-          const res_mutation = await this.props.createChat({
-            variables: {
-              name: "created",
-              usersIds: [id, "cjbjhh0f9lbfz01142sd6tvuv"],
-              authorId: "cjbjhh0f9lbfz01142sd6tvuv",
-              isGroup: false
-            }
-          });
-          if (!res_mutation.loading) {
-            this.props.navigation.navigate("ChatView", {
-              name: res_mutation.data.createChat.users[0].name,
-              avatar:
-                res_mutation.data.createChat.users[0].avatar != null
-                  ? GET_AVATAR_URL(
-                      res_mutation.data.createChat.users[0].avatar.secret,
-                      "250x250",
-                      res_mutation.data.createChat.users[0].avatar.name
-                    )
-                  : IMAGE_PLACEHOLDER,
-              id: res_mutation.data.createChat.id
-            });
-          }
-        } catch (e) {
-          console.log(e);
+  _goToChat = (id, users) => async () => {
+    const userlength = Object.keys(users).length;
+    let name = "";
+    let avatar = "";
+    if (userlength > 1) {
+      avatar = IMAGE_GROUP_CHAT;
+      users.map((user, i) => {
+        if (userlength === i + 1) {
+          name += user.name;
+        } else {
+          name += user.name + ", ";
         }
-      }
+      });
+    } else {
+      name = users[0].name;
+      avatar =
+        users[0].avatar != null
+          ? GET_AVATAR_URL(
+              users[0].avatar.secret,
+              "250x250",
+              users[0].avatar.name
+            )
+          : IMAGE_PLACEHOLDER;
     }
+    this.props.navigation.navigate("ChatView", {
+      name: name,
+      avatar: avatar,
+      id: id
+    });
   };
 
   render() {
@@ -122,11 +98,11 @@ class ChatAddScreen extends React.Component {
             this.handleChange(text);
           }}
           search_value={this.state.search_value}
-          placeholder="Pesquisar contactos"
+          placeholder="Pesquisar conversas"
         />
         <SearchContent>
           <ScrollView>
-            <SearchChatRooms
+            <SearchChat
               onPress={this._goToChat}
               search_value={this.state.search_value}
               searched={this.state.searched}
@@ -147,11 +123,7 @@ class ChatAddScreen extends React.Component {
   }
 }
 
-export default compose(
-  withApollo,
-  withNavigation,
-  graphql(CREATE_CHAT_MUTATION, { name: "createChat" })
-)(ChatAddScreen);
+export default compose(withNavigation)(SearchChatScreen);
 
 const Container = styled.View`
   flex: 1;

@@ -29,7 +29,7 @@ const Message = props => {
     } else if (props.type == "PROJECT") {
       message = (
         <ViewCardLogged>
-          <View style={{width:250}}>
+          <View>
             <ProjectCard project={props.project} />
           </View>
         </ViewCardLogged>
@@ -70,7 +70,7 @@ const Message = props => {
                 }}
               />
             </ViewAvatar>
-            <View style={{ width: 250 }}>
+            <View>
               <ProjectCard project={props.project} />
             </View>
           </ViewMessageNotLogged>

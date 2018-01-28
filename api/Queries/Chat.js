@@ -82,4 +82,38 @@ const ALL_INDIVIDUAL_CHATS_OF_USERS = gql`
   }
 `;
 
-export { ALL_CHATS_QUERY, ALL_MESSAGES_QUERY, ALL_INDIVIDUAL_CHATS_OF_USERS };
+const SEARCH_CHAT_QUERY = gql`
+  query SearchChat($id: ID, $query: String!) {
+    allChats(
+      filter: {
+        AND: [
+          { users_some: { name_contains: $query } }
+          { users_some: { id: $id } }
+        ]
+      }
+    ) {
+      id
+      name
+      messages(last: 1) {
+        content
+        createdAt
+        type
+        author {
+          id
+          name
+        }
+      }
+      users(filter: { id_not: $id }) {
+        id
+        avatar {
+          id
+          secret
+          name
+        }
+        name
+      }
+    }
+  }
+`;
+
+export { ALL_CHATS_QUERY, ALL_MESSAGES_QUERY, ALL_INDIVIDUAL_CHATS_OF_USERS, SEARCH_CHAT_QUERY};

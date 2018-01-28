@@ -21,6 +21,8 @@ import AddDiscussion from "../screens/DiscussionsScreen/AddScreen/index";
  */
 import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 import ChatAddScreen from "../screens/ChatScreen/AddScreen/index";
+import SearchChatScreen from "../screens/ChatScreen/SearchScreen/index";
+
 /**
  * SearchScreens
  */
@@ -63,6 +65,9 @@ export const createRootNavigator = (signedIn = false) => {
       },
       AddChat: {
         screen: ChatAddScreen
+      },
+      SearchChat: {
+        screen: SearchChatScreen
       },
       AuthScreen: {
         screen: AuthScreen

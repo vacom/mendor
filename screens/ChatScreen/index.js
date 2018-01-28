@@ -103,7 +103,7 @@ class ChatScreen extends React.Component {
     });
   };
   _goToSearch = () => {
-    console.log("hey");
+    this.props.navigation.navigate("SearchChat", {});
   };
   _goToProfile = id => () => {
     this.props.navigation.navigate("Profile", { id: id });
