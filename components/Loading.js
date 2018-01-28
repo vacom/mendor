@@ -24,7 +24,7 @@ const Loading = props => {
         style={{ height: "auto" }}
         color={props.dark ? "#000" : "#fff"}
       />
-      <Text style={styles}>{props.text || "Loading"}</Text>
+      <Text style={styles}>{props.text || "A carregar..."}</Text>
     </LoadingContainerWithStyles>
   );
 };

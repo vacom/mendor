@@ -21,14 +21,16 @@ const ALL_CONTACTS_QUERY = gql`
 
 const ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY = gql`
   query allContacts($id: ID) {
-    mentors: allContactsMentors(filter: { user: { type: MENTOR, id: $id } }) {
+    mentors: allContacts(filter: { user: { type: MENTOR, id: $id } }) {
+      id
       contactID {
         ...userItems
       }
     }
-    entrepeneurs: allContactsEntrepeneurs(
+    entrepeneurs: allContacts(
       filter: { user: { type: ENTREPRENEUR, id: $id } }
     ) {
+      id
       contactID {
         ...userItems
       }
