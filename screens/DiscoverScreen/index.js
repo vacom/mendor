@@ -2,7 +2,6 @@ import React from "react";
 import { TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { Location, Permissions } from "expo";
 import { Thumbnail } from "native-base";
-import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 //Components
 import GradientContainer from "../../components/GradientContainer";
@@ -66,6 +65,7 @@ class DiscoverScreen extends React.Component {
   componentDidMount() {
     this._getBasicUserInfo();
   }
+
   _goToProfile = () => {
     this.props.navigation.navigate("Profile", { id: this.state.userId });
   };
@@ -166,9 +166,7 @@ class DiscoverScreen extends React.Component {
     const data = [];
     //grupos all of the ids of user contacts and their interests
     object.map(res => {
-      data.push(
-        type === "competencesIds" ? res.interest.id : res.contactID.id
-      );
+      data.push(type === "competencesIds" ? res.interest.id : res.contactID.id);
     });
     this.setState({
       [type]: data
@@ -183,13 +181,15 @@ class DiscoverScreen extends React.Component {
       contactsIds,
       competencesIds,
       distance,
-      interests
+      interests,
+      refreshing
     } = this.state;
     return (
       <GradientContainer>
         <ScrollView
           refreshControl={
             <RefreshControl
+              tintColor="white"
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
@@ -208,6 +208,7 @@ class DiscoverScreen extends React.Component {
               competencesIds={competencesIds}
               distance={distance}
               interests={interests}
+              refresh={refreshing}
             />
           )}
         </ScrollView>

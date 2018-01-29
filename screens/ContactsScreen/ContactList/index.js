@@ -7,27 +7,36 @@ import {
   CardBody,
   CardRight
 } from "../../../components/Card";
-import { Thumbnail, Text, Container, View } from "native-base";
+import { Thumbnail, Text } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 import { Placeholder } from "../../../components";
 import { TouchableOpacity } from "react-native";
+//GraphQL
+import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 
 const ContactList = props => {
   if (Object.keys(props.contacts).length > 0) {
     return props.contacts.map((data, index) => {
       return (
-        <Card
-          key={index}
-          onPress={() => props.openProfile(data.contactID.id)}
-        >
+        <Card key={index} onPress={() => props.openProfile(data.contactID.id)}>
           <CardContainer>
             <CardLeft>
               <Thumbnail
                 style={{ width: 48, height: 48 }}
-                source={{
-                  uri: IMAGE_PLACEHOLDER
-                }}
+                source={
+                  data.contactID.avatar != null
+                    ? {
+                        uri: GET_AVATAR_URL(
+                          data.contactID.avatar.secret,
+                          "250x250",
+                          data.contactID.avatar.name
+                        )
+                      }
+                    : {
+                        uri: IMAGE_PLACEHOLDER
+                      }
+                }
               />
             </CardLeft>
             <CardBody>
@@ -47,9 +56,7 @@ const ContactList = props => {
               </Text>
             </CardBody>
             <CardRight>
-              <TouchableOpacity
-                onPress={() => props.openAction(data.id)}
-              >
+              <TouchableOpacity onPress={() => props.openAction(data.id)}>
                 <MaterialIcons name="more-vert" size={24} color="#757575" />
               </TouchableOpacity>
             </CardRight>
@@ -58,7 +65,7 @@ const ContactList = props => {
       );
     });
   } else {
-    return <Placeholder text="Sem Contactos" IconName="sentiment-neutral"/>;
+    return <Placeholder text="Sem Contactos" IconName="sentiment-neutral" />;
   }
 };
 

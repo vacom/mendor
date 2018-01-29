@@ -21,13 +21,17 @@ const ALL_CONTACTS_QUERY = gql`
 
 const ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY = gql`
   query allContacts($id: ID) {
-    mentors: allContacts(filter: { user: { type: MENTOR, id: $id } }) {
+    mentors: allContacts(
+      orderBy: createdAt_DESC
+      filter: { user: { type: MENTOR, id: $id } }
+    ) {
       id
       contactID {
         ...userItems
       }
     }
     entrepeneurs: allContacts(
+      orderBy: createdAt_DESC
       filter: { user: { type: ENTREPRENEUR, id: $id } }
     ) {
       id
@@ -43,10 +47,7 @@ const SEARCH_CONTACTS = gql`
   query searchContacts($id: ID, $query: String!) {
     allContacts(
       filter: {
-        AND: [
-          { contactID: { name_contains: $query } }
-          { user: { id: $id } }
-        ]
+        AND: [{ contactID: { name_contains: $query } }, { user: { id: $id } }]
       }
     ) {
       contactID {

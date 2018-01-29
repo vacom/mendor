@@ -1,23 +1,28 @@
 import React from "react";
-import { TouchableOpacity, ScrollView, View, Switch, Slider } from "react-native";
-import { Text, CheckBox } from "native-base";
-import { LinearGradient } from "expo";
+import {
+  TouchableOpacity,
+  ScrollView,
+  View,
+  Switch,
+  Slider
+} from "react-native";
+import { Text } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Col, Row } from "react-native-easy-grid";
 //Components
 import {
-    HeaderRightContainer,
-    HeaderRightElement
+  HeaderRightContainer,
+  HeaderRightElement
 } from "../../components/HeaderRight";
-import { Card, CardContainer } from "../../components/Card";
-
-
+import { Card } from "../../components/Card";
 //GraphQL
 import { graphql, compose } from "react-apollo";
+import { USER_PROFILE_QUERY } from "../../api/Queries/User";
 import { UPDATE_USER_CONFIG_MUTATION } from "../../api/Mutations/User";
-
-class ConfigScreen extends React.Component {
+//Utils
+import Toast from "react-native-root-toast";
+class ConfigScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -33,16 +38,65 @@ class ConfigScreen extends React.Component {
       )
     };
   };
+  state = {
+    id: "",
+    distance: 50,
+    interests: "COMMON",
+    type: "MENTOR"
+  };
+  componentWillMount() {
+    const {
+      id: configId,
+      distance,
+      interests,
+      type
+    } = this.props.navigation.state.params.data;
+    this.setState({ configId, distance, interests, type });
+  }
   componentDidMount() {
     this.props.navigation.setParams({
       updateConfigs: this._onUpdateConfigs
     });
   }
-  _onUpdateConfigs = () => {
-    console.log("A guardar configurações");
+  _onUpdateConfigs = async () => {
+    const { configId, distance, interests, type } = this.state;
+    const { updateUserConfigs } = this.props;
+    try {
+      //Updates the configs information of the user
+      await updateUserConfigs({
+        variables: {
+          configId,
+          type,
+          distance,
+          interests
+        },
+        update: async () => {
+          try {
+            Toast.show("Alterações guardadas.");
+          } catch (e) {
+            console.log(e);
+            Toast.show("Erro! Verifique os campos.");
+          }
+        }
+      });
+    } catch (e) {
+      Toast.show(e);
+    }
   };
+  _onChangeType = type => () => {
+    this.setState({ type });
+  };
+  _onChangeDistance = value => {
+    this.setState({ distance: Math.trunc(value) });
+  };
+
+  _onChangeInterests = value => {
+    this.setState({ interests: value ? "COMMON" : "ALL" });
+  };
+
   render() {
-    console.log("Config props: ", this.props.data);
+    console.log("Config props: ", this.props.navigation.state.params.data);
+    const { type, interests, distance } = this.state;
     return (
       <Container>
         <ScrollView>
@@ -58,9 +112,9 @@ class ConfigScreen extends React.Component {
               Definições de Descoberta
             </Text>
             <Card>
-              <View style={{padding: 20}}>
+              <View style={{ padding: 20 }}>
                 <Row>
-                  <Col style={{justifyContent: "center"}}>
+                  <Col style={{ justifyContent: "center" }}>
                     <Text
                       style={{
                         fontSize: 16,
@@ -71,7 +125,7 @@ class ConfigScreen extends React.Component {
                       A passar em
                     </Text>
                   </Col>
-                  <Col style={{justifyContent: "center"}}>
+                  <Col style={{ justifyContent: "center" }}>
                     <Text
                       style={{
                         fontSize: 16,
@@ -94,15 +148,16 @@ class ConfigScreen extends React.Component {
                 fontWeight: "300",
                 color: "#757575",
                 marginLeft: 14,
-                marginRight: 14,
+                marginRight: 14
               }}
             >
-              Mendor utiliza a localização para mostrar primeiro as pessoas perto de si.
+              Mendor utiliza a localização para mostrar primeiro as pessoas
+              perto de si.
             </Text>
 
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <Card>
-                <View style={{padding: 20}}>
+                <View style={{ padding: 20 }}>
                   <Row>
                     <Col>
                       <Text
@@ -116,8 +171,8 @@ class ConfigScreen extends React.Component {
                       </Text>
                     </Col>
                   </Row>
-                  <Row style={{marginTop: 15}}>
-                    <Col style={{justifyContent: "center"}}>
+                  <Row style={{ marginTop: 15 }}>
+                    <Col style={{ justifyContent: "center" }}>
                       <Text
                         style={{
                           fontSize: 16,
@@ -130,12 +185,15 @@ class ConfigScreen extends React.Component {
                     </Col>
                     <Col>
                       <Switch
-                        style={{ alignSelf: 'flex-end'}}
+                        onTintColor="#3F54AF"
+                        onValueChange={this._onChangeType("ENTREPRENEUR")}
+                        value={type != "ENTREPRENEUR" ? false : true}
+                        style={{ alignSelf: "flex-end" }}
                       />
                     </Col>
                   </Row>
-                  <Row style={{marginTop: 15}}>
-                    <Col style={{justifyContent: "center"}}>
+                  <Row style={{ marginTop: 15 }}>
+                    <Col style={{ justifyContent: "center" }}>
                       <Text
                         style={{
                           fontSize: 16,
@@ -148,7 +206,10 @@ class ConfigScreen extends React.Component {
                     </Col>
                     <Col>
                       <Switch
-                        style={{ alignSelf: 'flex-end'}}
+                        onTintColor="#3F54AF"
+                        onValueChange={this._onChangeType("MENTOR")}
+                        value={type != "MENTOR" ? false : true}
+                        style={{ alignSelf: "flex-end" }}
                       />
                     </Col>
                   </Row>
@@ -156,11 +217,11 @@ class ConfigScreen extends React.Component {
               </Card>
             </View>
 
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <Card>
-                <View style={{padding: 20}}>
+                <View style={{ padding: 20 }}>
                   <Row>
-                    <Col style={{justifyContent: "center", width: "auto"}}>
+                    <Col style={{ justifyContent: "center", width: "auto" }}>
                       <Text
                         style={{
                           fontSize: 18,
@@ -171,7 +232,7 @@ class ConfigScreen extends React.Component {
                         Distância máxima
                       </Text>
                     </Col>
-                    <Col style={{justifyContent: "center"}}>
+                    <Col style={{ justifyContent: "center" }}>
                       <Text
                         style={{
                           fontSize: 16,
@@ -180,14 +241,17 @@ class ConfigScreen extends React.Component {
                           color: "#000000"
                         }}
                       >
-                        20km
+                        {`${distance} Km`}
                       </Text>
                     </Col>
                   </Row>
-                  <Row style={{marginTop: 15}}>
+                  <Row style={{ marginTop: 15 }}>
                     <Col>
                       <Slider
-
+                        maximumValue={200}
+                        minimumValue={0}
+                        value={distance}
+                        onValueChange={this._onChangeDistance}
                       />
                     </Col>
                   </Row>
@@ -202,37 +266,39 @@ class ConfigScreen extends React.Component {
                 fontWeight: "300",
                 color: "#757575",
                 marginLeft: 14,
-                marginRight: 14,
+                marginRight: 14
               }}
             >
               Mendor utiliza estas preferências para sugerir correspondências.
             </Text>
 
-            <View style={{marginTop: 10}}>
+            <View style={{ marginTop: 10 }}>
               <Card>
-                <View style={{padding: 20}}>
+                <View style={{ padding: 20 }}>
                   <Row>
-                    <Col style={{justifyContent: "center", width: "auto"}}>
+                    <Col style={{ justifyContent: "center", width: "auto" }}>
                       <Text
                         style={{
-                            fontSize: 16,
-                            fontWeight: "400",
-                            color: "#616161"
+                          fontSize: 16,
+                          fontWeight: "400",
+                          color: "#616161"
                         }}
                       >
-                        Mostrar-me no Mendor
+                        Mostrar interesses em comum
                       </Text>
                     </Col>
-                    <Col style={{justifyContent: "center"}}>
+                    <Col style={{ justifyContent: "center" }}>
                       <Switch
-                        style={{ alignSelf: 'flex-end'}}
+                        onTintColor="#3F54AF"
+                        onValueChange={this._onChangeInterests}
+                        value={interests != "COMMON" ? false : true}
+                        style={{ alignSelf: "flex-end" }}
                       />
                     </Col>
                   </Row>
                 </View>
               </Card>
             </View>
-
           </ConfigContainer>
         </ScrollView>
       </Container>
@@ -242,13 +308,21 @@ class ConfigScreen extends React.Component {
 
 export default compose(
   graphql(UPDATE_USER_CONFIG_MUTATION, {
-    name: "updateUserConfigs"
+    name: "updateUserConfigs",
+    options: props => ({
+      refetchQueries: [
+        {
+          query: USER_PROFILE_QUERY,
+          variables: { id: props.navigation.state.params.userId }
+        }
+      ]
+    })
   })
 )(ConfigScreen);
 
 const Container = styled.View`
   flex: 1;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 `;
 
 const ConfigContainer = styled.View`

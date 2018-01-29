@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 //Fragments
-import { BASIC_USER_FIELDS_FRAGMENT } from "../Fragments/User";
+//import { BASIC_USER_FIELDS_FRAGMENT } from "../Fragments/User";
 
 /**
  * USER MUTATIONS
@@ -12,11 +12,10 @@ const SIGNIN_USER_MUTATION = gql`
     signinUser(email: { email: $email, password: $password }) {
       token
       user {
-        ...basicUserFields
+        id
       }
     }
   }
-  ${BASIC_USER_FIELDS_FRAGMENT}
 `;
 
 //Creates a new user in the DB
