@@ -19,11 +19,12 @@ import {
   Picker
 } from "native-base";
 //REQUESTS
+import { UPLOAD_PHOTO_FUNC } from "../../../api/Functions/Upload";
 import { CREATE_DISCUSSION_MUTATION } from "../../../api/Mutations/Discussions";
 import { ALL_CATEGORIES_QUERY } from "../../../api/Queries/Discussions";
 import {
-  DISCUSSIONS_BY_CATEGORIES_QUERY,
-  CATEGORY_QUERY
+  CATEGORY_QUERY,
+  DISCUSSIONS_BY_CATEGORIES_QUERY
 } from "../../../api/Queries/Discussions";
 
 //COMPONENTS
@@ -34,7 +35,7 @@ import {
 import { Placeholder, Loading } from "../../../components/index";
 
 //Utils
-import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+import { guid, IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
 class AddDiscussion extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -59,10 +60,11 @@ class AddDiscussion extends React.Component {
 
   state = {
     categoryId: "0",
-    cover: IMAGE_PLACEHOLDER,
     description: "",
     title: "",
     userId: this.props.screenProps.userId,
+    cover: null,
+    coverId: null
   };
   onPickerChange(value) {
     this.setState({
@@ -77,12 +79,12 @@ class AddDiscussion extends React.Component {
   }
 
   submitDiscussion = () => {
-    const { title, description, categoryId, cover } = this.state;
+    const { title, description, categoryId, cover, coverId } = this.state;
     if (!title || !description || categoryId == 0) {
       Toast.show("Todos os campos são obrigatórios!");
       return;
     } else {
-      if (!cover) {
+      if (!cover || !coverId) {
         Alert.alert(
           "Imagem de fundo não definida",
           "Tem a certeza que deseja criar uma nova discussão sem imagem de fundo definida?",
@@ -96,7 +98,7 @@ class AddDiscussion extends React.Component {
               text: "Sim",
               onPress: () => {
                 this.setState({
-                  cover: "https://i.ytimg.com/vi/YmIlsUKEjaA/maxresdefault.jpg"
+                  coverId: null
                 });
                 this._submitMutation();
               }
@@ -111,32 +113,16 @@ class AddDiscussion extends React.Component {
   };
 
   _submitMutation = async () => {
-    const { title, description, categoryId, cover, userId } = this.state;
+    const { title, description, categoryId, coverId, userId } = this.state;
+    console.log(title, description, categoryId, coverId, userId);
     try {
       await this.props.createDiscussion({
         variables: {
           title,
           description,
           categoryId,
-          cover,
+          coverId,
           userId
-        },
-        update: (proxy, { data: { createDiscussion } }) => {
-          const data = proxy.readQuery({
-            query: DISCUSSIONS_BY_CATEGORIES_QUERY,
-            variables: { id: null }
-          });
-          data.allCategories.unshift({
-            id: categoryId,
-            title: "Adicionadas recentemente",
-            __typename: "Category",
-            discussions: [createDiscussion]
-          });
-          proxy.writeQuery({
-            query: DISCUSSIONS_BY_CATEGORIES_QUERY,
-            data,
-            variables: { id: null }
-          });
         }
       });
       Toast.show("Discussão inserida com sucesso");
@@ -272,7 +258,12 @@ class AddDiscussion extends React.Component {
       aspect: [4, 3]
     });
     if (!result.cancelled) {
-      this.setState({ cover: result.uri });
+      UPLOAD_PHOTO_FUNC(result.uri, guid()).then(file => {
+        this.setState({
+          cover: file.url,
+          coverId: file.id
+        });
+      });
     }
   };
 }
@@ -282,7 +273,19 @@ export default compose(
   graphql(ALL_CATEGORIES_QUERY, {
     name: "Categories"
   }),
-  graphql(CREATE_DISCUSSION_MUTATION, { name: "createDiscussion" })
+  graphql(CREATE_DISCUSSION_MUTATION, {
+    name: "createDiscussion",
+    options: props => ({
+      refetchQueries: [
+        {
+          query: DISCUSSIONS_BY_CATEGORIES_QUERY,
+          variables: {
+            id: null
+          }
+        }
+      ]
+    })
+  })
 )(AddDiscussion);
 
 const ScreenContainer = styled.View`

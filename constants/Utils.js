@@ -19,8 +19,9 @@ const SOCIAL_ICONS = {
 };
 
 const IMAGE_PLACEHOLDER = "https://ui-avatars.com/api/?size=128&name=mendor";
-const IMAGE_GROUP_CHAT =
-  "https://ui-avatars.com/api/?size=128&name=group";
+const IMAGE_GROUP_CHAT = "https://ui-avatars.com/api/?size=128&name=group";
+const IMAGE_DISCUSSIONS_PLACEHOLDER =
+  "https://i.ytimg.com/vi/LqonKhRZAyE/maxresdefault.jpg";
 
 //const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
 
@@ -110,5 +111,6 @@ export {
   countAllTrue,
   GRAPHQL_FILE_ENDPOINT,
   guid,
-  GET_DISTANCE_FROM_LAT_LON_IN_KM
+  GET_DISTANCE_FROM_LAT_LON_IN_KM,
+  IMAGE_DISCUSSIONS_PLACEHOLDER
 };

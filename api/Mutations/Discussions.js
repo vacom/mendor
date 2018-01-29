@@ -25,20 +25,19 @@ const CREATE_DISCUSSION_MUTATION = gql`
   mutation createDiscussion(
     $title: String!
     $description: String!
-    $cover: String!
+    $coverId: ID
     $userId: ID
     $categoryId: ID
   ) {
     createDiscussion(
       title: $title
       description: $description
-      cover: $cover
+      coverId: $coverId
       userId: $userId
       categoryId: $categoryId
     ) {
       id
       title
-      cover
       description
       responses {
         id

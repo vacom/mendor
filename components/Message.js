@@ -19,7 +19,7 @@ const Message = props => {
     avatar = IMAGE_PLACEHOLDER;
   }
   if (userId == userIdLogged) {
-    if (props.type == "MESSAGE") {
+    if (props.type != "PROJECT") {
       message = (
         <ViewMessageLogged>
           <TextLogged>{props.message}</TextLogged>
@@ -36,7 +36,7 @@ const Message = props => {
       );
     }
   } else {
-    if (props.type == "MESSAGE") {
+    if (props.type != "PROJECT") {
       message = (
         <ViewMessage>
           <ViewMessageNotLogged>

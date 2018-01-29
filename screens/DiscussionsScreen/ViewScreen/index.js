@@ -21,6 +21,7 @@ import {
 } from "../../../components/HeaderRight";
 //utils
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+import moment from "moment/min/moment-with-locales";
 
 class DiscussionViewScreen extends React.Component {
   constructor(props) {
@@ -88,6 +89,7 @@ class DiscussionViewScreen extends React.Component {
     const content = e;
     const authorId = this.state.userIdLogged;
     const discussionId = this.props.Discussion.Discussion.id;
+    console.log(e, authorId, discussionId);
     try {
       await this.props.createResponse({
         variables: {
@@ -116,7 +118,7 @@ class DiscussionViewScreen extends React.Component {
     if (this.props.Discussion && this.props.Discussion.error) {
       return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
-
+    console.log(this.props.Discussion);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Accordion
@@ -126,6 +128,7 @@ class DiscussionViewScreen extends React.Component {
           renderContent={this._renderContent.bind(this)}
         />
         <Chat
+          share_cards={false}
           userIdLogged={this.state.userIdLogged}
           messages={this.props.Discussion.Discussion.responses}
           addMessage={this._addMessage}
@@ -138,7 +141,12 @@ class DiscussionViewScreen extends React.Component {
 
   //Cabeçalho Accordion
   _renderHeader() {
-    const { user, responses, title } = this.props.Discussion.Discussion;
+    const {
+      user,
+      responses,
+      title,
+      createdAt
+    } = this.props.Discussion.Discussion;
     return (
       <ContainerDiscussion>
         <Header>
@@ -168,7 +176,7 @@ class DiscussionViewScreen extends React.Component {
           </ViewIcon>
         </Header>
         <Title>{title}</Title>
-        <Desc>2 de Dezembro de 2017 - Atualizado há uma semana</Desc>
+        <Desc>Criado {moment(createdAt).fromNow()}</Desc>
       </ContainerDiscussion>
     );
   }

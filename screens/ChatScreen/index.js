@@ -72,10 +72,6 @@ class ChatScreen extends React.Component {
     });
   }
 
-  _onScroll = () => {
-    console.log("scroll");
-  };
-
   _onRefresh = () => {
     this.setState({ refreshing: true });
     //gets new content from the DB

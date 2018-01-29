@@ -196,6 +196,7 @@ class ChatViewScreen extends React.Component {
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
           <View style={{ flex: 1 }}>
             <Chat
+              share_cards={true}
               stopScroll={() => {
                 this.setState({ scrollBottomChat: false });
               }}

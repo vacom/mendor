@@ -1,5 +1,6 @@
 import React from "react";
-import { Container, Icon, Fab, View, Text } from "native-base";
+import { Container, Icon, Fab, View, Text, Content } from "native-base";
+import { RefreshControl, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 //GraphQL
@@ -16,19 +17,25 @@ import { Placeholder, Loading } from "../../components/index";
 import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 
 class DiscussionsScreen extends React.Component {
-  static navigationOptions = {
-    title: "Discussões",
-    headerRight: (
-      <HeaderRightContainer>
-        <HeaderRightElement>
-          <MaterialIcons name="search" size={24} color="#ffffff" />
-        </HeaderRightElement>
-      </HeaderRightContainer>
-    )
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      title: "Discussões",
+      headerRight: (
+        <HeaderRightContainer>
+          <HeaderRightElement>
+            <TouchableOpacity onPress={params.openSearch}>
+              <MaterialIcons name="search" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </HeaderRightElement>
+        </HeaderRightContainer>
+      )
+    };
   };
   state = {
     avatar: IMAGE_PLACEHOLDER,
     userIdLogged: this.props.screenProps.userId,
+    refreshing: false
   };
   _goToDiscussion = (
     id,
@@ -42,6 +49,26 @@ class DiscussionsScreen extends React.Component {
       avatar: avatar,
       userIdLogged: userIdLogged
     });
+  };
+
+  componentDidMount() {
+    this.props.navigation.setParams({
+      openSearch: this._goToSearch
+    });
+  }
+
+  _goToSearch = () => {
+    this.props.navigation.navigate("SearchDiscussion", {});
+  };
+
+  _onRefresh = () => {
+    this.setState({ refreshing: true });
+    //gets new content from the DB
+    this.props.DiscussionsByCategories.refetch();
+    //clears the loading
+    if (!this.props.DiscussionsByCategories.loading) {
+      this.setState({ refreshing: false });
+    }
   };
 
   _goToAddDiscussion = () => {
@@ -63,7 +90,14 @@ class DiscussionsScreen extends React.Component {
     }
     const { allCategories } = this.props.DiscussionsByCategories;
     return (
-      <Container>
+      <Content
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        }
+      >
         <ScrollView>
           {Object.keys(allCategories).length > 0 ? (
             <View style={{ marginBottom: 15 }}>
@@ -102,7 +136,7 @@ class DiscussionsScreen extends React.Component {
         >
           <Icon name="add" />
         </Fab>
-      </Container>
+      </Content>
     );
   }
 }

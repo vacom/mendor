@@ -25,9 +25,9 @@ import {
   SearchContent,
   SearchCard
 } from "../../../components/SearchComponents";
-import SearchChat from "../../SearchScreen/SearchChat/index";
+import SearchDiscussions from "../../SearchScreen/SearchDiscussions/index";
 
-class SearchChatScreen extends React.Component {
+class SearchDiscussionScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -58,36 +58,7 @@ class SearchChatScreen extends React.Component {
     }
   }
 
-  _goToChat = (id, users) => async () => {
-    const userlength = Object.keys(users).length;
-    let name = "";
-    let avatar = "";
-    if (userlength > 1) {
-      avatar = IMAGE_GROUP_CHAT;
-      users.map((user, i) => {
-        if (userlength === i + 1) {
-          name += user.name;
-        } else {
-          name += user.name + ", ";
-        }
-      });
-    } else {
-      name = users[0].name;
-      avatar =
-        users[0].avatar != null
-          ? GET_AVATAR_URL(
-              users[0].avatar.secret,
-              "250x250",
-              users[0].avatar.name
-            )
-          : IMAGE_PLACEHOLDER;
-    }
-    this.props.navigation.navigate("ChatView", {
-      name: name,
-      avatar: avatar,
-      id: id
-    });
-  };
+  _goToChat = (id, users) => async () => {};
 
   render() {
     return (
@@ -98,12 +69,12 @@ class SearchChatScreen extends React.Component {
             this.handleChange(text);
           }}
           search_value={this.state.search_value}
-          placeholder="Pesquisar conversas"
-          color="#3f51b5"
+          placeholder="Pesquisar discussões"
+          color="transparent"
         />
-        <SearchContent>
+        <SearchContent transparent={true}>
           <ScrollView>
-            <SearchChat
+            <SearchDiscussions
               onPress={this._goToChat}
               search_value={this.state.search_value}
               searched={this.state.searched}
@@ -124,7 +95,7 @@ class SearchChatScreen extends React.Component {
   }
 }
 
-export default compose(withNavigation)(SearchChatScreen);
+export default compose(withNavigation)(SearchDiscussionScreen);
 
 const Container = styled.View`
   flex: 1;

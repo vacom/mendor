@@ -7,7 +7,11 @@ import { View } from "native-base";
 const SearchContent = props => {
   return (
     <View style={{ flex: 1 }}>
-      <GradientContainer>{props.children}</GradientContainer>
+      {props.transparent ? (
+        <View>{props.children}</View>
+      ) : (
+        <GradientContainer>{props.children}</GradientContainer>
+      )}
     </View>
   );
 };

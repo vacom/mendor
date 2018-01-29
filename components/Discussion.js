@@ -5,7 +5,7 @@ import styled from "styled-components/native";
 //GraphQL
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
 //Utils
-import { IMAGE_PLACEHOLDER } from "../constants/Utils";
+import { IMAGE_PLACEHOLDER, IMAGE_DISCUSSIONS_PLACEHOLDER } from "../constants/Utils";
 
 const resizeMode = "cover";
 
@@ -19,7 +19,19 @@ const Discussion = props => {
             borderRadius: 3,
             resizeMode
           }}
-          source={{ uri: props.background }}
+          source={
+            props.background != null
+              ? {
+                  uri: GET_AVATAR_URL(
+                    props.background.secret,
+                    "250x250",
+                    props.background.name
+                  )
+                }
+              : {
+                  uri: IMAGE_DISCUSSIONS_PLACEHOLDER
+                }
+          }
         />
       </Background>
       <Content

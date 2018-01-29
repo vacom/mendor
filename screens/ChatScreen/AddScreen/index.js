@@ -67,7 +67,7 @@ class ChatAddScreen extends React.Component {
     const res = await this.props.client.query({
       query: ALL_INDIVIDUAL_CHATS_OF_USERS,
       variables: {
-        id1: "cjbjhh0f9lbfz01142sd6tvuv", // id1 -> Sempre o id logado!!!
+        id1: this.props.screenProps.userId, // id1 -> Sempre o id logado!!!
         id2: id
       }
     });
@@ -87,8 +87,8 @@ class ChatAddScreen extends React.Component {
           const res_mutation = await this.props.createChat({
             variables: {
               name: "created",
-              usersIds: [id, "cjbjhh0f9lbfz01142sd6tvuv"],
-              authorId: "cjbjhh0f9lbfz01142sd6tvuv",
+              usersIds: [id, this.props.screenProps.userId],
+              authorId: this.props.screenProps.userId,
               isGroup: false
             }
           });
@@ -123,6 +123,7 @@ class ChatAddScreen extends React.Component {
           }}
           search_value={this.state.search_value}
           placeholder="Pesquisar contactos"
+          color="#3f51b5"
         />
         <SearchContent>
           <ScrollView>

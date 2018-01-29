@@ -19,7 +19,7 @@ class Chat extends React.Component {
   };
 
   componentDidMount() {
-    if (this.props.messages.length > 0) {
+    if (Object.keys(this.props.messages).length > 0) {
       setTimeout(() => {
         this.refs.ScrollView.scrollToEnd({ animated: true });
       }, 50);
@@ -49,14 +49,15 @@ class Chat extends React.Component {
     this.props.openShareCards();
   }
   render() {
-    if (this.state.messages.length > 0) {
+    if (Object.keys(this.state.messages).length > 0) {
       return (
         <View style={{ flex: 1 }}>
           <ScrollView ref="ScrollView">
             {this.state.messages.map((data, index) => {
+              console.log(data);
               return (
                 <Message
-                  key={data.id}
+                  key={index}
                   userId={data.author.id}
                   userIdLogged={this.props.userIdLogged}
                   message={data.content}
@@ -70,7 +71,7 @@ class Chat extends React.Component {
           </ScrollView>
           <InputMessageBar
             openShareCards={this._openShareCards}
-            share_cards={true}
+            share_cards={this.props.share_cards}
             avatar={this.state.avatar}
             userIdLogged={this.state.userIdLogged}
             addMessage={this._addMessage}

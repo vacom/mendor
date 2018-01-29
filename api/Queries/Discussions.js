@@ -45,7 +45,11 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
       discussions {
         id
         title
-        cover
+        cover {
+          id
+          secret
+          name
+        }
         description
         responses {
           id
@@ -79,7 +83,11 @@ const CATEGORY_QUERY = gql`
       discussions {
         title
         description
-        cover
+        cover {
+          id
+          secret
+          name
+        }
         author {
           id
         }
@@ -91,9 +99,46 @@ const CATEGORY_QUERY = gql`
   }
 `;
 
+const SEARCH_DISCUSSIONS_BY_CATEGORIES = gql`
+  query allCategories($id: ID, $query: String!) {
+    allCategories(
+      filter: {
+        discussions_some: {
+          AND: [{ title_contains: $query }, { description_contains: $query }]
+          id_not: $id
+        }
+      }
+    ) {
+      id
+      title
+      discussions {
+        id
+        title
+        cover {
+          id
+          secret
+          name
+        }
+        description
+        responses {
+          id
+          author {
+            avatar {
+              id
+              secret
+              name
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export {
   DISCUSSION,
   DISCUSSIONS_BY_CATEGORIES_QUERY,
   ALL_CATEGORIES_QUERY,
-  CATEGORY_QUERY
+  CATEGORY_QUERY,
+  SEARCH_DISCUSSIONS_BY_CATEGORIES
 };

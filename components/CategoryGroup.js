@@ -1,10 +1,8 @@
 import React from "react";
-import { TouchableHighlight, View, Text } from "react-native";
+import { TouchableOpacity, View, Text } from "react-native";
 import styled from "styled-components/native";
 //Components
 import Discussion from "./Discussion";
-
-const url = "https://i.ytimg.com/vi/YmIlsUKEjaA/maxresdefault.jpg";
 
 const CategoryGroup = props => {
   return (
@@ -12,8 +10,17 @@ const CategoryGroup = props => {
       <Title>{props.nameCategory}</Title>
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
         {props.discussions.map((data, index) => {
+          console.log(data.cover);
           return (
-            <TouchableHighlight key={data.id} onPress={props.goToDiscussion(data.id, data.title, props.avatar, props.userIdLogged)}>
+            <TouchableOpacity
+              key={data.id}
+              onPress={props.goToDiscussion(
+                data.id,
+                data.title,
+                props.avatar,
+                props.userIdLogged
+              )}
+            >
               <View>
                 <Discussion
                   background={data.cover}
@@ -24,7 +31,7 @@ const CategoryGroup = props => {
                   responses={data.responses}
                 />
               </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
           );
         })}
       </ArticlesList>

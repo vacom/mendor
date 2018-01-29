@@ -7,7 +7,7 @@ import { Input } from "native-base";
 
 const SearchInput = props => {
   return (
-    <Header>
+    <Header style={{ backgroundColor: props.color }}>
       <SearchView>
         <IconBackView>
           <TouchableOpacity
