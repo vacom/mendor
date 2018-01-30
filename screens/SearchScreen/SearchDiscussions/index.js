@@ -44,7 +44,7 @@ class SearchDiscussions extends React.Component {
       return <Loading />;
     } else {
       // Se não estiver a escrever nem loading
-      if (Object.keys(this.props.Discussions.allCategories).length > 0) {
+      if (this.props.Discussions.allCategories.length > 0) {
         return (
           <View style={{ marginBottom: 15 }}>
             {this.props.Discussions.allCategories.map((data, key) => {
@@ -71,7 +71,7 @@ class SearchDiscussions extends React.Component {
               alignItems: "center"
             }}
           >
-            <Text>Ainda não existem discussões.</Text>
+            <Text>Não foram encontrados resultados.</Text>
           </View>
         );
       }

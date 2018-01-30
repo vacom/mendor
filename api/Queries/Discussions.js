@@ -124,6 +124,7 @@ const SEARCH_DISCUSSIONS_BY_CATEGORIES = gql`
         responses {
           id
           author {
+            id
             avatar {
               id
               secret

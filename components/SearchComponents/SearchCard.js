@@ -27,7 +27,7 @@ const SearchCard = props => {
     >
       <CardContainer>
         <CardLeft>
-          {props.avatar ? (
+          {props.send_avatar ? (
             <Thumbnail
               style={{ width: 48, height: 48 }}
               source={

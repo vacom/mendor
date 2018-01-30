@@ -26,20 +26,23 @@ class SearchChatRooms extends React.Component {
       // Se estiver a escrever ou o loading do search ativo
       return <Loading />;
     } else {
-        console.log(this.props.Contacts)
       // Se não estiver a escrever nem loading
       if (Object.keys(this.props.Contacts.allContacts).length > 0) {
         return this.props.Contacts.allContacts.map((data, index) => {
+          console.log(data.contactID.avatar);
           return (
             <SearchCard
               key={index}
+              users={data.users}
+              send_avatar={true}
               avatar={data.contactID.avatar}
               name={data.contactID.name}
-              type={
-                data.contactID.type == "MENTOR" ? "Mentor" : "Empreendedor"
-              }
+              type={data.contactID.type == "MENTOR" ? "Mentor" : "Empreendedor"}
               icon="send"
-              onPress={this.props.onPress(data.contactID.id, data.contactID.avatar)}
+              onPress={this.props.onPress(
+                data.contactID.id,
+                data.contactID.avatar
+              )}
             />
           );
         });
