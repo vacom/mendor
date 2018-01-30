@@ -5,10 +5,12 @@ import styled from "styled-components/native";
 //GraphQL
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
 //Utils
-import { IMAGE_PLACEHOLDER, IMAGE_DISCUSSIONS_PLACEHOLDER } from "../constants/Utils";
+import {
+  IMAGE_PLACEHOLDER,
+  IMAGE_DISCUSSIONS_PLACEHOLDER
+} from "../constants/Utils";
 
 const resizeMode = "cover";
-
 const Discussion = props => {
   return (
     <Card>

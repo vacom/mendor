@@ -70,10 +70,10 @@ class SearchDiscussionScreen extends React.Component {
           }}
           search_value={this.state.search_value}
           placeholder="Pesquisar discussões"
-          color="transparent"
+          color="#3f51b5"
         />
-        <SearchContent transparent={true}>
-          <ScrollView>
+        <SearchContent color="#fff">
+          <ScrollView style={{paddingTop: 20}}>
             <SearchDiscussions
               onPress={this._goToChat}
               search_value={this.state.search_value}

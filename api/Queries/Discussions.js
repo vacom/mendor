@@ -54,6 +54,7 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
         responses {
           id
           author {
+            id
             avatar {
               id
               secret

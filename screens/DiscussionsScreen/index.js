@@ -19,6 +19,7 @@ import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 class DiscussionsScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
+
     return {
       title: "Discussões",
       headerRight: (
@@ -71,7 +72,7 @@ class DiscussionsScreen extends React.Component {
     }
   };
 
-  _goToAddDiscussion = () => {
+  _goToAddDiscussion = () => {233336
     this.props.navigation.navigate("AddDiscussion");
   };
 
@@ -90,43 +91,45 @@ class DiscussionsScreen extends React.Component {
     }
     const { allCategories } = this.props.DiscussionsByCategories;
     return (
-      <Content
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh}
-          />
-        }
-      >
-        <ScrollView>
-          {Object.keys(allCategories).length > 0 ? (
-            <View style={{ marginBottom: 15 }}>
-              {allCategories.map(data => {
-                return (
-                  <CategoryGroup
-                    goToDiscussion={this._goToDiscussion}
-                    discussions={data.discussions}
-                    idCategory={data.id}
-                    nameCategory={data.title}
-                    key={data.id}
-                    avatar={this.state.avatar}
-                    userIdLogged={this.state.userIdLogged}
-                  />
-                );
-              })}
-            </View>
-          ) : (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text>Ainda não existem discussões.</Text>
-            </View>
-          )}
-        </ScrollView>
+      <Container>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
+        >
+          <ScrollView>
+            {Object.keys(allCategories).length > 0 ? (
+              <View style={{ marginBottom: 15 }}>
+                {allCategories.map(data => {
+                  return (
+                    <CategoryGroup
+                      goToDiscussion={this._goToDiscussion}
+                      discussions={data.discussions}
+                      idCategory={data.id}
+                      nameCategory={data.title}
+                      key={data.id}
+                      avatar={this.state.avatar}
+                      userIdLogged={this.state.userIdLogged}
+                    />
+                  );
+                })}
+              </View>
+            ) : (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text>Ainda não existem discussões.</Text>
+              </View>
+            )}
+          </ScrollView>
+        </Content>
         <Fab
           onPress={this._goToAddDiscussion}
           direction="up"
@@ -136,7 +139,7 @@ class DiscussionsScreen extends React.Component {
         >
           <Icon name="add" />
         </Fab>
-      </Content>
+      </Container>
     );
   }
 }

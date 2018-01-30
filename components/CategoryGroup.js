@@ -10,7 +10,6 @@ const CategoryGroup = props => {
       <Title>{props.nameCategory}</Title>
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
         {props.discussions.map((data, index) => {
-          console.log(data.cover);
           return (
             <TouchableOpacity
               key={data.id}
