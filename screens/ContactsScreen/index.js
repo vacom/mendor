@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { ScrollView, TouchableOpacity, RefreshControl } from "react-native";
 import { withNavigation } from "react-navigation";
@@ -19,7 +20,11 @@ import { DELETE_CONTACT_FUNC } from "../../api/Functions/User";
 //Utils
 import Toast from "react-native-root-toast";
 
-class ContactsScreen extends React.Component {
+class ContactsScreen extends React.PureComponent {
+  props: {
+    allContacts: any,
+    navigation: any
+  };
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -81,27 +86,19 @@ class ContactsScreen extends React.Component {
           case 0:
             this._onDeleteContact(id);
             break;
-          case 1:
-            console.log("GOooooooOoooooooo");
-            break;
         }
       }
     );
   }
 
   _onDeleteContact = async id => {
-
-    console.log("_onDeleteContact = ", id);
-
-    //const contactID = data.userRequest.id;
-
     const { deleteContact } = this.props;
     //deletes contact for the user
     const result = await DELETE_CONTACT_FUNC(id, deleteContact);
     //if success deletes a contact from the user
     if (result.status) {
       //deletes the contact
-      console.log("Contacto eliminado com sucesso!");
+      this._onRefresh();
       Toast.show("Contato eliminado.");
     } else {
       Toast.show("Erro! Tente Novamente.");
@@ -110,14 +107,20 @@ class ContactsScreen extends React.Component {
 
   render() {
     if (this.props.allContacts && this.props.allContacts.loading) {
-      return <Loading dark />;
+      return (
+        <GradientContainer>
+          <Loading dark />
+        </GradientContainer>
+      );
     }
     if (this.props.allContacts && this.props.allContacts.error) {
-      return <Placeholder text="Ocorreu um erro." IconName="error" />;
+      return (
+        <GradientContainer>
+          <Placeholder text="Ocorreu um erro." IconName="error" />
+        </GradientContainer>
+      );
     }
     const { mentors, entrepeneurs } = this.props.allContacts;
-    console.log("contacts = ", this.props.allContacts);
-
     return (
       <Container>
         <GradientContainer>
@@ -140,6 +143,7 @@ class ContactsScreen extends React.Component {
               <ScrollView
                 refreshControl={
                   <RefreshControl
+                    tintColor="white"
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
                   />
@@ -163,6 +167,7 @@ class ContactsScreen extends React.Component {
               <ScrollView
                 refreshControl={
                   <RefreshControl
+                    tintColor="white"
                     refreshing={this.state.refreshing}
                     onRefresh={this._onRefresh}
                   />

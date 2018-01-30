@@ -1,4 +1,5 @@
 import React from "react";
+import { withNavigation } from "react-navigation";
 import { TouchableOpacity, RefreshControl, ScrollView } from "react-native";
 import { Content, Thumbnail, ActionSheet, Card } from "native-base";
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -29,23 +30,27 @@ class ProfileScreen extends React.PureComponent {
     const { params = {} } = navigation.state;
     return {
       title: "Profile",
-      headerRight: (
-        <HeaderRightContainer>
-          <HeaderRightElement>
-            <TouchableOpacity onPress={params.openActions}>
-              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
-            </TouchableOpacity>
-          </HeaderRightElement>
-        </HeaderRightContainer>
-      )
+      headerRight:
+        params.userId != params.outSideUserId ? null : (
+          <HeaderRightContainer>
+            <HeaderRightElement>
+              <TouchableOpacity onPress={params.openActions}>
+                <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+              </TouchableOpacity>
+            </HeaderRightElement>
+          </HeaderRightContainer>
+        )
     };
   };
   state = {
     refreshing: false
   };
   componentDidMount() {
+    const { screenProps, navigation } = this.props;
     this.props.navigation.setParams({
-      openActions: this._onOpenActions
+      openActions: this._onOpenActions,
+      userId: screenProps.userId,
+      outSideUserId: navigation.state.params.id
     });
   }
   _onOpenActions = () => {
@@ -58,7 +63,6 @@ class ProfileScreen extends React.PureComponent {
         title: "Ações"
       },
       buttonIndex => {
-        console.log(buttonIndex);
         switch (buttonIndex) {
           case 0:
             this._goToEditProfile();
@@ -87,7 +91,6 @@ class ProfileScreen extends React.PureComponent {
       configuration: data,
       id: userId
     } = this.props.userProfileQuery.User;
-
     this.props.navigation.navigate("Config", { data, userId });
   };
   _goToEditProfile = () => {
@@ -118,7 +121,6 @@ class ProfileScreen extends React.PureComponent {
     if (this.props.userProfileQuery && this.props.userProfileQuery.error) {
       return <Error />;
     }
-    console.log(this.props.userProfileQuery);
     const { User } = this.props.userProfileQuery;
     const {
       profile,
@@ -137,6 +139,7 @@ class ProfileScreen extends React.PureComponent {
         <Content
           refreshControl={
             <RefreshControl
+              tintColor="white"
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
@@ -366,6 +369,7 @@ class ProfileScreen extends React.PureComponent {
 }
 
 export default compose(
+  withNavigation,
   graphql(USER_PROFILE_QUERY, {
     name: "userProfileQuery",
     options: props => ({

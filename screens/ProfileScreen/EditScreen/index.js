@@ -34,7 +34,7 @@ import { UPLOAD_PHOTO_FUNC } from "../../../api/Functions/Upload";
 import Toast from "react-native-root-toast";
 import { guid, IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
-class ProfileEditScreen extends React.Component {
+class ProfileEditScreen extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -98,10 +98,10 @@ class ProfileEditScreen extends React.Component {
       location,
       profileId
     } = this.state;
-    const { updateProfile } = this.props;
+    const { updateProfile, navigation } = this.props;
     //Checks if fields are empty
     if (!company || !profession || !role || !about || !location) {
-      Toast.show("Fields can not be empty!");
+      Toast.show("Os campos não podem estar vazios!");
       return;
     }
     try {
@@ -117,6 +117,12 @@ class ProfileEditScreen extends React.Component {
         },
         update: async () => {
           try {
+            //if the user only updates the information and not the avatar
+            if (!this.state.fileId) {
+              navigation.goBack();
+              return;
+            }
+            //update user avatar
             this._onUpdateAvatar();
           } catch (e) {
             console.log(e);

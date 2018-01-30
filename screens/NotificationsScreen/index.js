@@ -25,6 +25,7 @@ import { graphql, compose } from "react-apollo";
 //Notifications
 import { ALL_NOTIFICATIONS_QUERY } from "../../api/Queries/Notification";
 import { DISABLE_NOTIFICATION_MUTATION } from "../../api/Mutations/Notification";
+import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 import { CREATE_CONTACT_FUNC } from "../../api/Functions/User";
 //contacts
@@ -48,11 +49,15 @@ class NotificationsScreen extends React.Component {
     refreshing: false
   };
   _openNotification(data) {
-    //e.preventDefault();
+    //defines the route to go, profile or discussion
     const route = data.type === "REQUEST" ? "Profile" : "DiscussionView";
+    //gets the correct id to open the correct content
     const id =
       data.type === "REQUEST" ? data.userRequest.id : data.discussion.id;
-    this.props.navigation.navigate(route, { id });
+    //if is a discussion takes the titles as a params
+    const title = data.type === "REQUEST" ? null : data.discussion.title;
+    //navigates to the correct screen
+    this.props.navigation.navigate(route, { id, title });
   }
   _onOpenActions = data => () => {
     var BUTTONS = ["Ocultar Notificação", "Ver Discussão", "Cancelar"];
@@ -69,8 +74,6 @@ class NotificationsScreen extends React.Component {
             this._onDisableNotification(data.id);
             break;
           case 1:
-            console.log("GOooooooOoooooooo");
-
             this._openNotification(data);
             break;
         }
@@ -105,6 +108,7 @@ class NotificationsScreen extends React.Component {
   _onCreateContact = async data => {
     const contactID = data.userRequest.id;
     const { createContact, screenProps } = this.props;
+
     //Creates a new contact for the user
     const result = await CREATE_CONTACT_FUNC(
       screenProps.userId,
@@ -149,13 +153,21 @@ class NotificationsScreen extends React.Component {
       this.props.allNotificationsQuery &&
       this.props.allNotificationsQuery.loading
     ) {
-      return <Loading />;
+      return (
+        <GradientContainer>
+          <Loading />
+        </GradientContainer>
+      );
     }
     if (
       this.props.allNotificationsQuery &&
       this.props.allNotificationsQuery.error
     ) {
-      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
+      return (
+        <GradientContainer>
+          <Placeholder text="Erro! Tente novamente" IconName="error" />
+        </GradientContainer>
+      );
     }
     const { allNotifications } = this.props.allNotificationsQuery;
     return (
@@ -165,6 +177,7 @@ class NotificationsScreen extends React.Component {
             contentContainerStyle={{ paddingVertical: 5 }}
             refreshControl={
               <RefreshControl
+                tintColor="white"
                 refreshing={this.state.refreshing}
                 onRefresh={this._onRefresh}
               />
@@ -204,9 +217,19 @@ class NotificationsScreen extends React.Component {
                         ) : (
                           <Thumbnail
                             style={{ width: 48, height: 48 }}
-                            source={{
-                              uri: data.discussion.cover || IMAGE_PLACEHOLDER
-                            }}
+                            source={
+                              data.discussion.cover != null
+                                ? {
+                                    uri: GET_AVATAR_URL(
+                                      data.discussion.cover.secret,
+                                      "250x250",
+                                      data.discussion.cover.name
+                                    )
+                                  }
+                                : {
+                                    uri: IMAGE_PLACEHOLDER
+                                  }
+                            }
                           />
                         )}
                       </CardLeft>
@@ -275,7 +298,15 @@ export default compose(
     name: "disableNotification"
   }),
   graphql(CREATE_CONTACT_MUTATION, {
-    name: "createContact"
+    name: "createContact",
+    options: props => ({
+      refetchQueries: [
+        {
+          query: ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY,
+          variables: { id: props.screenProps.userId }
+        }
+      ]
+    })
   })
 )(NotificationsScreen);
 

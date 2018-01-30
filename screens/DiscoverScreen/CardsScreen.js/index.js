@@ -1,3 +1,4 @@
+// @flow
 import React from "react";
 import { View } from "react-native";
 //Components
@@ -22,10 +23,7 @@ import styled from "styled-components/native";
 import { graphql, compose, withApollo } from "react-apollo";
 import { CREATE_NOTIFICATION_MUTATION } from "../../../api/Mutations/Notification";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
-import {
-  ALL_USERS_DISCOVERY_QUERY,
-  ALL_COMMON_USERS_DISCOVERY_QUERY
-} from "../../../api/Queries/User";
+import { ALL_USERS_DISCOVERY_QUERY } from "../../../api/Queries/User";
 //Utils
 import Toast from "react-native-root-toast";
 import {
@@ -34,6 +32,11 @@ import {
 } from "../../../constants/Utils";
 
 class CardsScreen extends React.Component {
+  props: {
+    refresh: boolean,
+    client: any,
+    userLocation: number
+  };
   state = {
     notificationType: "REQUEST",
     data: [],
@@ -44,7 +47,15 @@ class CardsScreen extends React.Component {
   componentDidMount() {
     this._onLoadDiscovery();
   }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.refresh != this.props.refresh) {
+      if (nextProps.refresh) {
+        this._onLoadDiscovery();
+      }
+    }
+  }
   _onLoadDiscovery = async () => {
+    this.setState({ loading: true });
     const {
       type,
       userId,
@@ -67,20 +78,17 @@ class CardsScreen extends React.Component {
       });
       return;
     }
+   
     //if stops loading the data from DB
     if (!res.loading) {
-      //console.log("res.data.allUsers = ", res.data.allUsers);
-      console.log("count = ", Object.keys(res.data.allUsers).length);
       this._onFilterDiscovery(distance, res.data);
-      /*this.setState({
-        data: res.data.allUsers,
-        loading: false
-      });*/
       return;
     }
   };
   _onFilterDiscovery = (distance, object) => {
     const { latitude, longitude } = this.props.userLocation;
+
+    console.log("cards = ", object);
     //get closer users by distance
     const data = object.allUsers.filter(user => {
       return (
@@ -115,7 +123,6 @@ class CardsScreen extends React.Component {
             this._onRemoveUser(userId);
             Toast.show("Pedido Enviado.");
           } catch (e) {
-            console.log(e);
             Toast.show("Erro! Verifique os campos.");
           }
         }
@@ -160,10 +167,10 @@ class CardsScreen extends React.Component {
                       <CardLeft>
                         <Thumbnail
                           style={{ width: 48, height: 48 }}
-                          source={{
+                          /*source={{
                             uri: IMAGE_PLACEHOLDER
-                          }}
-                          /* source={
+                          }}*/
+                          source={
                             item.avatar != null
                               ? {
                                   uri: GET_AVATAR_URL(
@@ -175,7 +182,7 @@ class CardsScreen extends React.Component {
                               : {
                                   uri: IMAGE_PLACEHOLDER
                                 }
-                          }*/
+                          }
                         />
                       </CardLeft>
                       <CardBody>

@@ -41,7 +41,6 @@ class SigninScreen extends React.Component {
       });
       navigation.dispatch(resetAction);
     } else {
-      console.log("error = ", result.error);
       Toast.show("Erro! Verifique os campos.");
     }
   };

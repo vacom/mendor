@@ -6,8 +6,8 @@ import gql from "graphql-tag";
 
 //creates a new contact for the user
 const CREATE_CONTACT_MUTATION = gql`
-  mutation($contactID: [ID!], $userId: ID!) {
-    createContact(contactIDIds: $contactID, userId: $userId) {
+  mutation($contactID: ID!, $userId: ID!) {
+    createContact(contactIDId: $contactID, userId: $userId) {
       id
     }
   }

@@ -43,7 +43,7 @@ const CardContainer = props => {
 -- Card Left
 */
 const CardLeft = props => {
-  return <Col style={{ width: "auto", height: 48, backgroundColor: "pink" }}>{props.children}</Col>;
+  return <Col style={{ width: "auto", height: 48 }}>{props.children}</Col>;
 };
 
 /*
