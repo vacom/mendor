@@ -9,6 +9,7 @@ const CREATE_RESPONSE_MUTATION = gql`
     ) {
       content
       id
+      createdAt
       author {
         avatar {
           id

@@ -2,6 +2,7 @@ import React from "react";
 import { Image } from "react-native";
 import { Icon, View } from "native-base";
 import styled from "styled-components/native";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 //GraphQL
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
 //Utils
@@ -43,8 +44,10 @@ const Discussion = props => {
           backgroundColor: "transparent"
         }}
       >
-        <Title numberOfLines={2}>{props.title}</Title>
-        <Desc numberOfLines={2}>{props.description}</Desc>
+        <View style={{ height: 90 }}>
+          <Title numberOfLines={2}>{props.title}</Title>
+          <Desc numberOfLines={2}>{props.description}</Desc>
+        </View>
         <Footer
           style={{
             flex: 1,
@@ -74,17 +77,12 @@ const Discussion = props => {
               );
             })}
           </Users>
-          <Messages>
-            <View
-              style={{
-                flex: 1,
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
+          <Messages style={{ flexDirection: "row" }}>
+            <View>
               <NumberMessages>{props.messagesNumber}</NumberMessages>
-              <Icon name="mail" style={{ color: "#fff", fontSize: 14 }} />
+            </View>
+            <View>
+              <MaterialCommunityIcons name="forum" size={16} color="#fff" />
             </View>
           </Messages>
         </Footer>
@@ -96,10 +94,7 @@ const Discussion = props => {
 export default Discussion;
 
 const Card = styled.View`
-  margin-right: 10px;
-  margin-left: 15px;
   width: 220px;
-  elevation: 10;
 `;
 
 const Background = styled.View`
@@ -108,6 +103,14 @@ const Background = styled.View`
   left: 0;
   width: 100%;
   height: 100%;
+  background: #c18a8c;
+  opacity: 0.6;
+`;
+
+const BackgroundOpacity = styled.View`
+  background: blue;
+  opacity: 0.3;
+  elevation: 20;
 `;
 const Content = styled.View`
   padding: 10px;
@@ -123,7 +126,6 @@ const Desc = styled.Text`
   font-size: 16px;
   color: white;
   margin-top: 5px;
-  height: 35px;
 `;
 
 const Users = styled.View`
@@ -136,17 +138,19 @@ const Footer = styled.View`
 
 const ImageUser = styled.Image`
   border-radius: 50px;
-  height: 25px;
-  width: 25px;
+  height: 20px;
+  width: 20px;
   margin-left: -7px;
 `;
 
 const NumberMessages = styled.Text`
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   margin-right: 3px;
 `;
 
 const Messages = styled.View`
   align-self: flex-end;
+  align-items: center;
+  justify-content: center;
 `;

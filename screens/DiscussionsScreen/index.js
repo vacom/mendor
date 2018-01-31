@@ -91,7 +91,7 @@ class DiscussionsScreen extends React.Component {
     }
     const { allCategories } = this.props.DiscussionsByCategories;
     return (
-      <Container>
+      <Container >
         <Content
           refreshControl={
             <RefreshControl
@@ -100,7 +100,7 @@ class DiscussionsScreen extends React.Component {
             />
           }
         >
-          <ScrollView>
+          <ScrollView style={{backgroundColor: "#fff"}}>
             {Object.keys(allCategories).length > 0 ? (
               <View style={{ marginBottom: 15 }}>
                 {allCategories.map(data => {

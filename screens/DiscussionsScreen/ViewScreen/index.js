@@ -89,7 +89,7 @@ class DiscussionViewScreen extends React.Component {
     const content = e;
     const authorId = this.state.userIdLogged;
     const discussionId = this.props.Discussion.Discussion.id;
-    console.log(e, authorId, discussionId);
+    const createdAt = new Date().toLocaleString();
     try {
       await this.props.createResponse({
         variables: {
@@ -122,6 +122,7 @@ class DiscussionViewScreen extends React.Component {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Accordion
+          collapsed={false}
           duration={600}
           sections={["Section1"]}
           renderHeader={this._renderHeader.bind(this)}

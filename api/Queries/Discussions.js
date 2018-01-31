@@ -23,6 +23,7 @@ const DISCUSSION = gql`
       responses {
         id
         content
+        createdAt
         author {
           id
           avatar {

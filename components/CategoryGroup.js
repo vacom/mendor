@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, Text, TouchableHighlight } from "react-native";
 import styled from "styled-components/native";
 //Components
 import Discussion from "./Discussion";
@@ -11,26 +11,27 @@ const CategoryGroup = props => {
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
         {props.discussions.map((data, index) => {
           return (
-            <TouchableOpacity
-              key={data.id}
-              onPress={props.goToDiscussion(
-                data.id,
-                data.title,
-                props.avatar,
-                props.userIdLogged
-              )}
-            >
-              <View>
-                <Discussion
-                  background={data.cover}
-                  id={data.id}
-                  title={data.title}
-                  description={data.description}
-                  messagesNumber={data.responses.length}
-                  responses={data.responses}
-                />
-              </View>
-            </TouchableOpacity>
+            <View key={index} style={{ marginRight: 5, marginLeft: 15 }}>
+              <TouchableHighlight
+                onPress={props.goToDiscussion(
+                  data.id,
+                  data.title,
+                  props.avatar,
+                  props.userIdLogged
+                )}
+              >
+                <View>
+                  <Discussion
+                    background={data.cover}
+                    id={data.id}
+                    title={data.title}
+                    description={data.description}
+                    messagesNumber={data.responses.length}
+                    responses={data.responses}
+                  />
+                </View>
+              </TouchableHighlight>
+            </View>
           );
         })}
       </ArticlesList>

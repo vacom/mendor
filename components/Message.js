@@ -47,16 +47,18 @@ const Message = props => {
                 }}
               />
             </ViewAvatar>
-            <LinearGradient
-              colors={["#3F53AF", "#673AB7"]}
-              style={{ borderRadius: 10, padding: 10 }}
-              start={[0, 0]}
-              end={[1, 0]}
-            >
-              <TextNotLogged>{props.message}</TextNotLogged>
-            </LinearGradient>
+            <View>
+              <LinearGradient
+                colors={["#3F53AF", "#673AB7"]}
+                style={{ borderRadius: 10, padding: 10 }}
+                start={[0, 0]}
+                end={[1, 0]}
+              >
+                <TextNotLogged>{props.message}</TextNotLogged>
+              </LinearGradient>
+              <TextDate>{moment(props.createdAt).fromNow()}</TextDate>
+            </View>
           </ViewMessageNotLogged>
-          <TextDate>{moment(props.createdAt).fromNow()}</TextDate>
         </ViewMessage>
       );
     } else if (props.type == "PROJECT") {

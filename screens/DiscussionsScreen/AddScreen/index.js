@@ -37,7 +37,7 @@ import { Placeholder, Loading } from "../../../components/index";
 //Utils
 import { guid, IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
-class AddDiscussion extends React.Component {
+class AddDiscussion extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -50,7 +50,7 @@ class AddDiscussion extends React.Component {
                 params.submitDiscussion();
               }}
             >
-              <MaterialIcons name="check" size={24} color="#ffffff" />
+              <MaterialIcons name="save" size={24} color="#ffffff" />
             </TouchableOpacity>
           </HeaderRightElement>
         </HeaderRightContainer>
@@ -133,12 +133,6 @@ class AddDiscussion extends React.Component {
     }
   };
   render() {
-    if (this.props.Categories && this.props.Categories.loading) {
-      return <Loading />;
-    }
-    if (this.props.Categories && this.props.Categories.error) {
-      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
-    }
     let { cover } = this.state;
     const resizeMode = "cover";
     return (
@@ -233,16 +227,20 @@ class AddDiscussion extends React.Component {
                       label="Categoria"
                       value="0"
                     />
-                    {this.props.Categories.allCategories.map(data => {
-                      return (
-                        <Item
-                          style={{ fontSize: 20 }}
-                          label={data.title}
-                          value={data.id}
-                          key={data.id}
-                        />
-                      );
-                    })}
+                    {this.props.Categories && this.props.Categories.loading ? (
+                      <Loading dark/>
+                    ) : (
+                      this.props.Categories.allCategories.map(data => {
+                        return (
+                          <Item
+                            style={{ fontSize: 20 }}
+                            label={data.title}
+                            value={data.id}
+                            key={data.id}
+                          />
+                        );
+                      })
+                    )}
                   </Picker>
                 </StyledPickerView>
               </Form>
