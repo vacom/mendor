@@ -1,6 +1,7 @@
 // @flow
 import React from "react";
-import { View } from "react-native";
+import { View, TouchableOpacity } from "react-native";
+import { withNavigation } from "react-navigation";
 //Components
 import { Thumbnail, Button, DeckSwiper, Card, Text } from "native-base";
 import {
@@ -8,12 +9,7 @@ import {
   LabelContainer,
   LabelsContainer
 } from "../../../components/Label";
-import {
-  CardContainer,
-  CardLeft,
-  CardBody,
-  CardRight
-} from "../../../components/Card";
+import { CardContainer, CardLeft, CardBody } from "../../../components/Card";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { Loading, Placeholder, Error } from "../../../components/index";
 //Styles
@@ -78,7 +74,7 @@ class CardsScreen extends React.Component {
       });
       return;
     }
-   
+
     //if stops loading the data from DB
     if (!res.loading) {
       this._onFilterDiscovery(distance, res.data);
@@ -87,8 +83,6 @@ class CardsScreen extends React.Component {
   };
   _onFilterDiscovery = (distance, object) => {
     const { latitude, longitude } = this.props.userLocation;
-
-    console.log("cards = ", object);
     //get closer users by distance
     const data = object.allUsers.filter(user => {
       return (
@@ -136,14 +130,23 @@ class CardsScreen extends React.Component {
     //this._onConnectUser(userId);
   }
   _onRemoveUser(userId) {
+    console.log("old cards = ", this.state.data);
     //TODO need a bug fix for the last user, when only has 2 users it removes both
-    /* const data = this.state.data.filter(user => {
+    const data = this.state.data.filter(user => {
       return user.id !== userId;
     });
+
     this.setState({
       data
-    });*/
+    });
+
+    setTimeout(() => {
+      console.log("new cards = ", this.state.data);
+    }, 3500);
   }
+  _goToProfile = id => () => {
+    this.props.navigation.navigate("Profile", { id });
+  };
 
   render() {
     return (
@@ -165,25 +168,27 @@ class CardsScreen extends React.Component {
                   <UserContainer>
                     <CardContainer>
                       <CardLeft>
-                        <Thumbnail
-                          style={{ width: 48, height: 48 }}
-                          /*source={{
+                        <TouchableOpacity onPress={this._goToProfile(item.id)}>
+                          <Thumbnail
+                            style={{ width: 48, height: 48 }}
+                            /*source={{
                             uri: IMAGE_PLACEHOLDER
                           }}*/
-                          source={
-                            item.avatar != null
-                              ? {
-                                  uri: GET_AVATAR_URL(
-                                    item.avatar.secret,
-                                    "250x250",
-                                    item.avatar.name
-                                  )
-                                }
-                              : {
-                                  uri: IMAGE_PLACEHOLDER
-                                }
-                          }
-                        />
+                            source={
+                              item.avatar != null
+                                ? {
+                                    uri: GET_AVATAR_URL(
+                                      item.avatar.secret,
+                                      "250x250",
+                                      item.avatar.name
+                                    )
+                                  }
+                                : {
+                                    uri: IMAGE_PLACEHOLDER
+                                  }
+                            }
+                          />
+                        </TouchableOpacity>
                       </CardLeft>
                       <CardBody>
                         <H1>{item.name}</H1>
@@ -191,13 +196,6 @@ class CardsScreen extends React.Component {
                           item.profile.role
                         } na ${item.profile.company}`}</P>
                       </CardBody>
-                      <CardRight>
-                        <MaterialIcons
-                          name="arrow-drop-down"
-                          size={24}
-                          color="#000000"
-                        />
-                      </CardRight>
                     </CardContainer>
                   </UserContainer>
                   <LinksContainer>
@@ -305,6 +303,7 @@ class CardsScreen extends React.Component {
 }
 
 export default compose(
+  withNavigation,
   withApollo,
   graphql(CREATE_NOTIFICATION_MUTATION, { name: "createNotification" })
 )(CardsScreen);
