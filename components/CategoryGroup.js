@@ -11,7 +11,15 @@ const CategoryGroup = props => {
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
         {props.discussions.map((data, index) => {
           return (
-            <View key={index} style={{ marginRight: 5, marginLeft: 15 }}>
+            <View
+              key={index}
+              style={{
+                marginRight: 5,
+                marginLeft: 15,
+                backgroundColor: "#fff",
+                elevation: 10
+              }}
+            >
               <TouchableHighlight
                 onPress={props.goToDiscussion(
                   data.id,
@@ -20,7 +28,7 @@ const CategoryGroup = props => {
                   props.userIdLogged
                 )}
               >
-                <View>
+                <View style={{ elevation: 10 }}>
                   <Discussion
                     background={data.cover}
                     id={data.id}
@@ -47,8 +55,10 @@ const Title = styled.Text`
   padding-left: 15px;
 `;
 const CategoryGroupContainer = styled.ScrollView`
-  margin-bottom: 25px;
+  margin-bottom: 20px;
+  padding-bottom: 5px;
 `;
 const ArticlesList = styled.ScrollView`
+  background: #fff;
   margin-top: 20px;
 `;

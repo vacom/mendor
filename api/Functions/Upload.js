@@ -29,7 +29,6 @@ const UPLOAD_PHOTO_FUNC = (localUri, filename) => {
       return response.json();
     })
     .then(image => {
-      console.log(image);
       return image;
     })
     .catch(error => {

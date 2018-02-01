@@ -1,8 +1,13 @@
 import React from "react";
 import { Icon, View } from "native-base";
-import { KeyboardAvoidingView, Keyboard } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback
+} from "react-native";
 import styled from "styled-components/native";
 import Accordion from "react-native-collapsible/Accordion";
+import Collapsible from "react-native-collapsible";
 import { MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose, withApollo } from "react-apollo";
 
@@ -45,7 +50,8 @@ class DiscussionViewScreen extends React.Component {
   state = {
     height: 0,
     userIdLogged: "",
-    avatar: ""
+    avatar: "",
+    scroll: false
   };
 
   componentDidMount() {
@@ -57,9 +63,7 @@ class DiscussionViewScreen extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
-
     const { userIdLogged, avatar } = this.props.navigation.state.params;
-
     this.setState({
       userIdLogged,
       avatar
@@ -69,7 +73,7 @@ class DiscussionViewScreen extends React.Component {
   //Quando o teclado abre
   _keyboardDidShow = () => {
     if (this.refs.marginBar) {
-      this.setState({ height: 75 });
+      this.setState({ height: 75, scroll: true });
     }
   };
 
@@ -113,7 +117,7 @@ class DiscussionViewScreen extends React.Component {
 
   render() {
     if (this.props.Discussion && this.props.Discussion.loading) {
-      return <Loading />;
+      return <Loading dark />;
     }
     if (this.props.Discussion && this.props.Discussion.error) {
       return <Placeholder text="Erro! Tente novamente" IconName="error" />;
@@ -122,7 +126,7 @@ class DiscussionViewScreen extends React.Component {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Accordion
-          collapsed={false}
+          underlayColor="#fff"
           duration={600}
           sections={["Section1"]}
           renderHeader={this._renderHeader.bind(this)}
@@ -134,6 +138,10 @@ class DiscussionViewScreen extends React.Component {
           messages={this.props.Discussion.Discussion.responses}
           addMessage={this._addMessage}
           avatar={this.state.avatar}
+          scrollBottom={this.state.scroll}
+          stopScroll={() => {
+            this.setState({ scroll: false });
+          }}
         />
         <View ref="marginBar" style={{ height: this.state.height }} />
       </KeyboardAvoidingView>

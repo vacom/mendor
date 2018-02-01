@@ -41,7 +41,7 @@ class SearchDiscussions extends React.Component {
   render() {
     if (this.props.typing || this.props.Discussions.loading) {
       // Se estiver a escrever ou o loading do search ativo
-      return <Loading />;
+      return <Loading dark />;
     } else {
       // Se não estiver a escrever nem loading
       if (this.props.Discussions.allCategories.length > 0) {

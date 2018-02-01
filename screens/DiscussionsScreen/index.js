@@ -72,7 +72,8 @@ class DiscussionsScreen extends React.Component {
     }
   };
 
-  _goToAddDiscussion = () => {233336
+  _goToAddDiscussion = () => {
+    233336;
     this.props.navigation.navigate("AddDiscussion");
   };
 
@@ -91,7 +92,7 @@ class DiscussionsScreen extends React.Component {
     }
     const { allCategories } = this.props.DiscussionsByCategories;
     return (
-      <Container >
+      <Container>
         <Content
           refreshControl={
             <RefreshControl
@@ -100,9 +101,9 @@ class DiscussionsScreen extends React.Component {
             />
           }
         >
-          <ScrollView style={{backgroundColor: "#fff"}}>
+          <ScrollView style={{ backgroundColor: "#fff" }}>
             {Object.keys(allCategories).length > 0 ? (
-              <View style={{ marginBottom: 15 }}>
+              <View style={{ marginBottom: 15, backgroundColor: "#fff" }}>
                 {allCategories.map(data => {
                   return (
                     <CategoryGroup

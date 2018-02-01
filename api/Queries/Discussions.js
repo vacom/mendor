@@ -43,7 +43,7 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
     allCategories(filter: { discussions_some: { id_not: $id } }) {
       id
       title
-      discussions {
+      discussions(orderBy:createdAt_DESC) {
         id
         title
         cover {

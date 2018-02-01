@@ -12,6 +12,47 @@ import {
 } from "../constants/Utils";
 
 const resizeMode = "cover";
+
+const _renderResponses = responses => {
+  let responses_filtered = [];
+  if (Object.keys(responses).length > 0) {
+    for (x = 0; x < responses.length; x++) {
+      responses_filtered.push(responses[x]);
+    }
+    for (i = 0; i < responses.length; i++) {
+      let repeated = 0;
+      for (a = 0; a < responses_filtered.length; a++) {
+        if (responses[i].author.id == responses_filtered[a].author.id) {
+          repeated++;
+          if (repeated > 1) {
+            responses_filtered.splice(a, 1);
+            repeated = 0;
+          }
+        }
+      }
+    }
+  }
+  return responses_filtered.map((data, index) => {
+    return (
+      <ImageUser
+        key={data.id}
+        source={
+          data.author.avatar != null
+            ? {
+                uri: GET_AVATAR_URL(
+                  data.author.avatar.secret,
+                  "250x250",
+                  data.author.avatar.name
+                )
+              }
+            : {
+                uri: IMAGE_PLACEHOLDER
+              }
+        }
+      />
+    );
+  });
+};
 const Discussion = props => {
   return (
     <Card>
@@ -45,7 +86,7 @@ const Discussion = props => {
         }}
       >
         <View style={{ height: 90 }}>
-          <Title numberOfLines={2}>{props.title}</Title>
+          <Title numberOfLines={2}>{props.title.toUpperCase()}</Title>
           <Desc numberOfLines={2}>{props.description}</Desc>
         </View>
         <Footer
@@ -56,26 +97,7 @@ const Discussion = props => {
           }}
         >
           <Users style={{ flex: 1, flexDirection: "row" }}>
-            {props.responses.map((data, index) => {
-              return (
-                <ImageUser
-                  key={data.id}
-                  source={
-                    data.author.avatar != null
-                      ? {
-                          uri: GET_AVATAR_URL(
-                            data.author.avatar.secret,
-                            "250x250",
-                            data.author.avatar.name
-                          )
-                        }
-                      : {
-                          uri: IMAGE_PLACEHOLDER
-                        }
-                  }
-                />
-              );
-            })}
+            {_renderResponses(props.responses)}
           </Users>
           <Messages style={{ flexDirection: "row" }}>
             <View>

@@ -24,12 +24,6 @@ class Chat extends React.Component {
         this.refs.ScrollView.scrollToEnd({ animated: true });
       }, 50);
     }
-    if (this.props.scrollBottom) {
-      setTimeout(() => {
-        this.refs.ScrollView.scrollToEnd({ animated: true });
-      }, 50);
-      this.props.stopScroll();
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -38,6 +32,14 @@ class Chat extends React.Component {
       setTimeout(() => {
         this.refs.ScrollView.scrollToEnd({ animated: true });
       }, 50);
+    }
+    if (Object.keys(this.props.messages).length > 0) {
+      if (nextProps.scrollBottom != false) {
+        setTimeout(() => {
+          this.refs.ScrollView.scrollToEnd({ animated: true });
+        }, 50);
+        this.props.stopScroll();
+      }
     }
   }
 

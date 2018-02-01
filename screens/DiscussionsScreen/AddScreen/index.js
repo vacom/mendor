@@ -1,5 +1,12 @@
 import React from "react";
-import { Image, View, TouchableOpacity, Alert } from "react-native";
+import {
+  Image,
+  View,
+  TouchableOpacity,
+  Alert,
+  KeyboardAvoidingView,
+  ScrollView
+} from "react-native";
 import { LinearGradient } from "expo";
 import { Row } from "react-native-easy-grid";
 import { ImagePicker } from "expo";
@@ -136,7 +143,7 @@ class AddDiscussion extends React.PureComponent {
     let { cover } = this.state;
     const resizeMode = "cover";
     return (
-      <ScreenContainer>
+      <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#fff" }}>
         <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
           <ContentContainer>
             <DashedContainer>
@@ -194,60 +201,57 @@ class AddDiscussion extends React.PureComponent {
           </ContentContainer>
         </LinearGradient>
         <Container>
-          {this.state.loading ? (
-            <Loading dark />
-          ) : (
-            <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
-              <Form style={{ paddingBottom: 60 }}>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Título</Label>
-                  <Input
-                    onChangeText={title => this.setState({ title })}
-                    value={this.state.title}
+          <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
+            <Form style={{ paddingBottom: 60 }}>
+              <Item style={{ marginLeft: 0 }} floatingLabel>
+                <Label style={{ color: "#757575" }}>Título</Label>
+                <Input
+                  onChangeText={title => this.setState({ title })}
+                  value={this.state.title}
+                />
+              </Item>
+              <Item style={{ marginLeft: 0 }} floatingLabel>
+                <Label style={{ color: "#757575" }}>Descrição</Label>
+                <Input
+                  multiline={true}
+                  numberOfLines={6}
+                  value={this.state.description}
+                  onChangeText={description => this.setState({ description })}
+                />
+              </Item>
+              <StyledPickerView>
+                <Picker
+                  style={{ color: "#6B6A6F" }}
+                  mode="dropdown"
+                  onValueChange={this.onPickerChange.bind(this)}
+                  selectedValue={this.state.categoryId}
+                >
+                  <Item
+                    style={{ fontSize: 20, margin: 0 }}
+                    label="Categoria"
+                    value="0"
                   />
-                </Item>
-                <Item style={{ marginLeft: 0 }} floatingLabel>
-                  <Label style={{ color: "#757575" }}>Descrição</Label>
-                  <Input
-                    multiline={true}
-                    numberOfLines={6}
-                    value={this.state.description}
-                    onChangeText={description => this.setState({ description })}
-                  />
-                </Item>
-                <StyledPickerView>
-                  <Picker
-                    style={{ color: "#6B6A6F" }}
-                    mode="dropdown"
-                    onValueChange={this.onPickerChange.bind(this)}
-                    selectedValue={this.state.categoryId}
-                  >
-                    <Item
-                      style={{ fontSize: 20, margin: 0 }}
-                      label="Categoria"
-                      value="0"
-                    />
-                    {this.props.Categories && this.props.Categories.loading ? (
-                      <Loading dark/>
-                    ) : (
-                      this.props.Categories.allCategories.map(data => {
-                        return (
-                          <Item
-                            style={{ fontSize: 20 }}
-                            label={data.title}
-                            value={data.id}
-                            key={data.id}
-                          />
-                        );
-                      })
-                    )}
-                  </Picker>
-                </StyledPickerView>
-              </Form>
-            </Content>
-          )}
+                  {this.props.Categories && this.props.Categories.loading ? (
+                    <Loading dark />
+                  ) : (
+                    this.props.Categories.allCategories.map(data => {
+                      return (
+                        <Item
+                          style={{ fontSize: 20 }}
+                          label={data.title}
+                          value={data.id}
+                          key={data.id}
+                        />
+                      );
+                    })
+                  )}
+                </Picker>
+              </StyledPickerView>
+              <View style={{ height: 60 }} />
+            </Form>
+          </Content>
         </Container>
-      </ScreenContainer>
+      </KeyboardAvoidingView>
     );
   }
   _pickImage = async () => {
@@ -286,10 +290,6 @@ export default compose(
   })
 )(AddDiscussion);
 
-const ScreenContainer = styled.View`
-  flex: 1;
-  background-color: #fff;
-`;
 
 const ContentContainer = styled.View`
   margin: 30px;
