@@ -101,6 +101,7 @@ const ALL_USERS_DISCOVERY_QUERY = interests => {
       $userId: ID!
       $type: UserType!
       $contactsIds: [ID!]
+      $userRequestIds: [ID!]
       ${interests === "COMMON" ? "$competencesIds: [ID!]" : ""}
     ) {
       allUsers(
@@ -108,6 +109,10 @@ const ALL_USERS_DISCOVERY_QUERY = interests => {
           id_not: $userId
           type: $type
           contacts_every: { user: { id_not_in: $contactsIds } }
+          notifications_every: {
+            userRequest: {id: $userId}
+            user: {id_not_in: $userRequestIds}
+          }
           ${competences}
         }
       ) {
