@@ -54,6 +54,7 @@ class DiscoverScreen extends React.Component {
     profileId: "",
     loading: true,
     error: false,
+    msg: "Erro! Tente novamente",
     location: null,
     contactsIds: [],
     competencesIds: [],
@@ -128,10 +129,17 @@ class DiscoverScreen extends React.Component {
       });
     }
     let location = await Location.getCurrentPositionAsync({});
+
+    if (!location) {
+      this.setState({ error: true, msg: "Por favor, ative sua localização." });
+      return;
+    }
+
     //Saves the location and stops the loading state
     this.setState({
       location: location.coords,
       loading: false,
+      error: false,
       refreshing: false
     });
     //Updates the user location on the DB
@@ -152,7 +160,6 @@ class DiscoverScreen extends React.Component {
           try {
             console.log("Guardou localização");
           } catch (e) {
-            console.log(e);
             Toast.show("Erro! Em encontrar a sua localização.");
           }
         }
@@ -182,7 +189,8 @@ class DiscoverScreen extends React.Component {
       competencesIds,
       distance,
       interests,
-      refreshing
+      refreshing,
+      msg
     } = this.state;
     return (
       <GradientContainer>
@@ -196,7 +204,7 @@ class DiscoverScreen extends React.Component {
           }
         >
           {this.state.error ? (
-            <Placeholder text="Erro! Tente novamente" IconName="error" />
+            <Placeholder text={msg} IconName="error" />
           ) : this.state.loading ? (
             <Loading text="A obter a sua localização..." />
           ) : (
