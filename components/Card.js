@@ -54,7 +54,7 @@ const CardBody = props => {
     <Col
       style={{
         justifyContent: "center",
-        height: 48,
+        height: 55,
         overflow: "hidden",
         paddingLeft: 10,
         paddingRight: 10

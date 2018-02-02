@@ -45,7 +45,10 @@ import ConfigScreen from "../screens/ConfigScreen/index";
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
-import { isSignedIn } from "../constants/Utils";
+import { isSignedIn, onSignOut } from "../constants/Utils";
+
+
+
 
 export const createRootNavigator = (signedIn = false) => {
   return StackNavigator(

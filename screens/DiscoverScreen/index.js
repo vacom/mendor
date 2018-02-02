@@ -61,6 +61,7 @@ class DiscoverScreen extends React.Component {
     distance: 20,
     type: "MENTOR",
     interests: "COMMON",
+    userRequestIds: [],
     refreshing: false
   };
   componentDidMount() {
@@ -168,7 +169,6 @@ class DiscoverScreen extends React.Component {
       Toast.show(e);
     }
   };
-
   _onGroupIds = (object, type) => {
     const data = [];
     //grupos all of the ids of user contacts and their interests
@@ -190,6 +190,7 @@ class DiscoverScreen extends React.Component {
       distance,
       interests,
       refreshing,
+      userRequestIds,
       msg
     } = this.state;
     return (
@@ -217,6 +218,7 @@ class DiscoverScreen extends React.Component {
               distance={distance}
               interests={interests}
               refresh={refreshing}
+              userRequestIds={userRequestIds}
             />
           )}
         </ScrollView>
