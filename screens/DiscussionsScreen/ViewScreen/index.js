@@ -66,7 +66,8 @@ class DiscussionViewScreen extends React.Component {
     const { userIdLogged, avatar } = this.props.navigation.state.params;
     this.setState({
       userIdLogged,
-      avatar
+      avatar,
+      arrow: "open"
     });
   }
 
@@ -131,6 +132,7 @@ class DiscussionViewScreen extends React.Component {
           sections={["Section1"]}
           renderHeader={this._renderHeader.bind(this)}
           renderContent={this._renderContent.bind(this)}
+          initiallyActiveSection={0}
         />
         <Chat
           share_cards={false}
@@ -149,7 +151,8 @@ class DiscussionViewScreen extends React.Component {
   }
 
   //Cabeçalho Accordion
-  _renderHeader() {
+  _renderHeader(section, index, isActive, sections) {
+    console.log(isActive);
     const {
       user,
       responses,
@@ -181,7 +184,11 @@ class DiscussionViewScreen extends React.Component {
             <Span>{Object.keys(responses).length} respostas</Span>
           </ViewInput>
           <ViewIcon>
-            <Icon name="arrow-dropdown" style={{ fontSize: 20 }} />
+            {isActive ? (
+              <Icon name="arrow-dropup" style={{ fontSize: 20 }} />
+            ) : (
+              <Icon name="arrow-dropdown" style={{ fontSize: 20 }} />
+            )}
           </ViewIcon>
         </Header>
         <Title>{title}</Title>

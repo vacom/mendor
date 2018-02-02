@@ -40,14 +40,7 @@ class ChatViewScreen extends React.Component {
     const { params = {} } = navigation.state;
     return {
       headerTitle: (
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
+        <StyledHeader>
           <View>
             <ImageUser
               source={{
@@ -56,9 +49,9 @@ class ChatViewScreen extends React.Component {
             />
           </View>
           <ViewNameHeader>
-            <TextNameHeader>{params.name}</TextNameHeader>
+            <TextNameHeader numberOfLines={1}>{params.name}</TextNameHeader>
           </ViewNameHeader>
-        </View>
+        </StyledHeader>
       ),
       headerRight: (
         <HeaderRightContainer>
@@ -78,7 +71,8 @@ class ChatViewScreen extends React.Component {
     modalVisible: false,
     userIdLogged: this.props.screenProps.userId,
     avatar: IMAGE_PLACEHOLDER,
-    scrollBottomChat: false
+    scrollBottomChat: false,
+    icon: "add"
   };
 
   componentDidMount() {
@@ -175,12 +169,12 @@ class ChatViewScreen extends React.Component {
 
   _openShareCards = () => {
     if (this.state.heightViewShareCards == 200 && this.refs.viewShareCards) {
-      this.setState({ heightViewShareCards: 0 });
+      this.setState({ heightViewShareCards: 0, icon: "add" });
     } else if (
       this.state.heightViewShareCards == 0 &&
       this.refs.viewShareCards
     ) {
-      this.setState({ heightViewShareCards: 200 });
+      this.setState({ heightViewShareCards: 200, icon: "cancel" });
     }
   };
 
@@ -207,6 +201,7 @@ class ChatViewScreen extends React.Component {
               addMessage={this._addMessage}
               openShareCards={this._openShareCards}
               avatar={this.state.avatar}
+              icon={this.state.icon}
             />
           </View>
           <View
@@ -257,9 +252,17 @@ const ImageUser = styled.Image`
 
 const ViewNameHeader = styled.View`
   margin-left: 10px;
+  max-width: 87%;
 `;
 
 const TextNameHeader = styled.Text`
   color: #fff;
   font-size: 20px;
+`;
+
+const StyledHeader = styled.View`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 `;

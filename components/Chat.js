@@ -54,7 +54,7 @@ class Chat extends React.Component {
     if (Object.keys(this.state.messages).length > 0) {
       return (
         <View style={{ flex: 1 }}>
-          <ScrollView ref="ScrollView">
+          <ScrollView ref="ScrollView" style={{ paddingTop: 5 }}>
             {this.state.messages.map((data, index) => {
               console.log(data);
               return (
@@ -72,6 +72,7 @@ class Chat extends React.Component {
             })}
           </ScrollView>
           <InputMessageBar
+            icon={this.props.icon}
             openShareCards={this._openShareCards}
             share_cards={this.props.share_cards}
             avatar={this.state.avatar}
@@ -83,9 +84,7 @@ class Chat extends React.Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
-          <NoMessages ref="ScrollView">
-            <Text>No messages...</Text>
-          </NoMessages>
+          <NoMessages ref="ScrollView" />
           <InputMessageBar
             openShareCards={this._openShareCards}
             share_cards={true}
@@ -103,6 +102,4 @@ export default Chat;
 
 const NoMessages = styled.View`
   flex: 1;
-  align-items: center;
-  justify-content: center;
 `;

@@ -69,8 +69,8 @@ class InputMessageBar extends React.Component {
         {this.props.share_cards && (
           <TouchableOpacity onPress={this._openShareCards}>
             <MaterialIcons
-              name="add"
-              size={25}
+              name={this.props.icon}
+              size={23}
               color="#6A6A6A"
               style={{ marginRight: 15 }}
             />

@@ -86,7 +86,7 @@ const Discussion = props => {
         }}
       >
         <View style={{ height: 90 }}>
-          <Title numberOfLines={2}>{props.title.toUpperCase()}</Title>
+          <Title numberOfLines={2}>{props.title}</Title>
           <Desc numberOfLines={2}>{props.description}</Desc>
         </View>
         <Footer

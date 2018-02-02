@@ -64,6 +64,9 @@ class ChatAddScreen extends React.Component {
 
   _goToChat = (id, avatar) => async () => {
     console.log(id);
+    this.props.navigation.setParams({
+      id_user2: id
+    });
     const res = await this.props.client.query({
       query: ALL_INDIVIDUAL_CHATS_OF_USERS,
       variables: {
@@ -151,7 +154,20 @@ class ChatAddScreen extends React.Component {
 export default compose(
   withApollo,
   withNavigation,
-  graphql(CREATE_CHAT_MUTATION, { name: "createChat" })
+  graphql(CREATE_CHAT_MUTATION, {
+    name: "createChat",
+    options: props => ({
+      refetchQueries: [
+        {
+          query: ALL_INDIVIDUAL_CHATS_OF_USERS,
+          variables: {
+            id1: props.screenProps.userId, // id1 -> Sempre o id logado!!!
+            id2: props.navigation.state.params.id_user2
+          }
+        }
+      ]
+    })
+  })
 )(ChatAddScreen);
 
 const Container = styled.View`

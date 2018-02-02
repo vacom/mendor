@@ -197,7 +197,10 @@ class ChatScreen extends React.Component {
                   );
                 })
               ) : (
-                <Placeholder text="Não existem conversas." IconName="error" />
+                <Placeholder
+                  text="Não existem conversas."
+                  IconName="speaker-notes-off"
+                />
               )}
             </ScrollView>
           </Content>

@@ -7,7 +7,7 @@ import Discussion from "./Discussion";
 const CategoryGroup = props => {
   return (
     <CategoryGroupContainer>
-      <Title>{props.nameCategory}</Title>
+      <Title>{props.nameCategory.toUpperCase()}</Title>
       <ArticlesList horizontal showsHorizontalScrollIndicator={false}>
         {props.discussions.map((data, index) => {
           return (
@@ -51,7 +51,7 @@ export default CategoryGroup;
 
 const Title = styled.Text`
   color: #9ca4ab;
-  font-size: 16px;
+  font-size: 14px;
   padding-left: 15px;
 `;
 const CategoryGroupContainer = styled.ScrollView`

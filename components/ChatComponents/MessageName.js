@@ -3,6 +3,7 @@ import { Text } from "react-native";
 
 const MessageName = ({ users }) => {
   let name = "";
+
   const userslength = Object.keys(users).length;
   if (userslength > 1) {
     users.map((user, i) => {

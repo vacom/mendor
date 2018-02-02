@@ -8,7 +8,7 @@ import { IMAGE_PLACEHOLDER, IMAGE_GROUP_CHAT } from "../../constants/Utils";
 const MessageAvatar = ({ data }) => {
   let avatar = "";
   if (Object.keys(data).length < 2) {
-    if (data[0].avatar) { 
+    if (data[0].avatar) {
       avatar = GET_AVATAR_URL(
         data[0].avatar.secret,
         "250x250",
@@ -17,7 +17,8 @@ const MessageAvatar = ({ data }) => {
     } else {
       avatar = IMAGE_PLACEHOLDER;
     }
-  } else { // GROUP IMAGE
+  } else {
+    // GROUP IMAGE
     avatar = IMAGE_GROUP_CHAT;
   }
 

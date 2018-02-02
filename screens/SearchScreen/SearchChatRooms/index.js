@@ -5,7 +5,6 @@ import { withNavigation } from "react-navigation";
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
-
 // Components
 import { SearchCard } from "../../../components/SearchComponents";
 
@@ -29,7 +28,6 @@ class SearchChatRooms extends React.Component {
       // Se não estiver a escrever nem loading
       if (Object.keys(this.props.Contacts.allContacts).length > 0) {
         return this.props.Contacts.allContacts.map((data, index) => {
-          console.log(data.contactID.avatar);
           return (
             <SearchCard
               key={index}
@@ -47,7 +45,7 @@ class SearchChatRooms extends React.Component {
           );
         });
       } else {
-        return <Placeholder text="Sem resultados!" IconName="error" />;
+        return <Placeholder text="Sem resultados!" IconName="person" />;
       }
     }
   }

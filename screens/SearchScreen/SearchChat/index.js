@@ -43,7 +43,7 @@ class SearchChat extends React.Component {
           );
         });
       } else {
-        return <Placeholder text="Sem resultados!" IconName="error" />;
+        return <Placeholder text="Sem resultados!" IconName="speaker-notes-off" />;
       }
     }
   }
