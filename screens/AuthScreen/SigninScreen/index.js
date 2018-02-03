@@ -1,4 +1,5 @@
 import React from "react";
+import { ActivityIndicator } from "react-native";
 import { NavigationActions } from "react-navigation";
 import {
   Text,
@@ -26,13 +27,19 @@ class SigninScreen extends React.Component {
   };
   state = {
     email: "",
-    password: ""
+    password: "",
+    loading: false
   };
   _onUserSignIn = async () => {
+    this.setState(prevState => ({ loading: !prevState.loading }));
     const { email, password } = this.state;
     const { signinUser, navigation } = this.props;
     //Signins the user and checks in the DB
-    const result = await USER_SIGNIN_FUNC(email, password, signinUser);
+    const result = await USER_SIGNIN_FUNC(
+      email.trim(),
+      password.trim(),
+      signinUser
+    );
     //If it passes goes to the main screen
     if (result.status) {
       const resetAction = NavigationActions.reset({
@@ -41,6 +48,7 @@ class SigninScreen extends React.Component {
       });
       navigation.dispatch(resetAction);
     } else {
+      this.setState(prevState => ({ loading: !prevState.loading }));
       Toast.show("Erro! Verifique os campos.");
     }
   };
@@ -85,7 +93,10 @@ class SigninScreen extends React.Component {
             <Form style={{ paddingBottom: 60 }}>
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Email</Label>
-                <Input onChangeText={email => this.setState({ email })} />
+                <Input
+                  keyboardType="email-address"
+                  onChangeText={email => this.setState({ email })}
+                />
               </Item>
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Password</Label>
@@ -105,7 +116,11 @@ class SigninScreen extends React.Component {
           style={{ backgroundColor: "#3f51b5" }}
           position="bottomRight"
         >
-          <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          {this.state.loading ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          )}
         </Fab>
       </ScreenContainer>
     );

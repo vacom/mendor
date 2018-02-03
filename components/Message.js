@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components/native";
-import { ScrollView } from "react-native";
 import { View, Text } from "native-base";
 import { LinearGradient } from "expo";
 import moment from "moment/min/moment-with-locales";
@@ -8,35 +7,39 @@ import { GET_AVATAR_URL } from "../api/Functions/Upload";
 import { IMAGE_PLACEHOLDER } from "../constants/Utils";
 import ProjectCard from "./ProjectCard";
 
-const Message = props => {
-  let message = null;
-  const userId = props.userId;
-  const userIdLogged = props.userIdLogged;
-  let avatar = null;
-  if (props.avatar) {
-    avatar = GET_AVATAR_URL(props.avatar.secret, "250x250", props.avatar.name);
+const Message = ({
+  message = null,
+  userId,
+  userIdLogged,
+  avatar = null,
+  type,
+  createdAt,
+  project
+}) => {
+  if (avatar) {
+    avatar = GET_AVATAR_URL(avatar.secret, "250x250", avatar.name);
   } else {
     avatar = IMAGE_PLACEHOLDER;
   }
   if (userId == userIdLogged) {
-    if (props.type != "PROJECT") {
+    if (type != "PROJECT") {
       message = (
         <ViewMessageLogged>
-          <TextLogged>{props.message}</TextLogged>
-          <TextDate>{moment(props.createdAt).fromNow()}</TextDate>
+          <TextLogged>{message}</TextLogged>
+          <TextDate>{moment(createdAt).fromNow()}</TextDate>
         </ViewMessageLogged>
       );
-    } else if (props.type == "PROJECT") {
+    } else if (type == "PROJECT") {
       message = (
         <ViewCardLogged>
           <View>
-            <ProjectCard project={props.project} />
+            <ProjectCard project={project} />
           </View>
         </ViewCardLogged>
       );
     }
   } else {
-    if (props.type != "PROJECT") {
+    if (type != "PROJECT") {
       message = (
         <ViewMessage>
           <ViewMessageNotLogged>
@@ -54,14 +57,14 @@ const Message = props => {
                 start={[0, 0]}
                 end={[1, 0]}
               >
-                <TextNotLogged>{props.message}</TextNotLogged>
+                <TextNotLogged>{message}</TextNotLogged>
               </LinearGradient>
-              <TextDate>{moment(props.createdAt).fromNow()}</TextDate>
+              <TextDate>{moment(createdAt).fromNow()}</TextDate>
             </View>
           </ViewMessageNotLogged>
         </ViewMessage>
       );
-    } else if (props.type == "PROJECT") {
+    } else if (type == "PROJECT") {
       message = (
         <ViewMessage>
           <ViewMessageNotLogged>
@@ -73,7 +76,7 @@ const Message = props => {
               />
             </ViewAvatar>
             <View>
-              <ProjectCard project={props.project} />
+              <ProjectCard project={project} />
             </View>
           </ViewMessageNotLogged>
         </ViewMessage>
@@ -103,6 +106,7 @@ const TextDate = styled.Text`
 `;
 
 const TextNotLogged = styled.Text`
+  background-color: transparent;
   color: #fff;
   font-size: 16px;
   text-align: justify;
@@ -115,6 +119,7 @@ const ViewCardLogged = styled.View`
 `;
 
 const ViewMessageLogged = styled.View`
+  border-radius: 10px;
   align-items: flex-end;
   padding: 5px 10px;
   width: 100%;
