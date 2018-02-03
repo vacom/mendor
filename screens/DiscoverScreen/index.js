@@ -33,7 +33,9 @@ class DiscoverScreen extends React.Component {
       headerRight: (
         <HeaderRightContainer>
           <HeaderRightElement>
-            <MaterialIcons name="search" size={24} color="#ffffff" />
+            <TouchableOpacity onPress={params.goToSearch}>
+              <MaterialIcons name="search" size={24} color="#ffffff" />
+            </TouchableOpacity>
           </HeaderRightElement>
           <HeaderRightElement>
             <TouchableOpacity onPress={params.goToProfile}>
@@ -71,6 +73,9 @@ class DiscoverScreen extends React.Component {
   _goToProfile = () => {
     this.props.navigation.navigate("Profile", { id: this.state.userId });
   };
+  _goToSearch = () => {
+    this.props.navigation.navigate("SearchDiscover");
+  };
   _onRefresh = () => {
     this.setState({ refreshing: true });
     //gets new content from the DB
@@ -91,9 +96,11 @@ class DiscoverScreen extends React.Component {
       //Sets the navigation params to navigate to profile
       this.props.navigation.setParams({
         goToProfile: this._goToProfile,
+        goToSearch: this._goToSearch,
         avatar:
-          GET_AVATAR_URL(avatar.secret, "250x250", avatar.name) ||
-          IMAGE_PLACEHOLDER
+          avatar != null
+            ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
+            : IMAGE_PLACEHOLDER
       });
       //Updates the state with the user and profile ID
       this.setState({

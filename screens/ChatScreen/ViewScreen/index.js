@@ -88,6 +88,9 @@ class ChatViewScreen extends React.Component {
     this.props.navigation.setParams({
       openModal: this._setModalVisible
     });
+    this.setState({
+      icon: "add"
+    })
   }
 
   _setModalVisible = () => {

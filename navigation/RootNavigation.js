@@ -24,11 +24,11 @@ import SearchDiscussionScreen from "../screens/DiscussionsScreen/SearchScreen/in
 import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 import ChatAddScreen from "../screens/ChatScreen/AddScreen/index";
 import SearchChatScreen from "../screens/ChatScreen/SearchScreen/index";
-
 /**
- * SearchScreens
+ *  ContactsScreen
  */
-import SearchScreen from "../screens/SearchScreen/index";
+import ContactsSearchScreen from "../screens/ContactsScreen/SearchScreen/index";
+
 /**
  * AuthScreens
  */
@@ -38,6 +38,10 @@ import SignupScreen from "../screens/AuthScreen/SignupScreen/index";
 import ProfileStepScreen from "../screens/AuthScreen/SignupScreen/ProfileStepScreen/index";
 import SkillStepScreen from "../screens/AuthScreen/SignupScreen/SkillStepScreen/index";
 /**
+ * DiscoverScreen
+ */
+import DiscoverSearchScreen from "../screens/DiscoverScreen/SearchScreen/index";
+/**
  * Configuration Screen
  */
 import ConfigScreen from "../screens/ConfigScreen/index";
@@ -46,9 +50,6 @@ import ConfigScreen from "../screens/ConfigScreen/index";
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
 import { isSignedIn, onSignOut } from "../constants/Utils";
-
-
-
 
 export const createRootNavigator = (signedIn = false) => {
   return StackNavigator(
@@ -95,8 +96,11 @@ export const createRootNavigator = (signedIn = false) => {
       AddDiscussion: {
         screen: AddDiscussion
       },
-      Search: {
-        screen: SearchScreen
+      SearchContacts: {
+        screen: ContactsSearchScreen
+      },
+      SearchDiscover: {
+        screen: DiscoverSearchScreen
       },
       Config: {
         screen: ConfigScreen

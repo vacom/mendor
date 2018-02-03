@@ -69,7 +69,7 @@ class ContactsScreen extends React.PureComponent {
     this.props.navigation.navigate("Profile", { id: id });
   }
   _goToSearch = () => {
-    this.props.navigation.navigate("Search");
+    this.props.navigation.navigate("SearchContacts");
   };
 
   _onOpenActions(id) {

@@ -51,17 +51,11 @@ const SEARCH_CONTACTS = gql`
       }
     ) {
       contactID {
-        id
-        avatar {
-          id
-          secret
-          name
-        }
-        name
-        type
+        ...userItems
       }
     }
   }
+  ${USER_ITEMS_FRAGMENT}
 `;
 
 export {

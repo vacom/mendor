@@ -65,7 +65,7 @@ const ContactList = props => {
       );
     });
   } else {
-    return <Placeholder text="Sem Contactos" IconName="sentiment-neutral" />;
+    return <Placeholder text="Ainda não possui contactos." IconName="person" />;
   }
 };
 

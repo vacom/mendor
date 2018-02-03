@@ -36,14 +36,7 @@ class DiscussionViewScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
-      title: params.title,
-      headerRight: (
-        <HeaderRightContainer>
-          <HeaderRightElement>
-            <MaterialIcons name="more-vert" size={24} color="#ffffff" />
-          </HeaderRightElement>
-        </HeaderRightContainer>
-      )
+      title: params.title
     };
   };
 

@@ -53,8 +53,8 @@ class Chat extends React.Component {
   render() {
     if (Object.keys(this.state.messages).length > 0) {
       return (
-        <View style={{ flex: 1 }}>
-          <ScrollView ref="ScrollView" style={{ paddingTop: 5 }}>
+        <View style={{ flex: 1, paddingTop: 5, paddingBottom: 5 }}>
+          <ScrollView ref="ScrollView">
             {this.state.messages.map((data, index) => {
               console.log(data);
               return (
@@ -86,6 +86,7 @@ class Chat extends React.Component {
         <View style={{ flex: 1 }}>
           <NoMessages ref="ScrollView" />
           <InputMessageBar
+            icon={this.props.icon}
             openShareCards={this._openShareCards}
             share_cards={true}
             avatar={this.state.avatar}
