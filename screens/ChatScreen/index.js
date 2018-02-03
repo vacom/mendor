@@ -57,7 +57,8 @@ class ChatScreen extends React.Component {
   };
   state = {
     modalVisible: false,
-    refreshing: false
+    refreshing: false,
+    disabled: false
   };
 
   componentDidMount() {
@@ -98,45 +99,65 @@ class ChatScreen extends React.Component {
       }
     });
   };
+  _setDisabled = () => {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({
+        disabled: false
+      });
+    }, 1000);
+  };
   _goToSearch = () => {
-    this.props.navigation.navigate("SearchChat", {});
+    if (!this.state.disabled) {
+      this._setDisabled();
+      this.props.navigation.navigate("SearchChat", {});
+    }
   };
   _goToProfile = id => () => {
+    this._setDisabled();
     this.props.navigation.navigate("Profile", { id: id });
   };
   _goToAddChat = () => {
-    this.props.navigation.navigate("AddChat", {});
+    if (!this.state.disabled) {
+      this._setDisabled();
+      this.props.navigation.navigate("AddChat", {});
+    }
   };
   _goToChatView = (id, users) => {
-    const userlength = Object.keys(users).length;
-    console.log(userlength);
-    let name = "";
-    let avatar = "";
-    if (userlength > 1) {
-      avatar = IMAGE_GROUP_CHAT;
-      users.map((user, i) => {
-        if (userlength === i + 1) {
-          name += user.name;
-        } else {
-          name += user.name + ", ";
-        }
+    if (!this.state.disabled) {
+      const userlength = Object.keys(users).length;
+      console.log(userlength);
+      let name = "";
+      let avatar = "";
+      if (userlength > 1) {
+        id_user: null;
+        avatar = IMAGE_GROUP_CHAT;
+        users.map((user, i) => {
+          if (userlength === i + 1) {
+            name += user.name;
+          } else {
+            name += user.name + ", ";
+          }
+        });
+      } else {
+        id_user = users[0].id;
+        name = users[0].name;
+        avatar =
+          users[0].avatar != null
+            ? GET_AVATAR_URL(
+                users[0].avatar.secret,
+                "250x250",
+                users[0].avatar.name
+              )
+            : IMAGE_PLACEHOLDER;
+      }
+      this.props.navigation.navigate("ChatView", {
+        name,
+        avatar,
+        id,
+        id_user
       });
-    } else {
-      name = users[0].name;
-      avatar =
-        users[0].avatar != null
-          ? GET_AVATAR_URL(
-              users[0].avatar.secret,
-              "250x250",
-              users[0].avatar.name
-            )
-          : IMAGE_PLACEHOLDER;
     }
-    this.props.navigation.navigate("ChatView", {
-      name: name,
-      avatar: avatar,
-      id: id
-    });
   };
   render() {
     const { AllChatsQuery } = this.props;
@@ -165,12 +186,18 @@ class ChatScreen extends React.Component {
                   return (
                     <View key={data.id}>
                       <Card
-                        onPress={() => this._goToChatView(data.id, data.users)}
+                        onPress={() => {
+                          if (!this.state.disabled) {
+                            this._goToChatView(data.id, data.users);
+                            this._setDisabled();
+                          }
+                        }}
                       >
                         <CardContainer>
                           <CardLeft>
                             <TouchableOpacity
                               onPress={
+                                !this.state.disabled &&
                                 Object.keys(data.users).length < 2
                                   ? this._goToProfile(data.users[0].id)
                                   : () =>

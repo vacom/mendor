@@ -3,7 +3,8 @@ import { Icon, View } from "native-base";
 import {
   KeyboardAvoidingView,
   Keyboard,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  TouchableOpacity
 } from "react-native";
 import styled from "styled-components/native";
 import Accordion from "react-native-collapsible/Accordion";
@@ -44,7 +45,8 @@ class DiscussionViewScreen extends React.Component {
     height: 0,
     userIdLogged: "",
     avatar: "",
-    scroll: false
+    scroll: false,
+    disabled: false
   };
 
   componentDidMount() {
@@ -109,6 +111,25 @@ class DiscussionViewScreen extends React.Component {
     }
   };
 
+  _goToProfile = id => {
+    if (!this.state.disabled) {
+      this._setDisabled();
+      console.log(id);
+      this.props.navigation.navigate("Profile", {
+        id
+      });
+    }
+  };
+
+  _setDisabled = () => {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({
+        disabled: false
+      });
+    }, 1000);
+  };
+
   render() {
     if (this.props.Discussion && this.props.Discussion.loading) {
       return <Loading dark />;
@@ -137,6 +158,7 @@ class DiscussionViewScreen extends React.Component {
           stopScroll={() => {
             this.setState({ scroll: false });
           }}
+          goToProfile={this._goToProfile}
         />
         <View ref="marginBar" style={{ height: this.state.height }} />
       </KeyboardAvoidingView>
@@ -156,21 +178,23 @@ class DiscussionViewScreen extends React.Component {
       <ContainerDiscussion>
         <Header>
           <ViewAvatar>
-            <Avatar
-              source={
-                user.avatar != null
-                  ? {
-                      uri: GET_AVATAR_URL(
-                        user.avatar.secret,
-                        "250x250",
-                        user.avatar.name
-                      )
-                    }
-                  : {
-                      uri: IMAGE_PLACEHOLDER
-                    }
-              }
-            />
+            <TouchableOpacity onPress={() => this._goToProfile(user.id)}>
+              <Avatar
+                source={
+                  user.avatar != null
+                    ? {
+                        uri: GET_AVATAR_URL(
+                          user.avatar.secret,
+                          "250x250",
+                          user.avatar.name
+                        )
+                      }
+                    : {
+                        uri: IMAGE_PLACEHOLDER
+                      }
+                }
+              />
+            </TouchableOpacity>
           </ViewAvatar>
           <ViewInput>
             <Username>{user.name}</Username>

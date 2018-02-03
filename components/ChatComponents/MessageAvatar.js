@@ -1,18 +1,21 @@
 import React from "react";
 import { Thumbnail } from "native-base";
+import { TouchableOpacity } from "react-native";
 //GraphQL
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils
 import { IMAGE_PLACEHOLDER, IMAGE_GROUP_CHAT } from "../../constants/Utils";
 
-const MessageAvatar = ({ data }) => {
+const MessageAvatar = props => {
   let avatar = "";
-  if (Object.keys(data).length < 2) {
-    if (data[0].avatar) {
+  let id = null;
+  if (Object.keys(props.data).length < 2) {
+    id = props.data[0].id;
+    if (props.data[0].avatar) {
       avatar = GET_AVATAR_URL(
-        data[0].avatar.secret,
+        props.data[0].avatar.secret,
         "250x250",
-        data[0].avatar.name
+        props.data[0].avatar.name
       );
     } else {
       avatar = IMAGE_PLACEHOLDER;
@@ -23,12 +26,20 @@ const MessageAvatar = ({ data }) => {
   }
 
   return (
-    <Thumbnail
-      style={{ width: 48, height: 48 }}
-      source={{
-        uri: avatar
+    <TouchableOpacity
+      onPress={() => {
+        if (props.goToProfile && id) {
+          props.goToProfile(id);
+        }
       }}
-    />
+    >
+      <Thumbnail
+        style={{ width: 48, height: 48 }}
+        source={{
+          uri: avatar
+        }}
+      />
+    </TouchableOpacity>
   );
 };
 

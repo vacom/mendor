@@ -13,6 +13,7 @@ const DISCUSSION = gql`
       description
       createdAt
       user {
+        id
         name
         avatar {
           id
@@ -43,7 +44,7 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
     allCategories(filter: { discussions_some: { id_not: $id } }) {
       id
       title
-      discussions(orderBy:createdAt_DESC) {
+      discussions(orderBy: createdAt_DESC) {
         id
         title
         cover {

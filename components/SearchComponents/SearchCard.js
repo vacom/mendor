@@ -28,24 +28,26 @@ const SearchCard = props => {
       <CardContainer>
         <CardLeft>
           {props.send_avatar ? (
-            <Thumbnail
-              style={{ width: 48, height: 48 }}
-              source={
-                props.avatar != null
-                  ? {
-                      uri: GET_AVATAR_URL(
-                        props.avatar.secret,
-                        "250x250",
-                        props.avatar.name
-                      )
-                    }
-                  : {
-                      uri: IMAGE_PLACEHOLDER
-                    }
-              }
-            />
+            <TouchableOpacity onPress={() => props.goToProfile(props.id_user)}>
+              <Thumbnail
+                style={{ width: 48, height: 48 }}
+                source={
+                  props.avatar != null
+                    ? {
+                        uri: GET_AVATAR_URL(
+                          props.avatar.secret,
+                          "250x250",
+                          props.avatar.name
+                        )
+                      }
+                    : {
+                        uri: IMAGE_PLACEHOLDER
+                      }
+                }
+              />
+            </TouchableOpacity>
           ) : (
-            <MessageAvatar data={props.users} />
+            <MessageAvatar goToProfile={props.goToProfile} data={props.users} />
           )}
         </CardLeft>
         <CardBody>

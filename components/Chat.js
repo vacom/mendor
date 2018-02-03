@@ -67,6 +67,7 @@ class Chat extends React.Component {
                   avatar={data.author.avatar}
                   type={data.type}
                   project={data.project}
+                  goToProfile={this.props.goToProfile}
                 />
               );
             })}
@@ -78,6 +79,7 @@ class Chat extends React.Component {
             avatar={this.state.avatar}
             userIdLogged={this.state.userIdLogged}
             addMessage={this._addMessage}
+            goToProfile={this.props.goToProfile}
           />
         </View>
       );
@@ -92,6 +94,7 @@ class Chat extends React.Component {
             avatar={this.state.avatar}
             userIdLogged={this.state.userIdLogged}
             addMessage={this._addMessage}
+            goToProfile={this.props.goToProfile}
           />
         </View>
       );

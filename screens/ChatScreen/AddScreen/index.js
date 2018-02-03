@@ -40,7 +40,8 @@ class ChatAddScreen extends React.Component {
     search_value: "",
     typing: false,
     loading: false,
-    searched: false
+    searched: false,
+    disabled: false
   };
 
   handleChange(text) {
@@ -61,6 +62,25 @@ class ChatAddScreen extends React.Component {
       }, 500);
     }
   }
+
+  _setDisabled = () => {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({
+        disabled: false
+      });
+    }, 1000);
+  };
+
+  _goToProfile = id => {
+    if (!this.state.disabled) {
+      this._setDisabled();
+      console.log(id);
+      this.props.navigation.navigate("Profile", {
+        id
+      });
+    }
+  };
 
   _goToChat = (id, avatar) => async () => {
     console.log(id);
@@ -143,6 +163,7 @@ class ChatAddScreen extends React.Component {
                   loading: false
                 });
               }}
+              goToProfile={this._goToProfile}
             />
           </ScrollView>
         </SearchContent>

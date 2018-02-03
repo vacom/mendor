@@ -30,10 +30,12 @@ class DiscoverSearchScreen extends React.Component {
     typing: false,
     loading: false,
     searched: false,
-    refreshing: false
+    refreshing: false,
+    searched_first: false
   };
 
   handleChange(text) {
+    if (!this.searched_first) this.setState({ searched_first: true });
     if (!this.state.typing) {
       // Só executa se nao estiver a escrever
       const self = this;
@@ -70,20 +72,27 @@ class DiscoverSearchScreen extends React.Component {
         />
         <SearchContent>
           <ScrollView>
-            <SearchDiscover
-              onPress={this._goToProfile}
-              search_value={this.state.search_value}
-              searched={this.state.searched}
-              typing={this.state.typing}
-              loading={this.state.loading}
-              userId={this.props.screenProps.userId}
-              searchedDone={() => {
-                this.setState({
-                  searched: true,
-                  loading: false
-                });
-              }}
-            />
+            {this.state.searched_first ? (
+              <SearchDiscover
+                onPress={this._goToProfile}
+                search_value={this.state.search_value}
+                searched={this.state.searched}
+                typing={this.state.typing}
+                loading={this.state.loading}
+                userId={this.props.screenProps.userId}
+                searchedDone={() => {
+                  this.setState({
+                    searched: true,
+                    loading: false
+                  });
+                }}
+              />
+            ) : (
+              <Placeholder
+                text="Procure por outros utilizadores"
+                IconName="search"
+              />
+            )}
           </ScrollView>
         </SearchContent>
       </Container>

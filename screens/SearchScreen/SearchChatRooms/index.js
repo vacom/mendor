@@ -41,6 +41,8 @@ class SearchChatRooms extends React.Component {
                 data.contactID.id,
                 data.contactID.avatar
               )}
+              id_user={data.contactID.id}
+              goToProfile={this.props.goToProfile}
             />
           );
         });

@@ -39,11 +39,14 @@ class SearchChat extends React.Component {
               message={data}
               onPress={this.props.onPress(data.id, data.users)}
               userId={this.props.userId}
+              goToProfile={this.props.goToProfile}
             />
           );
         });
       } else {
-        return <Placeholder text="Sem resultados!" IconName="speaker-notes-off" />;
+        return (
+          <Placeholder text="Sem resultados!" IconName="speaker-notes-off" />
+        );
       }
     }
   }

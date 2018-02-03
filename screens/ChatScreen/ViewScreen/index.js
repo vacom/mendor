@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ActionSheet, Container } from "native-base";
+import { View, Container } from "native-base";
 import {
   KeyboardAvoidingView,
   Keyboard,
@@ -40,27 +40,20 @@ class ChatViewScreen extends React.Component {
     const { params = {} } = navigation.state;
     return {
       headerTitle: (
-        <StyledHeader>
-          <View>
-            <ImageUser
-              source={{
-                uri: params.avatar
-              }}
-            />
-          </View>
-          <ViewNameHeader>
-            <TextNameHeader numberOfLines={1}>{params.name}</TextNameHeader>
-          </ViewNameHeader>
-        </StyledHeader>
-      ),
-      headerRight: (
-        <HeaderRightContainer>
-          <HeaderRightElement>
-            <TouchableOpacity onPress={params.openModal}>
-              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
-            </TouchableOpacity>
-          </HeaderRightElement>
-        </HeaderRightContainer>
+        <TouchableOpacity onPress={params.id_user && params.goToProfile}>
+          <StyledHeader>
+            <View>
+              <ImageUser
+                source={{
+                  uri: params.avatar
+                }}
+              />
+            </View>
+            <ViewNameHeader>
+              <TextNameHeader numberOfLines={1}>{params.name}</TextNameHeader>
+            </ViewNameHeader>
+          </StyledHeader>
+        </TouchableOpacity>
       )
     };
   };
@@ -72,7 +65,8 @@ class ChatViewScreen extends React.Component {
     userIdLogged: this.props.screenProps.userId,
     avatar: IMAGE_PLACEHOLDER,
     scrollBottomChat: false,
-    icon: "add"
+    icon: "add",
+    disabled: false
   };
 
   componentDidMount() {
@@ -84,38 +78,39 @@ class ChatViewScreen extends React.Component {
       "keyboardDidHide",
       this._keyboardDidHide
     );
-    this._subscribeMessages();
     this.props.navigation.setParams({
-      openModal: this._setModalVisible
+      goToProfile: this._goToProfileByParams
     });
+    this._subscribeMessages();
     this.setState({
       icon: "add"
-    })
+    });
   }
+  _setDisabled = () => {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({
+        disabled: false
+      });
+    }, 1000);
+  };
 
-  _setModalVisible = () => {
-    var BUTTONS = [
-      "Editar nome da conversa",
-      "Adicionar pessoas à conversa",
-      "Silenciar conversa",
-      "Sugestões de parceiros",
-      "Cancelar"
-    ];
-    ActionSheet.show(
-      {
-        options: BUTTONS,
-        cancelButtonIndex: 4,
-        destructiveButtonIndex: 2,
-        title: "Ações"
-      },
-      buttonIndex => {
-        switch (buttonIndex) {
-          case 0:
-            console.log("Editar nome da conversa");
-            break;
-        }
-      }
-    );
+  _goToProfileByParams = () => {
+    if (!this.state.disabled) {
+      this._setDisabled();
+      this.props.navigation.navigate("Profile", {
+        id: this.props.navigation.state.params.id_user
+      });
+    }
+  };
+  _goToProfile = id => {
+    if (!this.state.disabled) {
+      this._setDisabled();
+      console.log(id);
+      this.props.navigation.navigate("Profile", {
+        id
+      });
+    }
   };
 
   _addProjectMessage(projectId) {
@@ -205,6 +200,7 @@ class ChatViewScreen extends React.Component {
               openShareCards={this._openShareCards}
               avatar={this.state.avatar}
               icon={this.state.icon}
+              goToProfile={this._goToProfile}
             />
           </View>
           <View

@@ -47,11 +47,15 @@ class InputMessageBar extends React.Component {
     return (
       <Message>
         <ViewAvatar>
-          <Avatar
-            source={{
-              uri: this.state.avatar
-            }}
-          />
+          <TouchableOpacity
+            onPress={() => this.props.goToProfile(this.props.userIdLogged)}
+          >
+            <Avatar
+              source={{
+                uri: this.state.avatar
+              }}
+            />
+          </TouchableOpacity>
         </ViewAvatar>
         <ViewInput>
           <InputMessage
