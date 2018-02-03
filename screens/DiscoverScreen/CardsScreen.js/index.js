@@ -130,17 +130,11 @@ class CardsScreen extends React.Component {
   };
   _onConnectByButton(userId) {
     const { cardIndex, data } = this.state;
-    console.log("userId button = ", userId);
-
     const noItems = cardIndex + 1 === Object.keys(data).length;
-
-    console.log("index  = ", this.state.cardIndex);
-
     //sends request to the user
     this._onConnectUser(userId);
 
     if (noItems) {
-      console.log("ja acvou mother func");
       this._onSwipedAll(true);
       return;
     } else {
@@ -160,7 +154,6 @@ class CardsScreen extends React.Component {
   }
   _onSwipedAll(value) {
     if (value) {
-      console.log("_onSwipedAll");
       setTimeout(() => {
         this.setState({
           data: []
@@ -188,7 +181,7 @@ class CardsScreen extends React.Component {
               cardIndex={this.state.cardIndex}
               verticalSwipe={false}
               backgroundColor={"transparent"}
-              cardVerticalMargin={10}
+              cardVerticalMargin={0}
               onSwipedRight={index => {
                 this._onAddUser(index);
               }}
