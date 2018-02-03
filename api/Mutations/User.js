@@ -143,6 +143,32 @@ const UPDATE_USER_CONFIG_MUTATION = gql`
   }
 `;
 
+/**
+ *  TECHNOLOGIES MUTATIONS
+ */
+
+//creates a new technology for the user
+const CREATE_USER_TECHNOLOGY_MUTATION = gql`
+  mutation($userId: ID!, $name: String!) {
+    createTechnology(userId: $userId, name: $name) {
+      id
+    }
+  }
+`;
+
+/**
+ *  SOCIAL MUTATIONS
+ */
+
+//creates a new technology for the user
+const CREATE_USER_SOCIAL_MUTATION = gql`
+mutation ($userId: ID!, $content: String!, $type: SocialType!) {
+  createSocial(userId: $userId, content: $content, type: $type) {
+    id
+  }
+}
+`;
+
 export {
   SIGNIN_USER_MUTATION,
   CREATE_USER_MUTATION,
@@ -151,5 +177,7 @@ export {
   UPDATE_USER_AVATAR_MUTATION,
   UPDATE_USER_COORDINATES_MUTATION,
   CREATE_USER_CONFIG_MUTATION,
-  UPDATE_USER_CONFIG_MUTATION
+  UPDATE_USER_CONFIG_MUTATION,
+  CREATE_USER_TECHNOLOGY_MUTATION,
+  CREATE_USER_SOCIAL_MUTATION
 };

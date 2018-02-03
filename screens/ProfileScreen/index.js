@@ -13,7 +13,7 @@ import {
   HeaderRightElement
 } from "../../components/HeaderRight";
 import { CardContainer, CardLeft, CardBody } from "../../components/Card";
-import { Error, Loading } from "../../components/index";
+import { Placeholder, Loading } from "../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import { USER_PROFILE_QUERY } from "../../api/Queries/User";
@@ -54,12 +54,20 @@ class ProfileScreen extends React.PureComponent {
     });
   }
   _onOpenActions = () => {
-    var BUTTONS = ["Editar Perfil", "Configurações", "Sair", "Cancelar"];
+    var BUTTONS = [
+      "Editar Perfil",
+      "Adcionar Tecnologia",
+      "Adicionar Projeto",
+      "Adicionar Contato Externo",
+      "Configurações",
+      "Sair",
+      "Cancelar"
+    ];
     ActionSheet.show(
       {
         options: BUTTONS,
-        cancelButtonIndex: 3,
-        destructiveButtonIndex: 2,
+        cancelButtonIndex: 6,
+        destructiveButtonIndex: 5,
         title: "Ações"
       },
       buttonIndex => {
@@ -68,9 +76,18 @@ class ProfileScreen extends React.PureComponent {
             this._goToEditProfile();
             break;
           case 1:
-            this._gotToConfigs();
+            this._goToAddScreen("addTechnology");
             break;
           case 2:
+            this._goToAddScreen("addProject");
+            break;
+          case 3:
+            this._goToAddScreen("addSocial");
+            break;
+          case 4:
+            this._gotToConfigs();
+            break;
+          case 5:
             this._onUserSignOut();
             break;
         }
@@ -106,6 +123,11 @@ class ProfileScreen extends React.PureComponent {
 
     this.props.navigation.navigate("EditProfile", { data, userId, image });
   };
+  _goToAddScreen(screen) {
+    const { id: userId } = this.props.userProfileQuery.User;
+    this.props.navigation.navigate(screen, { userId });
+    console.log("screen = ", screen);
+  }
   _onUserSignOut = () => {
     //clears the user session id and token
     onSignOut();
@@ -119,7 +141,7 @@ class ProfileScreen extends React.PureComponent {
       return <Loading dark />;
     }
     if (this.props.userProfileQuery && this.props.userProfileQuery.error) {
-      return <Error />;
+      <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
     const { User } = this.props.userProfileQuery;
     const {
@@ -221,9 +243,17 @@ class ProfileScreen extends React.PureComponent {
                   {"competências".toUpperCase()}
                 </Span>
                 {Object.keys(competences).length <= 0 ? (
-                  <P style={{ color: "#757575", marginTop: 10 }}>
-                    Ainda não adicionou competências.
-                  </P>
+                  <TouchableOpacity>
+                    <Placeholder
+                      dark
+                      link
+                      linkText="Pressione para adicionar"
+                      text="Ainda não adicionou competências."
+                      IconName="adjust"
+                      size={28}
+                      fontSize={14}
+                    />
+                  </TouchableOpacity>
                 ) : (
                   <LabelsContainer>
                     {competences.map(data => {
@@ -250,9 +280,19 @@ class ProfileScreen extends React.PureComponent {
                   {"tecnologias".toUpperCase()}
                 </Span>
                 {Object.keys(technologies).length <= 0 ? (
-                  <P style={{ color: "#757575", marginTop: 10 }}>
-                    Ainda não adicionou tecnologias.
-                  </P>
+                  <TouchableOpacity
+                    onPress={() => this._goToAddScreen("addTechnology")}
+                  >
+                    <Placeholder
+                      dark
+                      link
+                      linkText="Pressione para adicionar"
+                      text="Ainda não adicionou tecnologias."
+                      IconName="layers"
+                      size={28}
+                      fontSize={14}
+                    />
+                  </TouchableOpacity>
                 ) : (
                   <LabelsContainer>
                     <LabelsContainer>
@@ -283,9 +323,19 @@ class ProfileScreen extends React.PureComponent {
             <Row>
               {Object.keys(technologies).length <= 0 ? (
                 <PortfolioContainer>
-                  <P style={{ color: "#757575", marginTop: 10 }}>
-                    Ainda não adicionou projetos.
-                  </P>
+                  <TouchableOpacity
+                    onPress={() => this._goToAddScreen("addProject")}
+                  >
+                    <Placeholder
+                      dark
+                      linkP
+                      linkText="Pressione para adicionar"
+                      text="Ainda não adicionou projetos."
+                      IconName="apps"
+                      size={28}
+                      fontSize={14}
+                    />
+                  </TouchableOpacity>
                 </PortfolioContainer>
               ) : (
                 <ScrollView
@@ -333,9 +383,19 @@ class ProfileScreen extends React.PureComponent {
                 {"contactos".toUpperCase()}
               </Span>
               {Object.keys(technologies).length <= 0 ? (
-                <P style={{ color: "#757575", marginTop: 10 }}>
-                  Ainda não adicionou contatos.
-                </P>
+                <TouchableOpacity
+                  onPress={() => this._goToAddScreen("addSocial")}
+                >
+                  <Placeholder
+                    dark
+                    link
+                    linkText="Pressione para adicionar"
+                    text="Ainda não adicionou contatos."
+                    IconName="contacts"
+                    size={28}
+                    fontSize={14}
+                  />
+                </TouchableOpacity>
               ) : (
                 <LinksContainer>
                   {socials.map(data => {
@@ -434,6 +494,7 @@ const NumberContainer = styled.View`
 const PortfolioContainer = styled.View`
   padding-left: 20px;
   padding-right: 20px;
+  width: 100%;
 `;
 
 /*

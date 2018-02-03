@@ -1,10 +1,11 @@
 import React from "react";
+import { ActivityIndicator } from "react-native";
 import { NavigationActions } from "react-navigation";
 //Components
 import { Container, Content, Form, Item, Input, Fab, Text } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SignUpHeader } from "../../../../components/index";
+import { GradientHeader } from "../../../../components/index";
 //Containers
 import InterestsContainer from "./InterestsContainer/index";
 //GraphQL
@@ -16,12 +17,14 @@ import { allFalse, countAllTrue } from "../../../../constants/Utils";
 
 class SkillStepScreen extends React.Component {
   static navigationOptions = {
-    title: ""
+    title: "",
+    headerLeft: null
   };
   state = {
     timeoutSearch: 0,
     interests: [],
-    query: "programaçao"
+    query: "programaçao",
+    loading: false
   };
   _onSearch(query) {
     clearTimeout(this.state.timeoutSearch);
@@ -36,17 +39,20 @@ class SkillStepScreen extends React.Component {
     this.setState({ interests });
   }
   _onSaveSkills = async () => {
+    //this disables double press
+    if (this.state.loading) return;
+    //get input values
     const { interests } = this.state;
     //Checks if fields are empty
     if (countAllTrue(interests) <= 0 || allFalse(interests)) {
-      Toast.show("You have not selected any interest!");
+      Toast.show("Ainda não selecionou nenhum interesse!");
       return;
     }
     try {
+      this.setState(prevState => ({ loading: !prevState.loading }));
       for (var key in this.state.interests) {
         if (this.state.interests[key]) {
           this._onCreateCompetence(key);
-          console.log(key);
         }
       }
       //If it passes goes to the main screen
@@ -55,7 +61,6 @@ class SkillStepScreen extends React.Component {
         actions: [NavigationActions.navigate({ routeName: "Main" })]
       });
       this.props.navigation.dispatch(resetAction);
-
     } catch (e) {
       Toast.show(e);
     }
@@ -72,7 +77,7 @@ class SkillStepScreen extends React.Component {
         try {
           console.log(createCompetence.id);
         } catch (e) {
-          console.log(e);
+          this.setState(prevState => ({ loading: !prevState.loading }));
           Toast.show("Erro! Verifique os campos.");
           return;
         }
@@ -83,7 +88,7 @@ class SkillStepScreen extends React.Component {
     const { interests } = this.state;
     return (
       <ScreenContainer>
-        <SignUpHeader text="Está quase, para terminar, selecione as areas de interesse que pretende." />
+        <GradientHeader title="Registar" text="Está quase, para terminar, selecione as areas de interesse que pretende." />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60, paddingTop: 30 }}>
@@ -112,7 +117,11 @@ class SkillStepScreen extends React.Component {
           style={{ backgroundColor: "#3f51b5" }}
           position="bottomRight"
         >
-          <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          {this.state.loading ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          )}
         </Fab>
       </ScreenContainer>
     );

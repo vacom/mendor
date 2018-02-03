@@ -11,6 +11,9 @@ import MainTabNavigator from "./MainTabNavigator";
  */
 import ProfileScreen from "../screens/ProfileScreen/index";
 import EditProfileScreen from "../screens/ProfileScreen/EditScreen/index";
+import addTechnologyScreen from "../screens/ProfileScreen/TechnologyScreen/index";
+import addSocialScreen from "../screens/ProfileScreen/SocialScreen/index";
+
 /**
  *  DiscussionScreens
  */
@@ -45,7 +48,6 @@ import DiscoverSearchScreen from "../screens/DiscoverScreen/SearchScreen/index";
  * Configuration Screen
  */
 import ConfigScreen from "../screens/ConfigScreen/index";
-
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
@@ -62,6 +64,12 @@ export const createRootNavigator = (signedIn = false) => {
       },
       EditProfile: {
         screen: EditProfileScreen
+      },
+      addTechnology: {
+        screen: addTechnologyScreen
+      },
+      addSocial: {
+        screen: addSocialScreen
       },
       DiscussionView: {
         screen: DiscussionViewScreen

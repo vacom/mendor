@@ -11,7 +11,7 @@ const ContentContainer = styled.View`
   margin-right: 20px;
 `;
 
-const SignUpHeader = props => {
+const GradientHeader = ({title, text}) => {
   return (
     <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
       <ContentContainer>
@@ -24,7 +24,7 @@ const SignUpHeader = props => {
           }}
         >
           <Text style={{ fontSize: 26, fontWeight: "600", color: "#fff" }}>
-            Registar
+            {title}
           </Text>
         </Row>
         <Row
@@ -41,7 +41,7 @@ const SignUpHeader = props => {
               color: "#fff"
             }}
           >
-            {props.text}
+            {text}
           </Text>
         </Row>
       </ContentContainer>
@@ -49,4 +49,4 @@ const SignUpHeader = props => {
   );
 };
 
-export default SignUpHeader;
+export default GradientHeader;
