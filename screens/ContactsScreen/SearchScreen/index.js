@@ -30,7 +30,26 @@ class ContactsSearchScreen extends React.Component {
     typing: false,
     loading: false,
     searched: false,
-    refreshing: false
+    refreshing: false,
+    disabled: false
+  };
+
+  _setDisabled = () => {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({
+        disabled: false
+      });
+    }, 1000);
+  };
+  _goToProfile = id => {
+    if (!this.state.disabled) {
+      this._setDisabled();
+      console.log(id);
+      this.props.navigation.navigate("Profile", {
+        id
+      });
+    }
   };
 
   handleChange(text) {
@@ -51,10 +70,6 @@ class ContactsSearchScreen extends React.Component {
       }, 500);
     }
   }
-
-  _goToProfile = id => {
-    this.props.navigation.navigate("Profile", { id: id });
-  };
 
   render() {
     return (

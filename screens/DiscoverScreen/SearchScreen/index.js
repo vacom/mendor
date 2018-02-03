@@ -31,7 +31,8 @@ class DiscoverSearchScreen extends React.Component {
     loading: false,
     searched: false,
     refreshing: false,
-    searched_first: false
+    searched_first: false,
+    disabled: false
   };
 
   handleChange(text) {
@@ -53,11 +54,23 @@ class DiscoverSearchScreen extends React.Component {
       }, 500);
     }
   }
-
-  _goToProfile = id => {
-    this.props.navigation.navigate("Profile", { id: id });
+  _setDisabled = () => {
+    this.setState({ disabled: true });
+    setTimeout(() => {
+      this.setState({
+        disabled: false
+      });
+    }, 1000);
   };
-
+  _goToProfile = id => {
+    if (!this.state.disabled) {
+      this._setDisabled();
+      console.log(id);
+      this.props.navigation.navigate("Profile", {
+        id
+      });
+    }
+  };
   render() {
     return (
       <Container>
