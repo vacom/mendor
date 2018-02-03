@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components/native";
 import { View, Text } from "native-base";
+import { TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo";
 import moment from "moment/min/moment-with-locales";
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
@@ -14,7 +15,8 @@ const Message = ({
   avatar = null,
   type,
   createdAt,
-  project
+  project,
+  goToProfile
 }) => {
   if (avatar) {
     avatar = GET_AVATAR_URL(avatar.secret, "250x250", avatar.name);
@@ -44,11 +46,13 @@ const Message = ({
         <ViewMessage>
           <ViewMessageNotLogged>
             <ViewAvatar>
-              <Avatar
-                source={{
-                  uri: avatar
-                }}
-              />
+              <TouchableOpacity onPress={() => goToProfile(userId)}>
+                <Avatar
+                  source={{
+                    uri: avatar
+                  }}
+                />
+              </TouchableOpacity>
             </ViewAvatar>
             <View>
               <LinearGradient
@@ -69,11 +73,13 @@ const Message = ({
         <ViewMessage>
           <ViewMessageNotLogged>
             <ViewAvatar>
-              <Avatar
-                source={{
-                  uri: avatar
-                }}
-              />
+              <TouchableOpacity onPress={() => goToProfile(userId)}>
+                <Avatar
+                  source={{
+                    uri: avatar
+                  }}
+                />
+              </TouchableOpacity>
             </ViewAvatar>
             <View>
               <ProjectCard project={project} />
