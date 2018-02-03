@@ -101,8 +101,7 @@ const TextLogged = styled.Text`
   elevation: 1;
   border-radius: 10;
   font-size: 16px;
-  text-align: justify;
-  max-width: 90%;
+  max-width: 100%;
 `;
 
 const TextDate = styled.Text`
@@ -129,6 +128,7 @@ const ViewMessageLogged = styled.View`
   align-items: flex-end;
   padding: 5px 10px;
   width: 100%;
+  padding-left: 25px;
 `;
 
 const ViewMessage = styled.View`

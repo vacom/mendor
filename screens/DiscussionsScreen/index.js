@@ -38,6 +38,7 @@ class DiscussionsScreen extends React.Component {
     userIdLogged: this.props.screenProps.userId,
     refreshing: false
   };
+  
   _goToDiscussion = (
     id,
     title,
@@ -92,7 +93,7 @@ class DiscussionsScreen extends React.Component {
     }
     const { allCategories } = this.props.DiscussionsByCategories;
     return (
-      <Container>
+      <Container style={{ backgroundColor: "#fff" }}>
         <Content
           refreshControl={
             <RefreshControl
@@ -101,8 +102,8 @@ class DiscussionsScreen extends React.Component {
             />
           }
         >
-          <ScrollView style={{ backgroundColor: "#fff" }}>
-            {Object.keys(allCategories).length > 0 ? (
+          {Object.keys(allCategories).length > 0 ? (
+            <ScrollView>
               <View style={{ marginBottom: 15, backgroundColor: "#fff" }}>
                 {allCategories.map(data => {
                   return (
@@ -118,18 +119,20 @@ class DiscussionsScreen extends React.Component {
                   );
                 })}
               </View>
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignItems: "center"
-                }}
-              >
-                <Text>Ainda não existem discussões.</Text>
-              </View>
-            )}
-          </ScrollView>
+            </ScrollView>
+          ) : (
+            <View
+              style={{
+                flex: 1
+              }}
+            >
+              <Placeholder
+                dark
+                text="Ainda não foram criadas discussões!"
+                IconName="clear-all"
+              />
+            </View>
+          )}
         </Content>
         <Fab
           onPress={this._goToAddDiscussion}

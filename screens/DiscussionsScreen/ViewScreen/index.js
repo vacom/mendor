@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon, View } from "native-base";
+import { withNavigation } from "react-navigation";
 import {
   KeyboardAvoidingView,
   Keyboard,
@@ -15,6 +16,7 @@ import { graphql, compose, withApollo } from "react-apollo";
 //GraphQL
 import { DISCUSSION } from "../../../api/Queries/Discussions";
 import { CREATE_RESPONSE_MUTATION } from "../../../api/Mutations/Discussions";
+import { CREATE_NOTIFICATION_MUTATION } from "../../../api/Mutations/Notification";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 
 //Components
@@ -43,7 +45,7 @@ class DiscussionViewScreen extends React.Component {
 
   state = {
     height: 0,
-    userIdLogged: "",
+    userIdLogged: this.props.screenProps.userId,
     avatar: "",
     scroll: false,
     disabled: false
@@ -60,7 +62,7 @@ class DiscussionViewScreen extends React.Component {
     );
     const { userIdLogged, avatar } = this.props.navigation.state.params;
     this.setState({
-      userIdLogged,
+      userIdLogged: this.props.screenProps.userId,
       avatar,
       arrow: "open"
     });
@@ -104,6 +106,17 @@ class DiscussionViewScreen extends React.Component {
           });
           data.Discussion.responses.push(createResponse);
           proxy.writeQuery({ query: DISCUSSION, data });
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
+    try {
+      await this.props.createNotification({
+        variables: {
+          userId: this.props.Discussion.Discussion.user.id,
+          type: "DISCUSSION",
+          discussionId
         }
       });
     } catch (e) {
@@ -225,7 +238,9 @@ class DiscussionViewScreen extends React.Component {
   }
 }
 
-const DiscussionViewScreenWithData = compose(
+export default compose(
+  withApollo,
+  withNavigation,
   graphql(DISCUSSION, {
     options: props => ({
       variables: { id: props.navigation.state.params.id }
@@ -234,10 +249,11 @@ const DiscussionViewScreenWithData = compose(
   }),
   graphql(CREATE_RESPONSE_MUTATION, {
     name: "createResponse"
+  }),
+  graphql(CREATE_NOTIFICATION_MUTATION, {
+    name: "createNotification"
   })
 )(DiscussionViewScreen);
-
-export default withApollo(DiscussionViewScreenWithData);
 
 const ContainerDiscussion = styled.View`
   background: #fff;

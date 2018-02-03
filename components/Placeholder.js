@@ -11,11 +11,22 @@ const PlaceholderContainerWithStyles = styled.View`
   margin-bottom: 30px;
 `;
 
-const Placeholder = (props) => {
+const Placeholder = props => {
+  const styles = {
+    fontSize: 20,
+    marginTop: 10,
+    color: props.dark ? "#000" : "#fff",
+    backgroundColor: "transparent"
+  };
   return (
     <PlaceholderContainerWithStyles>
-        <MaterialIcons name={props.IconName} size={42} color="#ffffff" style={{backgroundColor: 'transparent'}}/>
-        <Text style={{fontSize: 20, marginTop: 10, color: '#fff', backgroundColor: 'transparent'}}>{props.text}</Text>
+      <MaterialIcons
+        name={props.IconName}
+        size={42}
+        color={props.dark ? "#000" : "#ffffff"}
+        style={{ backgroundColor: "transparent" }}
+      />
+      <Text style={styles}>{props.text}</Text>
     </PlaceholderContainerWithStyles>
   );
 };
