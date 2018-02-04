@@ -162,11 +162,34 @@ const CREATE_USER_TECHNOLOGY_MUTATION = gql`
 
 //creates a new technology for the user
 const CREATE_USER_SOCIAL_MUTATION = gql`
-mutation ($userId: ID!, $content: String!, $type: SocialType!) {
-  createSocial(userId: $userId, content: $content, type: $type) {
-    id
+  mutation($userId: ID!, $content: String!, $type: SocialType!) {
+    createSocial(userId: $userId, content: $content, type: $type) {
+      id
+    }
   }
-}
+`;
+
+/**
+ *  PROJECT MUTATIONS
+ */
+
+//creates a new project for the user
+const CREATE_USER_PROJECT_MUTATION = gql`
+  mutation(
+    $userId: ID!
+    $title: String!
+    $description: String!
+    $technologiesIds: [ID!]
+  ) {
+    createProject(
+      userId: $userId
+      title: $title
+      description: $description
+      technologiesIds: $technologiesIds
+    ) {
+      id
+    }
+  }
 `;
 
 export {
@@ -179,5 +202,6 @@ export {
   CREATE_USER_CONFIG_MUTATION,
   UPDATE_USER_CONFIG_MUTATION,
   CREATE_USER_TECHNOLOGY_MUTATION,
-  CREATE_USER_SOCIAL_MUTATION
+  CREATE_USER_SOCIAL_MUTATION,
+  CREATE_USER_PROJECT_MUTATION
 };

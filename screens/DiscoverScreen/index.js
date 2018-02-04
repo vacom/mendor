@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  TouchableOpacity,
-  ScrollView,
-  RefreshControl,
-} from "react-native";
+import { TouchableOpacity, ScrollView, RefreshControl } from "react-native";
 import { Location, Permissions } from "expo";
 import { Thumbnail } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -72,7 +68,6 @@ class DiscoverScreen extends React.Component {
   componentDidMount() {
     this._getBasicUserInfo();
   }
-
   _goToProfile = () => {
     this.props.navigation.navigate("Profile", { id: this.state.userId });
   };

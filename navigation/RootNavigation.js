@@ -13,6 +13,7 @@ import ProfileScreen from "../screens/ProfileScreen/index";
 import EditProfileScreen from "../screens/ProfileScreen/EditScreen/index";
 import addTechnologyScreen from "../screens/ProfileScreen/TechnologyScreen/index";
 import addSocialScreen from "../screens/ProfileScreen/SocialScreen/index";
+import addProjectScreen from "../screens/ProfileScreen/ProjectScreen/index";
 
 /**
  *  DiscussionScreens
@@ -51,7 +52,7 @@ import ConfigScreen from "../screens/ConfigScreen/index";
 //Push Notifications
 import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
-import { isSignedIn, onSignOut } from "../constants/Utils";
+import { isSignedIn } from "../constants/Utils";
 
 export const createRootNavigator = (signedIn = false) => {
   return StackNavigator(
@@ -70,6 +71,9 @@ export const createRootNavigator = (signedIn = false) => {
       },
       addSocial: {
         screen: addSocialScreen
+      },
+      addProject: {
+        screen: addProjectScreen
       },
       DiscussionView: {
         screen: DiscussionViewScreen

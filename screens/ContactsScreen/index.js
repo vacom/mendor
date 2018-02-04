@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { ScrollView, TouchableOpacity, RefreshControl } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import { withNavigation } from "react-navigation";
 //Components
 import GradientContainer from "../../components/GradientContainer";
@@ -45,26 +45,11 @@ class ContactsScreen extends React.PureComponent {
       )
     };
   };
-  state = {
-    refreshing: false
-  };
   componentDidMount() {
     this.props.navigation.setParams({
       goToSearch: this._goToSearch
     });
   }
-  _onRefresh = () => {
-    this.setState({ refreshing: true });
-    //gets new content from the DB
-    this.props.allContacts.refetch();
-    //clears the loading
-    if (!this.props.allContacts.loading) {
-      this.setState({ refreshing: false });
-    }
-    if (this.props.allContacts && this.props.allContacts.error) {
-      return <Placeholder text="Ocorreu um erro." IconName="error" />;
-    }
-  };
   _goToProfile(id) {
     this.props.navigation.navigate("Profile", { id: id });
   }
@@ -140,15 +125,7 @@ class ContactsScreen extends React.PureComponent {
               activeTabStyle={{ backgroundColor: "#3F51B5" }}
               activeTextStyle={{ color: "#FFF", fontWeight: "400" }}
             >
-              <ScrollView
-                refreshControl={
-                  <RefreshControl
-                    tintColor="white"
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                  />
-                }
-              >
+              <ScrollView>
                 <ContactList
                   contacts={mentors}
                   openProfile={id => this._goToProfile(id)}
@@ -164,15 +141,7 @@ class ContactsScreen extends React.PureComponent {
               activeTabStyle={{ backgroundColor: "#3F51B5" }}
               activeTextStyle={{ color: "#FFF", fontWeight: "400" }}
             >
-              <ScrollView
-                refreshControl={
-                  <RefreshControl
-                    tintColor="white"
-                    refreshing={this.state.refreshing}
-                    onRefresh={this._onRefresh}
-                  />
-                }
-              >
+              <ScrollView>
                 <ContactList
                   openProfile={id => this._goToProfile(id)}
                   openAction={id => this._onOpenActions(id)}

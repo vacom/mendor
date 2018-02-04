@@ -105,6 +105,7 @@ class SigninScreen extends React.Component {
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Password</Label>
                 <Input
+                  autoCapitalize="none"
                   secureTextEntry={true}
                   onChangeText={password => this.setState({ password })}
                 />

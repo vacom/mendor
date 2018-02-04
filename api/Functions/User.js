@@ -18,10 +18,10 @@ const USER_SIGNIN_FUNC = async (
         email,
         password
       },
-      update: (store, { data: { signinUser } }) => {
+      update: async (store, { data: { signinUser } }) => {
         try {
-          AsyncStorage.setItem("graphcoolToken", signinUser.token);
-          AsyncStorage.setItem("@mendor:userId", signinUser.user.id);
+          await AsyncStorage.setItem("graphcoolToken", signinUser.token);
+          await AsyncStorage.setItem("@mendor:userId", signinUser.user.id);
           userId = signinUser.user.id;
         } catch (e) {
           return e;

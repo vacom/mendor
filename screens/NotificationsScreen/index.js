@@ -1,4 +1,6 @@
 import React from "react";
+import { Alert, Platform } from "react-native";
+import { Notifications, Permissions } from "expo";
 import { withNavigation } from "react-navigation";
 import { ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 //Components
@@ -6,10 +8,6 @@ import { Thumbnail, Button, Text, ActionSheet } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import GradientContainer from "../../components/GradientContainer";
-import {
-  HeaderRightContainer,
-  HeaderRightElement
-} from "../../components/HeaderRight";
 import {
   Card,
   CardContainer,
@@ -25,28 +23,110 @@ import { graphql, compose } from "react-apollo";
 //Notifications
 import { ALL_NOTIFICATIONS_QUERY } from "../../api/Queries/Notification";
 import { DISABLE_NOTIFICATION_MUTATION } from "../../api/Mutations/Notification";
-import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
+import { ALL_NOTIFICATIONS_SUBSCRIPTION } from "../../api/Subscriptions/User";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 import { CREATE_CONTACT_FUNC } from "../../api/Functions/User";
+import { IMAGE_PLACEHOLDER } from "../../api/Functions/Upload";
 //contacts
+import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
 import { CREATE_CONTACT_MUTATION } from "../../api/Mutations/Contacts";
 //Utils
-import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 import Toast from "react-native-root-toast";
+
+async function getiOSNotificationPermission() {
+  const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  if (status !== "granted") {
+    await Permissions.askAsync(Permissions.NOTIFICATIONS);
+  }
+}
 
 class NotificationsScreen extends React.Component {
   static navigationOptions = {
-    title: "Notificações",
-    headerRight: (
-      <HeaderRightContainer>
-        <HeaderRightElement>
-          <MaterialIcons name="search" size={24} color="#ffffff" />
-        </HeaderRightElement>
-      </HeaderRightContainer>
-    )
+    title: "Notificações"
   };
   state = {
     refreshing: false
+  };
+  componentDidMount() {
+    getiOSNotificationPermission();
+    this.listenForNotifications();
+
+    this._subscribeToNotifications();
+  }
+  componentWillUnmount() {
+    Notifications.cancelAllScheduledNotificationsAsync();
+  }
+  _subscribeToNotifications = () => {
+    const { allNotificationsQuery, screenProps } = this.props;
+    allNotificationsQuery.subscribeToMore({
+      document: ALL_NOTIFICATIONS_SUBSCRIPTION,
+      variables: { userId: screenProps.userId },
+      updateQuery: (previous, { subscriptionData }) => {
+        if (!subscriptionData.data) {
+          return previous;
+        }
+        //gets the new data
+        const { node } = subscriptionData.data.Notification;
+        //Sets the notification
+        const data = {
+          title:
+            node.type === "REQUEST"
+              ? "Novo pedido de utilizador"
+              : "Nova resposta à discussão",
+          body:
+            node.type === "REQUEST"
+              ? `${node.userRequest.name} enviou um pedido para conectar`
+              : `Nova resposta na discussão ${node.discussion.title}`,
+          icon:
+            node.type === "REQUEST"
+              ? GET_AVATAR_URL(
+                  node.userRequest.avatar.secret,
+                  "150x150",
+                  node.userRequest.avatar.name
+                )
+              : GET_AVATAR_URL(
+                  node.discussion.cover.secret,
+                  "150x150",
+                  node.discussion.cover.name
+                )
+        };
+        //Creates a new notification
+        this._onCreateLocalNotification(data);
+        //Shows the result on the UI
+        const result = Object.assign({}, previous, {
+          allNotifications: [...previous.allNotifications, node]
+        });
+        return result;
+      }
+    });
+  };
+  listenForNotifications = () => {
+    Notifications.addListener(notification => {
+      if (notification.origin === "received" && Platform.OS === "ios") {
+        Alert.alert(notification.title, notification.body);
+      }
+    });
+  };
+  _onCreateLocalNotification = ({ title, body, icon }) => {
+    const localnotification = {
+      title,
+      body,
+      android: {
+        sound: true,
+        icon
+      },
+      ios: {
+        sound: true
+      }
+    };
+    let sendAfterFiveSeconds = Date.now();
+    sendAfterFiveSeconds += 5000;
+
+    const schedulingOptions = { time: sendAfterFiveSeconds };
+    Notifications.scheduleLocalNotificationAsync(
+      localnotification,
+      schedulingOptions
+    );
   };
   _openNotification(data) {
     //defines the route to go, profile or discussion

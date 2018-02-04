@@ -47,6 +47,10 @@ class ProfileScreen extends React.PureComponent {
   };
   componentDidMount() {
     const { screenProps, navigation } = this.props;
+
+    console.log("suserId = ", screenProps.userId);
+    console.log("outSideUserId = ", navigation.state.params.id);
+
     this.props.navigation.setParams({
       openActions: this._onOpenActions,
       userId: screenProps.userId,
@@ -143,7 +147,9 @@ class ProfileScreen extends React.PureComponent {
     if (this.props.userProfileQuery && this.props.userProfileQuery.error) {
       <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
-    const { User } = this.props.userProfileQuery;
+    const { screenProps, navigation, userProfileQuery } = this.props;
+    const { User } = userProfileQuery;
+
     const {
       profile,
       competences,
@@ -161,7 +167,7 @@ class ProfileScreen extends React.PureComponent {
         <Content
           refreshControl={
             <RefreshControl
-              tintColor="white"
+              tintColor="black"
               refreshing={this.state.refreshing}
               onRefresh={this._onRefresh}
             />
@@ -246,8 +252,6 @@ class ProfileScreen extends React.PureComponent {
                   <TouchableOpacity>
                     <Placeholder
                       dark
-                      link
-                      linkText="Pressione para adicionar"
                       text="Ainda não adicionou competências."
                       IconName="adjust"
                       size={28}
@@ -280,19 +284,29 @@ class ProfileScreen extends React.PureComponent {
                   {"tecnologias".toUpperCase()}
                 </Span>
                 {Object.keys(technologies).length <= 0 ? (
-                  <TouchableOpacity
-                    onPress={() => this._goToAddScreen("addTechnology")}
-                  >
+                  screenProps.userId === navigation.state.params.id ? (
+                    <TouchableOpacity
+                      onPress={() => this._goToAddScreen("addTechnology")}
+                    >
+                      <Placeholder
+                        dark
+                        link
+                        linkText="Pressione para adicionar"
+                        text="Ainda não adicionou tecnologias."
+                        IconName="layers"
+                        size={28}
+                        fontSize={14}
+                      />
+                    </TouchableOpacity>
+                  ) : (
                     <Placeholder
                       dark
-                      link
-                      linkText="Pressione para adicionar"
-                      text="Ainda não adicionou tecnologias."
+                      text={`${User.name} Ainda não adicionou tecnologias.`}
                       IconName="layers"
                       size={28}
                       fontSize={14}
                     />
-                  </TouchableOpacity>
+                  )
                 ) : (
                   <LabelsContainer>
                     <LabelsContainer>
@@ -323,19 +337,29 @@ class ProfileScreen extends React.PureComponent {
             <Row>
               {Object.keys(technologies).length <= 0 ? (
                 <PortfolioContainer>
-                  <TouchableOpacity
-                    onPress={() => this._goToAddScreen("addProject")}
-                  >
+                  {screenProps.userId === navigation.state.params.id ? (
+                    <TouchableOpacity
+                      onPress={() => this._goToAddScreen("addProject")}
+                    >
+                      <Placeholder
+                        dark
+                        link
+                        linkText="Pressione para adicionar"
+                        text="Ainda não adicionou projetos."
+                        IconName="apps"
+                        size={28}
+                        fontSize={14}
+                      />
+                    </TouchableOpacity>
+                  ) : (
                     <Placeholder
                       dark
-                      linkP
-                      linkText="Pressione para adicionar"
-                      text="Ainda não adicionou projetos."
+                      text={`${User.name} Ainda não adicionou projetos.`}
                       IconName="apps"
                       size={28}
                       fontSize={14}
                     />
-                  </TouchableOpacity>
+                  )}
                 </PortfolioContainer>
               ) : (
                 <ScrollView
@@ -383,19 +407,29 @@ class ProfileScreen extends React.PureComponent {
                 {"contactos".toUpperCase()}
               </Span>
               {Object.keys(technologies).length <= 0 ? (
-                <TouchableOpacity
-                  onPress={() => this._goToAddScreen("addSocial")}
-                >
+                screenProps.userId === navigation.state.params.id ? (
+                  <TouchableOpacity
+                    onPress={() => this._goToAddScreen("addSocial")}
+                  >
+                    <Placeholder
+                      dark
+                      link
+                      linkText="Pressione para adicionar"
+                      text="Ainda não adicionou contatos."
+                      IconName="contacts"
+                      size={28}
+                      fontSize={14}
+                    />
+                  </TouchableOpacity>
+                ) : (
                   <Placeholder
                     dark
-                    link
-                    linkText="Pressione para adicionar"
-                    text="Ainda não adicionou contatos."
+                    text={`${User.name} Ainda não adicionou contatos.`}
                     IconName="contacts"
                     size={28}
                     fontSize={14}
                   />
-                </TouchableOpacity>
+                )
               ) : (
                 <LinksContainer>
                   {socials.map(data => {

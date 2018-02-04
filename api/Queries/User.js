@@ -161,9 +161,23 @@ const ALL_PROJECTS_OF_USER = gql`
   }
 `;
 
+/**
+ * ALL TECHNOLOGIES QUERIES
+ */
+
+const ALL_TECHNOLOGIES_OF_USER = gql`
+  query allTechnologies($userId: ID!) {
+    allTechnologies(filter: { user: { id: $userId } }) {
+      id
+      name
+    }
+  }
+`;
+
 export {
   BASIC_USER_QUERY,
   USER_PROFILE_QUERY,
   ALL_USERS_DISCOVERY_QUERY,
-  ALL_PROJECTS_OF_USER
+  ALL_PROJECTS_OF_USER,
+  ALL_TECHNOLOGIES_OF_USER
 };

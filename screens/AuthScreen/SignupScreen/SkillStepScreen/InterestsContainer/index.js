@@ -6,7 +6,7 @@ import {
   LabelContainer,
   LabelsContainer
 } from "../../../../../components/Label";
-import { Error, Loading } from "../../../../../components/index";
+import { Placeholder, Loading } from "../../../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import { ALL_INTERESTS_QUERY } from "../../../../../api/Queries/Competence";
@@ -17,7 +17,7 @@ class InterestsContainer extends React.Component {
   };
   state = {
     active: false,
-    interests: [],
+    interests: []
   };
   _onSelectInterest = id => () => {
     const interests = this.state.interests;
@@ -43,10 +43,10 @@ class InterestsContainer extends React.Component {
   };
   render() {
     if (this.props.interestsQuery && this.props.interestsQuery.loading) {
-      return <Loading dark/>;
+      return <Loading dark />;
     }
     if (this.props.interestsQuery && this.props.interestsQuery.error) {
-      return <Error />;
+      <Placeholder text="Erro! Ao carregar interesses" IconName="error" />;
     }
     const { allInterests } = this.props.interestsQuery;
     return (
