@@ -11,22 +11,46 @@ const PlaceholderContainerWithStyles = styled.View`
   margin-bottom: 30px;
 `;
 
-const Placeholder = props => {
-  const styles = {
-    fontSize: 20,
-    marginTop: 10,
-    color: props.dark ? "#000" : "#fff",
-    backgroundColor: "transparent"
-  };
+const Placeholder = ({
+  IconName,
+  size = 42,
+  fontSize = 20,
+  dark = false,
+  text,
+  link = false,
+  linkText
+}) => {
   return (
     <PlaceholderContainerWithStyles>
       <MaterialIcons
-        name={props.IconName}
-        size={42}
-        color={props.dark ? "#000" : "#ffffff"}
+        name={IconName}
+        size={size}
+        color={dark ? "#757575" : "#ffffff"}
         style={{ backgroundColor: "transparent" }}
       />
-      <Text style={styles}>{props.text}</Text>
+      <Text
+        style={{
+          fontSize: fontSize,
+          marginTop: 10,
+          color: dark ? "#757575" : "#fff",
+          backgroundColor: "transparent"
+        }}
+      >
+        {text}
+      </Text>
+
+      {link ? (
+        <Text
+          style={{
+            fontSize: fontSize,
+            marginTop: 10,
+            color: dark ? "#3F53AF" : "#fff",
+            backgroundColor: "transparent"
+          }}
+        >
+          {linkText}
+        </Text>
+      ) : null}
     </PlaceholderContainerWithStyles>
   );
 };

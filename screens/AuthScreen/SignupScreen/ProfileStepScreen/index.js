@@ -1,9 +1,10 @@
 import React from "react";
+import { ActivityIndicator } from "react-native";
 //Components
 import { Container, Content, Form, Item, Input, Label, Fab } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SignUpHeader } from "../../../../components/index";
+import { GradientHeader } from "../../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import { CREATE_USER_PROFILE_MUTATION } from "../../../../api/Mutations/User";
@@ -12,26 +13,32 @@ import Toast from "react-native-root-toast";
 
 class ProfileStepScreen extends React.Component {
   static navigationOptions = {
-    title: ""
+    title: "",
+    headerLeft: null
   };
   state = {
     company: "",
     profession: "",
     role: "",
     about: "",
-    location: ""
+    location: "",
+    loading: false
   };
   _onCreateProfile = async () => {
+    //this disables double press
+    if (this.state.loading) return;
+    //get input values
     const { company, profession, role, about, location } = this.state;
     const { createProfile, navigation } = this.props;
     const userId = navigation.state.params.userId;
     //Checks if fields are empty
     if (!company || !profession || !role || !about || !location) {
-      Toast.show("Fields can not be empty!");
+      Toast.show("Os campos não podem estar vazios!");
       return;
     }
 
     try {
+      this.setState(prevState => ({ loading: !prevState.loading }));
       //Creates a new user on the DB
       await createProfile({
         variables: {
@@ -46,7 +53,7 @@ class ProfileStepScreen extends React.Component {
           try {
             navigation.navigate("SignUpSkillStep", { userId });
           } catch (e) {
-            console.log(e);
+            this.setState(prevState => ({ loading: !prevState.loading }));
             Toast.show("Erro! Verifique os campos.");
           }
         }
@@ -58,7 +65,7 @@ class ProfileStepScreen extends React.Component {
   render() {
     return (
       <ScreenContainer>
-        <SignUpHeader text="Aproveite este espaço para falar um pouco sobre si, ideia ou tecnologia." />
+        <GradientHeader title="Registar" text="Aproveite este espaço para falar um pouco sobre si, ideia ou tecnologia." />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60 }}>
@@ -94,7 +101,11 @@ class ProfileStepScreen extends React.Component {
           style={{ backgroundColor: "#3f51b5" }}
           position="bottomRight"
         >
-          <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          {this.state.loading ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          )}
         </Fab>
       </ScreenContainer>
     );

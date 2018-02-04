@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 //Components
 import {
   Text,
@@ -16,7 +16,7 @@ import {
 } from "native-base";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { SignUpHeader } from "../../../components/index";
+import { GradientHeader } from "../../../components/index";
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import {
@@ -38,25 +38,30 @@ class SignupScreen extends React.Component {
     email: "",
     password: "",
     repeatPassword: "",
-    type: "ENTREPRENEUR"
+    type: "ENTREPRENEUR",
+    loading: false
   };
 
   _onUserSignUp = async () => {
+    //this disables double press
+    if (this.state.loading) return;
+    //get input values
     const { name, email, password, repeatPassword, type } = this.state;
     const { signinUser, createUser } = this.props;
 
     //Checks if fields are empty
     if (!name || !email || !password) {
-      Toast.show("Fields can not be empty!");
+      Toast.show("Os campos não podem estar vazios!");
       return;
     }
     //if the passwords are not the same
     if (password !== repeatPassword) {
-      Toast.show("Passwords do not match!");
+      Toast.show("As senhas não coincidem!");
       return;
     }
 
     try {
+      this.setState(prevState => ({ loading: !prevState.loading }));
       //Creates a new user on the DB
       await createUser({
         variables: {
@@ -71,18 +76,21 @@ class SignupScreen extends React.Component {
             this.setState({ userId: createUser.id });
             const userId = createUser.id;
             //Signins the user and checks in the DB
-            const result = await USER_SIGNIN_FUNC(email, password, signinUser);
+            const result = await USER_SIGNIN_FUNC(
+              email.trim(),
+              password.trim(),
+              signinUser
+            );
             //If it passes goes to the next screen
             if (result.status) {
               //create a configuration for the user
               this._onCreateUserConfig(userId);
-              //navigation.navigate("SignUpProfileStep", { userId });
             } else {
-              console.log("error = ", result.error);
+              this.setState(prevState => ({ loading: !prevState.loading }));
               Toast.show("Erro! Verifique os campos.");
             }
           } catch (e) {
-            console.log(e);
+            this.setState(prevState => ({ loading: !prevState.loading }));
             Toast.show("Erro! Verifique os campos.");
           }
         }
@@ -91,7 +99,7 @@ class SignupScreen extends React.Component {
       Toast.show(e);
     }
   };
-  _onCreateUserConfig = async (userId) => {
+  _onCreateUserConfig = async userId => {
     const { createUserConfig, navigation } = this.props;
     try {
       //Creates a new user on the DB
@@ -99,12 +107,12 @@ class SignupScreen extends React.Component {
         variables: {
           userId
         },
-        update: async (store, { data: { createUser } }) => {
+        update: async () => {
           try {
-             //If it passes goes to the next screen
+            //If it passes goes to the next screen
             navigation.navigate("SignUpProfileStep", { userId });
           } catch (e) {
-            console.log(e);
+            this.setState(prevState => ({ loading: !prevState.loading }));
             Toast.show("Erro! Verifique os campos.");
           }
         }
@@ -121,7 +129,7 @@ class SignupScreen extends React.Component {
   render() {
     return (
       <ScreenContainer>
-        <SignUpHeader text="Mendor é conetar as pessoas certas, estabelecer relaçoes de valor e partilhar ideias." />
+        <GradientHeader title="Registar" text="Mendor é conetar as pessoas certas, estabelecer relaçoes de valor e partilhar ideias." />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60 }}>
@@ -152,7 +160,11 @@ class SignupScreen extends React.Component {
               </Item>
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Email</Label>
-                <Input onChangeText={email => this.setState({ email })} />
+                <Input
+                  autoCapitalize="none"
+                  keyboardType="email-address"
+                  onChangeText={email => this.setState({ email })}
+                />
               </Item>
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Password</Label>
@@ -180,7 +192,11 @@ class SignupScreen extends React.Component {
           style={{ backgroundColor: "#3f51b5" }}
           position="bottomRight"
         >
-          <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          {this.state.loading ? (
+            <ActivityIndicator size="small" color="#FFFFFF" />
+          ) : (
+            <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
+          )}
         </Fab>
       </ScreenContainer>
     );

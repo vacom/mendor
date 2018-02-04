@@ -1,6 +1,6 @@
 // @flow
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, AsyncStorage } from "react-native";
 import { withNavigation } from "react-navigation";
 //Components
 import Swiper from "react-native-deck-swiper";
@@ -39,7 +39,8 @@ class CardsScreen extends React.Component {
     data: [],
     loading: true,
     error: false,
-    cardIndex: 0
+    cardIndex: 0,
+    userRequests: []
   };
   componentDidMount() {
     this._onLoadDiscovery();
@@ -53,6 +54,7 @@ class CardsScreen extends React.Component {
   }
   _onLoadDiscovery = async () => {
     this.setState({ loading: true });
+    await this._onGetUserRequests();
     const {
       type,
       userId,
@@ -60,16 +62,19 @@ class CardsScreen extends React.Component {
       competencesIds,
       distance,
       interests,
-      userRequestIds
+      client
     } = this.props;
-    console.log("userRequestIds = ", userRequestIds);
+    const { userRequests } = this.state;
+    //console.log("userRequestIds cards = ", userRequestIds);
+    const userRequestIds = (userRequests != null) ? userRequests : [];
     //choose the type of users to discover
     const query = ALL_USERS_DISCOVERY_QUERY(interests);
     //Fetch the data from DB
-    const res = await this.props.client.query({
+    const res = await client.query({
       query,
       variables: { userId, type, contactsIds, userRequestIds, competencesIds }
     });
+    
     //error handling
     if (res.error) {
       this.setState({
@@ -77,7 +82,6 @@ class CardsScreen extends React.Component {
       });
       return;
     }
-
     //if stops loading the data from DB
     if (!res.loading) {
       this._onFilterDiscovery(distance, res.data);
@@ -86,6 +90,7 @@ class CardsScreen extends React.Component {
   };
   _onFilterDiscovery = (distance, object) => {
     const { latitude, longitude } = this.props.userLocation;
+  
     //get closer users by distance
     const data = object.allUsers.filter(user => {
       return (
@@ -97,6 +102,7 @@ class CardsScreen extends React.Component {
         ) <= distance
       );
     });
+    //console.log("data ahah = ", data);
     //updates the data
     this.setState({
       cardIndex: 0,
@@ -118,6 +124,7 @@ class CardsScreen extends React.Component {
         },
         update: async () => {
           try {
+            this._onSetUserRequests(userId);
             Toast.show("Pedido Enviado.");
           } catch (e) {
             Toast.show("Erro! Verifique os campos.");
@@ -129,11 +136,24 @@ class CardsScreen extends React.Component {
     }
   };
   _onConnectByButton(userId) {
-    const { cardIndex, data } = this.state;
-    const noItems = cardIndex + 1 === Object.keys(data).length;
     //sends request to the user
     this._onConnectUser(userId);
+    //Removes the card from ui
+    this._onRemoveCard();
+  }
 
+  _onAddUser(index) {
+    const { data } = this.state;
+    //gets users id
+    const { id } = data[index];
+    //sends a user request
+    this._onConnectUser(id);
+    //Removes the card from ui
+    this._onRemoveCard();
+  }
+  _onRemoveCard = () => {
+    const { cardIndex, data } = this.state;
+    const noItems = cardIndex + 1 === Object.keys(data).length;
     if (noItems) {
       this._onSwipedAll(true);
       return;
@@ -143,15 +163,7 @@ class CardsScreen extends React.Component {
         cardIndex: prevState.cardIndex + 1
       }));
     }
-  }
-
-  _onAddUser(index) {
-    const { data } = this.state;
-    //gets users id
-    const { id } = data[index];
-    //sends a user request
-    this._onConnectUser(id);
-  }
+  };
   _onSwipedAll(value) {
     if (value) {
       setTimeout(() => {
@@ -162,6 +174,34 @@ class CardsScreen extends React.Component {
       return;
     }
   }
+  _onSetUserRequests = async id => {
+    try {
+      //get ids already saved
+      let result = await this._onGetUserRequests();
+      console.log("result = ", result);
+      //checks if its null or not, if not concats the new id with the already saved ones
+      const data = result != null ? [id, ...JSON.parse(result)] : [id];
+      console.log("data = ", data);
+      //updates the storage
+      await AsyncStorage.setItem(
+        "@mendor:userRequestIds",
+        JSON.stringify(data)
+      );
+
+      setTimeout(() => {
+        console.log("state = ", this.state.userRequests);
+      }, 1000);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  _onGetUserRequests = async () => {
+    let result = await AsyncStorage.getItem("@mendor:userRequestIds");
+    this.setState({
+      userRequests: JSON.parse(result)
+    });
+    return result;
+  };
   _goToProfile = id => () => {
     this.props.navigation.navigate("Profile", { id });
   };

@@ -1,5 +1,9 @@
 import React from "react";
-import { TouchableOpacity, ScrollView, RefreshControl } from "react-native";
+import {
+  TouchableOpacity,
+  ScrollView,
+  RefreshControl,
+} from "react-native";
 import { Location, Permissions } from "expo";
 import { Thumbnail } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -63,7 +67,6 @@ class DiscoverScreen extends React.Component {
     distance: 20,
     type: "MENTOR",
     interests: "COMMON",
-    userRequestIds: [],
     refreshing: false
   };
   componentDidMount() {
@@ -128,30 +131,51 @@ class DiscoverScreen extends React.Component {
     }
   };
   _getUserLocation = async () => {
-    const { profileId } = this.state;
-    //Gets the user permission to access is location
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
+    try {
+      const { profileId } = this.state;
+      //Gets the user permission to access is location
+      let { status } = await Permissions.askAsync(Permissions.LOCATION);
+      if (status !== "granted") {
+        this.setState({
+          error: true,
+          msg: "Precisa ativar o serviço de localização para continuar."
+        });
+      }
+
+      //Check if the locations services are enabled
+      let LocationProvider = await Location.getProviderStatusAsync();
+      //let the user know
+      if (!LocationProvider.locationServicesEnabled) {
+        this.setState({
+          error: true,
+          msg: "Por favor, ative sua localização."
+        });
+        return;
+      }
+
+      //get the current location position
+      let location = await Location.getCurrentPositionAsync({});
+
+      if (Object.keys(location).length <= 0) {
+        this.setState({
+          error: true,
+          msg: "Não foi possivel recolher a sua localização."
+        });
+        return;
+      }
+
+      //Saves the location and stops the loading state
       this.setState({
-        errorMessage: "Permission to access location was denied"
+        location: location.coords,
+        loading: false,
+        error: false,
+        refreshing: false
       });
+      //Updates the user location on the DB
+      this._onUpdateUserCoords(profileId, location.coords);
+    } catch (e) {
+      Toast.show(e);
     }
-    let location = await Location.getCurrentPositionAsync({});
-
-    if (!location) {
-      this.setState({ error: true, msg: "Por favor, ative sua localização." });
-      return;
-    }
-
-    //Saves the location and stops the loading state
-    this.setState({
-      location: location.coords,
-      loading: false,
-      error: false,
-      refreshing: false
-    });
-    //Updates the user location on the DB
-    this._onUpdateUserCoords(profileId, location.coords);
   };
 
   _onUpdateUserCoords = async (profileId, coordinates, distance) => {
@@ -197,7 +221,6 @@ class DiscoverScreen extends React.Component {
       distance,
       interests,
       refreshing,
-      userRequestIds,
       msg
     } = this.state;
     return (
@@ -225,7 +248,6 @@ class DiscoverScreen extends React.Component {
               distance={distance}
               interests={interests}
               refresh={refreshing}
-              userRequestIds={userRequestIds}
             />
           )}
         </ScrollView>

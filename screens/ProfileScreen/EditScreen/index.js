@@ -28,7 +28,10 @@ import {
   UPDATE_USER_PROFILE_MUTATION,
   UPDATE_USER_AVATAR_MUTATION
 } from "../../../api/Mutations/User";
-import { USER_PROFILE_QUERY } from "../../../api/Queries/User";
+import {
+  USER_PROFILE_QUERY,
+  BASIC_USER_QUERY
+} from "../../../api/Queries/User";
 import { UPLOAD_PHOTO_FUNC } from "../../../api/Functions/Upload";
 //Utils
 import Toast from "react-native-root-toast";

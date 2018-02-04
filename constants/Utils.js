@@ -18,6 +18,54 @@ const SOCIAL_ICONS = {
   TRELLO: "trello"
 };
 
+const SOCIAL_TYPES = [
+  {
+    name: "Tipo de contato",
+    icon: null,
+    typename: "empty"
+  },
+  {
+    name: "Facebook",
+    icon: SOCIAL_ICONS.FACEBOOK,
+    typename: "FACEBOOK"
+  },
+  {
+    name: "Twitter",
+    icon: SOCIAL_ICONS.TWITTER,
+    typename: "TWITTER"
+  },
+  {
+    name: "LinkedIn",
+    icon: SOCIAL_ICONS.LINKEDIN,
+    typename: "LINKEDIN"
+  },
+  {
+    name: "Telemóvel",
+    icon: SOCIAL_ICONS.PHONE,
+    typename: "PHONE"
+  },
+  {
+    name: "Email",
+    icon: SOCIAL_ICONS.EMAIL,
+    typename: "EMAIL"
+  },
+  {
+    name: "Github",
+    icon: SOCIAL_ICONS.GITHUB,
+    typename: "GITHUB"
+  },
+  {
+    name: "Trello",
+    icon: SOCIAL_ICONS.TRELLO,
+    typename: "TRELLO"
+  },
+  {
+    name: "Outro",
+    icon: SOCIAL_ICONS.OTHER,
+    typename: "OTHER"
+  }
+];
+
 const IMAGE_PLACEHOLDER = "https://ui-avatars.com/api/?size=128&name=mendor";
 const IMAGE_GROUP_CHAT = "https://ui-avatars.com/api/?size=128&name=group";
 const IMAGE_DISCUSSIONS_PLACEHOLDER =
@@ -28,6 +76,7 @@ const IMAGE_DISCUSSIONS_PLACEHOLDER =
 const onSignOut = () => {
   AsyncStorage.removeItem("graphcoolToken");
   AsyncStorage.removeItem("@mendor:userId");
+  AsyncStorage.removeItem("@mendor:userRequestIds");
 };
 
 const isSignedIn = () => {
@@ -112,5 +161,6 @@ export {
   GRAPHQL_FILE_ENDPOINT,
   guid,
   GET_DISTANCE_FROM_LAT_LON_IN_KM,
-  IMAGE_DISCUSSIONS_PLACEHOLDER
+  IMAGE_DISCUSSIONS_PLACEHOLDER,
+  SOCIAL_TYPES
 };

@@ -31,7 +31,9 @@ class SigninScreen extends React.Component {
     loading: false
   };
   _onUserSignIn = async () => {
-    this.setState(prevState => ({ loading: !prevState.loading }));
+    //this disables double press
+    if (this.state.loading) return;
+    //get input values
     const { email, password } = this.state;
     const { signinUser, navigation } = this.props;
     //Signins the user and checks in the DB
@@ -40,6 +42,7 @@ class SigninScreen extends React.Component {
       password.trim(),
       signinUser
     );
+    this.setState(prevState => ({ loading: !prevState.loading }));
     //If it passes goes to the main screen
     if (result.status) {
       const resetAction = NavigationActions.reset({
@@ -94,6 +97,7 @@ class SigninScreen extends React.Component {
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Email</Label>
                 <Input
+                  autoCapitalize="none"
                   keyboardType="email-address"
                   onChangeText={email => this.setState({ email })}
                 />
