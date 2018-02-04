@@ -111,17 +111,58 @@ class DiscussionViewScreen extends React.Component {
     } catch (e) {
       console.log(e);
     }
-    try {
-      await this.props.createNotification({
+    this._createNotifications(
+      discussionId,
+      this.props.Discussion.Discussion.user.id,
+      this.props.Discussion.Discussion.responses
+    );
+  };
+
+  _createNotifications = (discussionId, userId, responses) => {
+    let responses_filtered = [];
+    if (Object.keys(responses).length > 0) {
+      for (x = 0; x < responses.length; x++) {
+        responses_filtered.push(responses[x]);
+      }
+      for (i = 0; i < responses.length; i++) {
+        let repeated = 0;
+        for (a = 0; a < responses_filtered.length; a++) {
+          if (responses[i].author.id == responses_filtered[a].author.id) {
+            repeated++;
+            if (repeated > 1) {
+              responses_filtered.splice(a, 1);
+              repeated = 0;
+            }
+          }
+        }
+      }
+    }
+
+    let author_notifyied = false;
+    responses_filtered.map((data, index) => {
+      if (!author_notifyied && data.author.id == userId) {
+        author_notifyied = true;
+      }
+      this.props.createNotification({
         variables: {
-          userId: this.props.Discussion.Discussion.user.id,
+          userId: data.author.id,
           type: "DISCUSSION",
           discussionId
         }
       });
-    } catch (e) {
-      console.log(e);
-    }
+      if (
+        index == Object.keys(responses_filtered).length &&
+        !author_notifyied
+      ) {
+        this.props.createNotification({
+          variables: {
+            userId: userId,
+            type: "DISCUSSION",
+            discussionId
+          }
+        });
+      }
+    });
   };
 
   _goToProfile = id => {
