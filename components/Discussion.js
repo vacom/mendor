@@ -134,12 +134,14 @@ const Content = styled.View`
 `;
 
 const Title = styled.Text`
+  text-shadow-offset: 1px 1px;
   font-weight: 600;
   color: white;
   font-size: 21px;
 `;
 
 const Desc = styled.Text`
+  text-shadow-offset: 1px 1px;
   font-size: 16px;
   color: white;
   margin-top: 5px;

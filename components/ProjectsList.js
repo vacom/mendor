@@ -23,6 +23,8 @@ class ProjectsList extends React.Component {
     return (
       <ScrollView style={{ flex: 1, flexDirection: "row" }} horizontal>
         {this.props.projects.allProjects.map((data, key) => {
+          if (this.props.projects.loading) return <Loading dark />;
+          if (this.props.projects.error) return <Error dark />;
           return (
             <ProjectCard
               addProjectMessage={this._addProjectMessage}

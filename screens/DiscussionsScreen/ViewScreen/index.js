@@ -129,16 +129,19 @@ class DiscussionViewScreen extends React.Component {
       if (!author_notifyied && data.author.id == userId) {
         author_notifyied = true;
       }
-      this.props.createNotification({
-        variables: {
-          userId: data.author.id,
-          type: "DISCUSSION",
-          discussionId
-        }
-      });
+      if (data.author.id != this.state.userId) {
+        this.props.createNotification({
+          variables: {
+            userId: data.author.id,
+            type: "DISCUSSION",
+            discussionId
+          }
+        });
+      }
       if (
         index == Object.keys(responses_filtered).length &&
-        !author_notifyied
+        !author_notifyied &&
+        data.author.id != this.state.userIdLogged
       ) {
         this.props.createNotification({
           variables: {

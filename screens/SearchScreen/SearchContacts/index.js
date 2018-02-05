@@ -38,13 +38,13 @@ class SearchContacts extends React.Component {
       // Se não estiver a escrever nem loading
       if (Object.keys(this.props.Contacts.allContacts).length > 0) {
         if (Object.keys(this.props.users).length > 0) {
-          return this.props.Contacts.allContacts.map((data, index) => {
+          return this.props.Contacts.allContacts.map((data, index) => { 
             let repeated = 0;
-            for (i = 0; i < this.props.users.length; i++) {
-              if (this.props.users[i].id == data.contactID.id) {
-                repeated++;
+            for (i = 0; i <= this.props.users.length -1; i++) {
+              if (this.props.users[i].id == data.contactID.id) { 
+                repeated++; // INCREMENTA
               }
-              if (i == this.props.users.length - 1 && repeated == 0) {
+              if (i == this.props.users.length - 1 && repeated == 0) { 
                 return (
                   <Card
                     key={index}
@@ -94,6 +94,7 @@ class SearchContacts extends React.Component {
                               data.contactID.id,
                               data.contactID.name
                             )}
+                            
                           >
                             <MaterialIcons
                               name="add"

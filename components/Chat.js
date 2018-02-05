@@ -53,7 +53,7 @@ class Chat extends React.Component {
   render() {
     if (Object.keys(this.state.messages).length > 0) {
       return (
-        <View style={{ flex: 1, paddingTop: 5, paddingBottom: 5 }}>
+        <View style={{ flex: 1, paddingTop: 5 }}>
           <ScrollView ref="ScrollView">
             {this.state.messages.map((data, index) => {
               return (

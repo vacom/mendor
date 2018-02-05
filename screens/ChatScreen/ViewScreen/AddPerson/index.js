@@ -23,6 +23,7 @@ import {
   IMAGE_PLACEHOLDER,
   IMAGE_GROUP_CHAT
 } from "../../../../constants/Utils";
+import { SEARCH_CONTACTS } from "../../../../api/Queries/Contacts";
 
 class AddPersonScreen extends React.Component {
   static navigationOptions = {
@@ -34,7 +35,8 @@ class AddPersonScreen extends React.Component {
     typing: false,
     loading: false,
     searched: false,
-    users: this.props.navigation.state.params.users
+    users: this.props.navigation.state.params.users,
+    disabled: false
   };
 
   handleChange(text) {
@@ -57,38 +59,42 @@ class AddPersonScreen extends React.Component {
   }
 
   _updateChat = (id, name) => async () => {
-    let users = [id, this.props.screenProps.userId];
-    for (i = 0; i < Object.keys(this.state.users).length; i++) {
-      users.push(this.state.users[i].id);
-    }
-    console.log(users);
-    try {
-      const res_mutation = await this.props.updateChat({
-        variables: {
-          id: this.props.navigation.state.params.id,
-          usersIds: users,
-          isGroup: true
-        }
-      });
-
-      if (!res_mutation.loading) {
-        this._createMessage(res_mutation.data.updateChat.id, name);
-        Toast.show(name + " foi adicionado/a à conversa.");
-        let id_user = null;
-        let avatar = IMAGE_GROUP_CHAT;
-        let chat_name = "";
-        let id_chat = res_mutation.data.updateChat.id;
-        users.map((user, i) => {
-          if (Object.keys(users).length === i + 1) {
-            chat_name += name;
-          } else {
-            chat_name += name + ", ";
+    if (!this.state.disabled) {
+      this.setState({ disabled: true });
+      let users = [id, this.props.screenProps.userId];
+      for (i = 0; i < this.state.users.length; i++) {
+        users.push(this.state.users[i].id);
+      }
+      console.log(users);
+      try {
+        const res_mutation = await this.props.updateChat({
+          variables: {
+            id: this.props.navigation.state.params.id,
+            usersIds: users,
+            isGroup: true
           }
         });
-        this.props.navigation.navigate("ChatScreen");
+
+        if (!res_mutation.loading) {
+          this.setState({ search_value: "" });
+          this._createMessage(res_mutation.data.updateChat.id, name);
+          Toast.show(name + " foi adicionado/a à conversa.");
+          let id_user = null;
+          let avatar = IMAGE_GROUP_CHAT;
+          let chat_name = "";
+          let id_chat = res_mutation.data.updateChat.id;
+          users.map((user, i) => {
+            if (users.length === i + 1) {
+              chat_name += name;
+            } else {
+              chat_name += name + ", ";
+            }
+          });
+          this.props.navigation.navigate("ChatScreen");
+        }
+      } catch (e) {
+        console.log(e);
       }
-    } catch (e) {
-      console.log(e);
     }
   };
 
@@ -168,12 +174,6 @@ export default compose(
     name: "createMessage",
     options: props => ({
       refetchQueries: [
-        {
-          query: ALL_CHATS_QUERY,
-          variables: {
-            id: props.screenProps.userId
-          }
-        },
         {
           query: ALL_MESSAGES_QUERY,
           variables: {
