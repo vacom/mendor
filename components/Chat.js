@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { ScrollView, View, Text } from "react-native";
+import { ScrollView, View } from "react-native";
 
 //Components
 import Message from "./Message";
@@ -56,7 +56,6 @@ class Chat extends React.Component {
         <View style={{ flex: 1, paddingTop: 5, paddingBottom: 5 }}>
           <ScrollView ref="ScrollView">
             {this.state.messages.map((data, index) => {
-              console.log(data);
               return (
                 <Message
                   key={index}

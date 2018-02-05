@@ -10,7 +10,7 @@ import { ALL_CHATS_QUERY } from "../../api/Queries/Chat";
 import { ALL_CHATS_SUBSCRIPTION } from "../../api/Subscriptions/Chat";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Components
-import { Text, View, Icon, Content } from "native-base";
+import { View, Content } from "native-base";
 import GradientContainer from "../../components/GradientContainer";
 import {
   HeaderRightContainer,
@@ -126,7 +126,6 @@ class ChatScreen extends React.Component {
   _goToChatView = (id, users) => {
     if (!this.state.disabled) {
       const userlength = Object.keys(users).length;
-      console.log(userlength);
       let name = "";
       let avatar = "";
       if (userlength > 1) {

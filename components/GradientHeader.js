@@ -11,7 +11,7 @@ const ContentContainer = styled.View`
   margin-right: 20px;
 `;
 
-const GradientHeader = ({title, text}) => {
+const GradientHeader = ({ title, text }) => {
   return (
     <LinearGradient colors={["#3f51b5", "#B39DDB"]}>
       <ContentContainer>

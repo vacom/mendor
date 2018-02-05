@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { View, Text } from "native-base";
+import { View } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo";
 import moment from "moment/min/moment-with-locales";

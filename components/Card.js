@@ -11,14 +11,17 @@ const Card = props => {
   return (
     <TouchableWithoutFeedback {...props}>
       <NativeBaseCard
-          style={{
-              backgroundColor: "#ffffff",
-              marginTop: 5,
-              marginRight: 10,
-              marginLeft: 10,
-              marginBottom: 5,
-              borderRadius: 2
-          }}>{props.children}</NativeBaseCard>
+        style={{
+          backgroundColor: "#ffffff",
+          marginTop: 5,
+          marginRight: 10,
+          marginLeft: 10,
+          marginBottom: 5,
+          borderRadius: 2
+        }}
+      >
+        {props.children}
+      </NativeBaseCard>
     </TouchableWithoutFeedback>
   );
 };

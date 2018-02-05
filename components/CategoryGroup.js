@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text, TouchableHighlight } from "react-native";
+import {View, TouchableHighlight } from "react-native";
 import styled from "styled-components/native";
 //Components
 import Discussion from "./Discussion";

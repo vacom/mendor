@@ -1,4 +1,3 @@
-import { Notifications } from "expo";
 import { AsyncStorage } from "react-native";
 import React from "react";
 import { Root } from "native-base";
@@ -14,14 +13,12 @@ import EditProfileScreen from "../screens/ProfileScreen/EditScreen/index";
 import addTechnologyScreen from "../screens/ProfileScreen/TechnologyScreen/index";
 import addSocialScreen from "../screens/ProfileScreen/SocialScreen/index";
 import addProjectScreen from "../screens/ProfileScreen/ProjectScreen/index";
-
 /**
  *  DiscussionScreens
  */
 import DiscussionViewScreen from "../screens/DiscussionsScreen/ViewScreen/index";
 import AddDiscussion from "../screens/DiscussionsScreen/AddScreen/index";
 import SearchDiscussionScreen from "../screens/DiscussionsScreen/SearchScreen/index";
-
 /**
  * ChatScreens
  */
@@ -32,7 +29,6 @@ import SearchChatScreen from "../screens/ChatScreen/SearchScreen/index";
  *  ContactsScreen
  */
 import ContactsSearchScreen from "../screens/ContactsScreen/SearchScreen/index";
-
 /**
  * AuthScreens
  */
@@ -49,8 +45,6 @@ import DiscoverSearchScreen from "../screens/DiscoverScreen/SearchScreen/index";
  * Configuration Screen
  */
 import ConfigScreen from "../screens/ConfigScreen/index";
-//Push Notifications
-import registerForPushNotificationsAsync from "../api/registerForPushNotificationsAsync";
 //Utils
 import { isSignedIn } from "../constants/Utils";
 
@@ -147,22 +141,13 @@ export default class RootNavigator extends React.Component {
           this.setState({ signedIn: res, userId, checkedSignIn: true });
         });
       })
-      .catch(err => alert("An error occurred: ", err));
+      .catch(err => console.log("An error occurred: ", err));
   }
-  componentDidMount() {
-    this._notificationSubscription = this._registerForPushNotifications();
-  }
-  componentWillUnmount() {
-    this._notificationSubscription && this._notificationSubscription.remove();
-  }
-
   render() {
     const { checkedSignIn, signedIn } = this.state;
-
     if (!checkedSignIn) {
       return null;
     }
-
     const RootStackNavigator = createRootNavigator(signedIn);
     return (
       <Root>
@@ -170,23 +155,4 @@ export default class RootNavigator extends React.Component {
       </Root>
     );
   }
-
-  _registerForPushNotifications() {
-    // Send our push token over to our backend so we can receive notifications
-    // You can comment the following line out if you want to stop receiving
-    // a notification every time you open the app. Check out the source
-    // for this function in api/registerForPushNotificationsAsync.js
-    registerForPushNotificationsAsync();
-
-    // Watch for incoming notifications
-    this._notificationSubscription = Notifications.addListener(
-      this._handleNotification
-    );
-  }
-
-  _handleNotification = ({ origin, data }) => {
-    console.log(
-      `Push notification ${origin} with data: ${JSON.stringify(data)}`
-    );
-  };
 }

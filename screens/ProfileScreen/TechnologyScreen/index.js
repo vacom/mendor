@@ -1,14 +1,6 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { NavigationActions } from "react-navigation";
-import {
-  Container,
-  Content,
-  Form,
-  Item,
-  Input,
-  Label
-} from "native-base";
+import { Container, Content, Form, Item, Input, Label } from "native-base";
 import styled from "styled-components/native";
 import { GradientHeader } from "../../../components/index";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -40,7 +32,7 @@ class TechnologyScreen extends React.Component {
     };
   };
   state = {
-    name: "",
+    name: ""
   };
   componentDidMount() {
     this.props.navigation.setParams({
@@ -50,7 +42,7 @@ class TechnologyScreen extends React.Component {
   _onAddTechnology = async () => {
     const { name } = this.state;
     const { addTechnology, navigation } = this.props;
-    const {userId} = navigation.state.params
+    const { userId } = navigation.state.params;
     //Checks if fields are empty
     if (!name) {
       Toast.show("O campo nome não pode estar vazio!");
@@ -61,19 +53,18 @@ class TechnologyScreen extends React.Component {
       await addTechnology({
         variables: {
           userId,
-          name,
+          name
         },
         update: async () => {
           //show the success msg
           Toast.show("Tecnologia adicionada.");
           //clears the inputs
-          this.setState({name: ""});
+          this.setState({ name: "" });
         }
       });
     } catch (e) {
       Toast.show("Erro! Verifique os campos.");
     }
-
   };
   render() {
     return (
@@ -87,7 +78,10 @@ class TechnologyScreen extends React.Component {
             <Form style={{ paddingBottom: 60 }}>
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Nome da tecnologia</Label>
-                <Input value={this.state.name} onChangeText={name => this.setState({ name })} />
+                <Input
+                  value={this.state.name}
+                  onChangeText={name => this.setState({ name })}
+                />
               </Item>
             </Form>
           </Content>

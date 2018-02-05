@@ -88,7 +88,10 @@ class SkillStepScreen extends React.Component {
     const { interests } = this.state;
     return (
       <ScreenContainer>
-        <GradientHeader title="Registar" text="Está quase, para terminar, selecione as areas de interesse que pretende." />
+        <GradientHeader
+          title="Registar"
+          text="Está quase, para terminar, selecione as areas de interesse que pretende."
+        />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60, paddingTop: 30 }}>

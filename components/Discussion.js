@@ -1,8 +1,8 @@
 import React from "react";
 import { Image } from "react-native";
-import { Icon, View } from "native-base";
+import { View } from "native-base";
 import styled from "styled-components/native";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 //GraphQL
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
 //Utils
@@ -129,11 +129,6 @@ const Background = styled.View`
   opacity: 0.6;
 `;
 
-const BackgroundOpacity = styled.View`
-  background: blue;
-  opacity: 0.3;
-  elevation: 20;
-`;
 const Content = styled.View`
   padding: 10px;
 `;

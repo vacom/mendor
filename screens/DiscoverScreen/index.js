@@ -30,6 +30,7 @@ class DiscoverScreen extends React.Component {
       headerStyle: {
         elevation: 0
       },
+      headerLeft: null,
       headerRight: (
         <HeaderRightContainer>
           <HeaderRightElement>
@@ -69,7 +70,10 @@ class DiscoverScreen extends React.Component {
     this._getBasicUserInfo();
   }
   _goToProfile = () => {
-    this.props.navigation.navigate("Profile", { id: this.state.userId });
+    this.props.navigation.navigate("Profile", {
+      id: this.state.userId,
+      currentUser: true
+    });
   };
   _goToSearch = () => {
     this.props.navigation.navigate("SearchDiscover");
@@ -108,6 +112,7 @@ class DiscoverScreen extends React.Component {
         type,
         interests
       });
+
       //Groups all of his contacts
       if (this._onGroupIds(contacts, "contactsIds")) {
         //Groups all of his competences

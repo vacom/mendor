@@ -65,8 +65,7 @@ class CardsScreen extends React.Component {
       client
     } = this.props;
     const { userRequests } = this.state;
-    //console.log("userRequestIds cards = ", userRequestIds);
-    const userRequestIds = (userRequests != null) ? userRequests : [];
+    const userRequestIds = userRequests != null ? userRequests : [];
     //choose the type of users to discover
     const query = ALL_USERS_DISCOVERY_QUERY(interests);
     //Fetch the data from DB
@@ -74,7 +73,7 @@ class CardsScreen extends React.Component {
       query,
       variables: { userId, type, contactsIds, userRequestIds, competencesIds }
     });
-    
+
     //error handling
     if (res.error) {
       this.setState({
@@ -90,7 +89,7 @@ class CardsScreen extends React.Component {
   };
   _onFilterDiscovery = (distance, object) => {
     const { latitude, longitude } = this.props.userLocation;
-  
+
     //get closer users by distance
     const data = object.allUsers.filter(user => {
       return (
@@ -102,7 +101,6 @@ class CardsScreen extends React.Component {
         ) <= distance
       );
     });
-    //console.log("data ahah = ", data);
     //updates the data
     this.setState({
       cardIndex: 0,
@@ -178,19 +176,13 @@ class CardsScreen extends React.Component {
     try {
       //get ids already saved
       let result = await this._onGetUserRequests();
-      console.log("result = ", result);
       //checks if its null or not, if not concats the new id with the already saved ones
       const data = result != null ? [id, ...JSON.parse(result)] : [id];
-      console.log("data = ", data);
       //updates the storage
       await AsyncStorage.setItem(
         "@mendor:userRequestIds",
         JSON.stringify(data)
       );
-
-      setTimeout(() => {
-        console.log("state = ", this.state.userRequests);
-      }, 1000);
     } catch (e) {
       console.log(e);
     }

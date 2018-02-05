@@ -65,7 +65,10 @@ class ProfileStepScreen extends React.Component {
   render() {
     return (
       <ScreenContainer>
-        <GradientHeader title="Registar" text="Aproveite este espaço para falar um pouco sobre si, ideia ou tecnologia." />
+        <GradientHeader
+          title="Registar"
+          text="Aproveite este espaço para falar um pouco sobre si, ideia ou tecnologia."
+        />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60 }}>

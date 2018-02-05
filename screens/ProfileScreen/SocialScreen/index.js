@@ -1,6 +1,5 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { NavigationActions } from "react-navigation";
 import {
   Container,
   Content,

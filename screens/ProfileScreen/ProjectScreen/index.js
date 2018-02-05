@@ -1,6 +1,5 @@
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { NavigationActions } from "react-navigation";
 import {
   Container,
   Content,
@@ -47,7 +46,7 @@ class ProjectScreen extends React.Component {
     title: "",
     description: "",
     technologiesIds: [],
-    technologies: [],
+    technologies: []
   };
   componentDidMount() {
     this.props.navigation.setParams({

@@ -1,9 +1,7 @@
 import React from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TabNavigator, TabBarBottom } from "react-navigation";
-
 import Colors from "../constants/Colors";
-
 import DiscoverScreen from "../screens/DiscoverScreen/index";
 import DiscussionsScreen from "../screens/DiscussionsScreen/index";
 import ContactsScreen from "../screens/ContactsScreen/index";

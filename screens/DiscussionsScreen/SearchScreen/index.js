@@ -1,29 +1,13 @@
 import React from "react";
-import { View, Text, Input, Thumbnail, Content } from "native-base";
 import styled from "styled-components/native";
-import { MaterialIcons } from "@expo/vector-icons";
-import GradientContainer from "../../../components/GradientContainer";
-import {
-  ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-  RefreshControl
-} from "react-native";
-import { Error, Loading, Placeholder } from "../../../components/index";
+import { ScrollView } from "react-native";
 import { withNavigation } from "react-navigation";
-
 //GRAPHQL
-import { graphql, compose, withApollo } from "react-apollo";
-import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
-
-//Utils
-import { IMAGE_PLACEHOLDER, IMAGE_GROUP_CHAT } from "../../../constants/Utils";
-
+import { compose } from "react-apollo";
 // Components
 import {
   SearchInput,
-  SearchContent,
-  SearchCard
+  SearchContent
 } from "../../../components/SearchComponents";
 import SearchDiscussions from "../../SearchScreen/SearchDiscussions/index";
 
@@ -73,7 +57,7 @@ class SearchDiscussionScreen extends React.Component {
           color="#3f51b5"
         />
         <SearchContent color="#fff">
-          <ScrollView style={{paddingTop: 20}}>
+          <ScrollView style={{ paddingTop: 20 }}>
             <SearchDiscussions
               onPress={this._goToChat}
               search_value={this.state.search_value}
@@ -99,26 +83,4 @@ export default compose(withNavigation)(SearchDiscussionScreen);
 
 const Container = styled.View`
   flex: 1;
-`;
-const Header = styled.View`
-  padding: 10px;
-  background-color: #3f51b5;
-  height: 65px;
-`;
-
-const HeaderTitle = styled.Text`
-  font-size: 20px;
-`;
-
-const SearchView = styled.View`
-  flex: 1;
-  flex-direction: row;
-  padding: 10px;
-  background-color: white;
-  border-radius: 2px;
-  elevation: 10;
-`;
-
-const ViewInput = styled.View`
-  width: 80%;
 `;

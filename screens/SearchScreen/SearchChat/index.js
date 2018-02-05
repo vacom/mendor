@@ -1,6 +1,5 @@
 import React from "react";
-import styled from "styled-components/native";
-import { Error, Loading, Placeholder } from "../../../components/index";
+import { Loading, Placeholder } from "../../../components/index";
 import { withNavigation } from "react-navigation";
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
@@ -26,7 +25,6 @@ class SearchChat extends React.Component {
       // Se estiver a escrever ou o loading do search ativo
       return <Loading />;
     } else {
-      console.log(this.props.Chats);
       // Se não estiver a escrever nem loading
       if (Object.keys(this.props.Chats.allChats).length > 0) {
         return this.props.Chats.allChats.map((data, index) => {

@@ -15,7 +15,7 @@ import {
 import { CardContainer, CardLeft, CardBody } from "../../components/Card";
 import { Placeholder, Loading } from "../../components/index";
 //GraphQL
-import { graphql, compose } from "react-apollo";
+import { graphql, compose, withApollo } from "react-apollo";
 import { USER_PROFILE_QUERY } from "../../api/Queries/User";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils
@@ -30,31 +30,24 @@ class ProfileScreen extends React.PureComponent {
     const { params = {} } = navigation.state;
     return {
       title: "Profile",
-      headerRight:
-        params.userId != params.outSideUserId ? null : (
-          <HeaderRightContainer>
-            <HeaderRightElement>
-              <TouchableOpacity onPress={params.openActions}>
-                <MaterialIcons name="more-vert" size={24} color="#ffffff" />
-              </TouchableOpacity>
-            </HeaderRightElement>
-          </HeaderRightContainer>
-        )
+      headerRight: !params.currentUser ? null : (
+        <HeaderRightContainer>
+          <HeaderRightElement>
+            <TouchableOpacity onPress={params.openActions}>
+              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </HeaderRightElement>
+        </HeaderRightContainer>
+      )
     };
   };
   state = {
     refreshing: false
   };
   componentDidMount() {
-    const { screenProps, navigation } = this.props;
-
-    console.log("suserId = ", screenProps.userId);
-    console.log("outSideUserId = ", navigation.state.params.id);
-
     this.props.navigation.setParams({
       openActions: this._onOpenActions,
-      userId: screenProps.userId,
-      outSideUserId: navigation.state.params.id
+      currentUser: this.props.navigation.state.params.currentUser
     });
   }
   _onOpenActions = () => {
@@ -130,15 +123,16 @@ class ProfileScreen extends React.PureComponent {
   _goToAddScreen(screen) {
     const { id: userId } = this.props.userProfileQuery.User;
     this.props.navigation.navigate(screen, { userId });
-    console.log("screen = ", screen);
   }
-  _onUserSignOut = () => {
+  _onUserSignOut = async () => {
+    //Clears the apollo store;
+    await this.props.client.resetStore();
     //clears the user session id and token
     onSignOut();
     //redirects the user to auth screen
     setTimeout(() => {
       this.props.navigation.navigate("AuthScreen");
-    }, 150);
+    }, 250);
   };
   render() {
     if (this.props.userProfileQuery && this.props.userProfileQuery.loading) {
@@ -464,6 +458,7 @@ class ProfileScreen extends React.PureComponent {
 
 export default compose(
   withNavigation,
+  withApollo,
   graphql(USER_PROFILE_QUERY, {
     name: "userProfileQuery",
     options: props => ({

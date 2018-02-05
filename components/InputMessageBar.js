@@ -3,7 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Icon } from "native-base";
 import { TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
-import { graphql, compose, withApollo } from "react-apollo";
+import { compose, withApollo } from "react-apollo";
 import { BASIC_USER_QUERY } from "../api/Queries/User";
 import { GET_AVATAR_URL } from "../api/Functions/Upload";
 import { IMAGE_PLACEHOLDER } from "../constants/Utils";
@@ -65,7 +65,7 @@ class InputMessageBar extends React.Component {
             borderWidth="0"
             placeholder="Escrever uma mensagem..."
             onChangeText={text => {
-              this.setState({ text }), console.log(text);
+              this.setState({ text });
             }}
             ref="input"
           />

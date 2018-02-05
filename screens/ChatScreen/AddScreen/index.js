@@ -1,33 +1,18 @@
 import React from "react";
-import { View, Text, Input, Thumbnail, Content } from "native-base";
 import styled from "styled-components/native";
-import { MaterialIcons } from "@expo/vector-icons";
-import GradientContainer from "../../../components/GradientContainer";
-import {
-  ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-  RefreshControl
-} from "react-native";
-import { Error, Loading, Placeholder } from "../../../components/index";
+import { ScrollView } from "react-native";
 import { withNavigation } from "react-navigation";
-
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
-import { ALL_CONTACTS_QUERY } from "../../../api/Queries/Contacts";
-import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
 import { ALL_INDIVIDUAL_CHATS_OF_USERS } from "../../../api/Queries/Chat";
 import { CREATE_CHAT_MUTATION } from "../../../api/Mutations/Chat";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
-
 //Utils
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
-
 // Components
 import {
   SearchInput,
-  SearchContent,
-  SearchCard
+  SearchContent
 } from "../../../components/SearchComponents";
 import SearchChatRooms from "../../SearchScreen/SearchChatRooms/index";
 
@@ -75,7 +60,6 @@ class ChatAddScreen extends React.Component {
   _goToProfile = id => {
     if (!this.state.disabled) {
       this._setDisabled();
-      console.log(id);
       this.props.navigation.navigate("Profile", {
         id
       });
@@ -83,7 +67,6 @@ class ChatAddScreen extends React.Component {
   };
 
   _goToChat = (id, avatar) => async () => {
-    console.log(id);
     this.props.navigation.setParams({
       id_user2: id
     });
@@ -95,7 +78,6 @@ class ChatAddScreen extends React.Component {
       }
     });
     if (!res.loading) {
-      console.log(res);
       if (res.data.allChats.length > 0) {
         this.props.navigation.navigate("ChatView", {
           name: res.data.allChats[0].users[0].name,
@@ -193,26 +175,4 @@ export default compose(
 
 const Container = styled.View`
   flex: 1;
-`;
-const Header = styled.View`
-  padding: 10px;
-  background-color: #3f51b5;
-  height: 65px;
-`;
-
-const HeaderTitle = styled.Text`
-  font-size: 20px;
-`;
-
-const SearchView = styled.View`
-  flex: 1;
-  flex-direction: row;
-  padding: 10px;
-  background-color: white;
-  border-radius: 2px;
-  elevation: 10;
-`;
-
-const ViewInput = styled.View`
-  width: 80%;
 `;

@@ -1,32 +1,18 @@
 import React from "react";
 import { Icon, View } from "native-base";
 import { withNavigation } from "react-navigation";
-import {
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
-  TouchableOpacity
-} from "react-native";
+import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import Accordion from "react-native-collapsible/Accordion";
-import Collapsible from "react-native-collapsible";
-import { MaterialIcons } from "@expo/vector-icons";
 import { graphql, compose, withApollo } from "react-apollo";
-
 //GraphQL
 import { DISCUSSION } from "../../../api/Queries/Discussions";
 import { CREATE_RESPONSE_MUTATION } from "../../../api/Mutations/Discussions";
 import { CREATE_NOTIFICATION_MUTATION } from "../../../api/Mutations/Notification";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
-
 //Components
 import Chat from "../../../components/Chat";
-import CategoryGroup from "../../../components/CategoryGroup";
 import { Placeholder, Loading } from "../../../components/index";
-import {
-  HeaderRightContainer,
-  HeaderRightElement
-} from "../../../components/HeaderRight";
 //utils
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 import moment from "moment/min/moment-with-locales";
@@ -168,7 +154,6 @@ class DiscussionViewScreen extends React.Component {
   _goToProfile = id => {
     if (!this.state.disabled) {
       this._setDisabled();
-      console.log(id);
       this.props.navigation.navigate("Profile", {
         id
       });
@@ -191,7 +176,6 @@ class DiscussionViewScreen extends React.Component {
     if (this.props.Discussion && this.props.Discussion.error) {
       return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
-    console.log(this.props.Discussion);
     return (
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <Accordion
@@ -221,7 +205,6 @@ class DiscussionViewScreen extends React.Component {
 
   //Cabeçalho Accordion
   _renderHeader(section, index, isActive, sections) {
-    console.log(isActive);
     const {
       user,
       responses,

@@ -1,23 +1,18 @@
 import React from "react";
-import styled from "styled-components/native";
-import { Error, Loading, Placeholder } from "../../../components/index";
+import { Loading, Placeholder } from "../../../components/index";
 import { withNavigation } from "react-navigation";
 import { Thumbnail, Text } from "native-base";
-import { TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { SEARCH_USERS } from "../../../api/Queries/Discover";
 // Components
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
-import { SearchCard } from "../../../components/SearchComponents";
 import {
   Card,
   CardContainer,
   CardLeft,
-  CardBody,
-  CardRight
+  CardBody
 } from "../../../components/Card";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 
@@ -73,7 +68,9 @@ class SearchDiscover extends React.Component {
                     {data.name}
                   </Text>
                   <Text style={{ fontSize: 14, color: "#757575" }}>
-                    {data.profile ?`${data.profile.role} na ${data.profile.company}`: "Sem informação"}
+                    {data.profile
+                      ? `${data.profile.role} na ${data.profile.company}`
+                      : "Sem informação"}
                   </Text>
                 </CardBody>
               </CardContainer>

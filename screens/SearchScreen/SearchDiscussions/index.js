@@ -1,14 +1,11 @@
 import React from "react";
-import styled from "styled-components/native";
-import { Error, Loading, Placeholder } from "../../../components/index";
+import { Loading } from "../../../components/index";
 import { withNavigation } from "react-navigation";
 import { View, Text } from "react-native";
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { SEARCH_DISCUSSIONS_BY_CATEGORIES } from "../../../api/Queries/Discussions";
-
 // Components
-import { SearchCard } from "../../../components/SearchComponents";
 import CategoryGroup from "../../../components/CategoryGroup";
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 

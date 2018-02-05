@@ -73,10 +73,10 @@ const IMAGE_DISCUSSIONS_PLACEHOLDER =
 
 //const onSignIn = () => AsyncStorage.setItem(USER_KEY, "true");
 
-const onSignOut = () => {
-  AsyncStorage.removeItem("graphcoolToken");
-  AsyncStorage.removeItem("@mendor:userId");
-  AsyncStorage.removeItem("@mendor:userRequestIds");
+const onSignOut = async () => {
+  await AsyncStorage.removeItem("graphcoolToken");
+  await AsyncStorage.removeItem("@mendor:userId");
+  await AsyncStorage.removeItem("@mendor:userRequestIds");
 };
 
 const isSignedIn = () => {

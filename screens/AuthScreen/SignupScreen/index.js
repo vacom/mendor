@@ -129,7 +129,10 @@ class SignupScreen extends React.Component {
   render() {
     return (
       <ScreenContainer>
-        <GradientHeader title="Registar" text="Mendor é conetar as pessoas certas, estabelecer relaçoes de valor e partilhar ideias." />
+        <GradientHeader
+          title="Registar"
+          text="Mendor é conetar as pessoas certas, estabelecer relaçoes de valor e partilhar ideias."
+        />
         <Container>
           <Content style={{ paddingLeft: 20, paddingRight: 20 }}>
             <Form style={{ paddingBottom: 60 }}>

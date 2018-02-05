@@ -176,7 +176,6 @@ class NotificationsScreen extends React.Component {
             this._onRefresh();
             Toast.show(msg);
           } catch (e) {
-            console.log(e);
             Toast.show("Erro! Verifique os campos.");
           }
         }

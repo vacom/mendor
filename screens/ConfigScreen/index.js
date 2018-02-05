@@ -74,7 +74,6 @@ class ConfigScreen extends React.PureComponent {
           try {
             Toast.show("Alterações guardadas.");
           } catch (e) {
-            console.log(e);
             Toast.show("Erro! Verifique os campos.");
           }
         }
@@ -95,7 +94,6 @@ class ConfigScreen extends React.PureComponent {
   };
 
   render() {
-    console.log("Config props: ", this.props.navigation.state.params.data);
     const { type, interests, distance } = this.state;
     return (
       <Container>

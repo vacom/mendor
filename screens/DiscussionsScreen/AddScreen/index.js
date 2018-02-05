@@ -4,8 +4,7 @@ import {
   View,
   TouchableOpacity,
   Alert,
-  KeyboardAvoidingView,
-  ScrollView
+  KeyboardAvoidingView
 } from "react-native";
 import { LinearGradient } from "expo";
 import { Row } from "react-native-easy-grid";
@@ -29,20 +28,17 @@ import {
 import { UPLOAD_PHOTO_FUNC } from "../../../api/Functions/Upload";
 import { CREATE_DISCUSSION_MUTATION } from "../../../api/Mutations/Discussions";
 import { ALL_CATEGORIES_QUERY } from "../../../api/Queries/Discussions";
-import {
-  CATEGORY_QUERY,
-  DISCUSSIONS_BY_CATEGORIES_QUERY
-} from "../../../api/Queries/Discussions";
+import { DISCUSSIONS_BY_CATEGORIES_QUERY } from "../../../api/Queries/Discussions";
 
 //COMPONENTS
 import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../../components/HeaderRight";
-import { Placeholder, Loading } from "../../../components/index";
+import { Loading } from "../../../components/index";
 
 //Utils
-import { guid, IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+import { guid } from "../../../constants/Utils";
 
 class AddDiscussion extends React.PureComponent {
   static navigationOptions = ({ navigation }) => {
@@ -121,7 +117,6 @@ class AddDiscussion extends React.PureComponent {
 
   _submitMutation = async () => {
     const { title, description, categoryId, coverId, userId } = this.state;
-    console.log(title, description, categoryId, coverId, userId);
     try {
       await this.props.createDiscussion({
         variables: {
@@ -135,7 +130,6 @@ class AddDiscussion extends React.PureComponent {
       Toast.show("Discussão inserida com sucesso");
       this.props.navigation.goBack();
     } catch (e) {
-      console.log(e);
       Toast.show("Ocorreu um erro a inserir a discussão");
     }
   };
@@ -289,7 +283,6 @@ export default compose(
     })
   })
 )(AddDiscussion);
-
 
 const ContentContainer = styled.View`
   margin: 30px;

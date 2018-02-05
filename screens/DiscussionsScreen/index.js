@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Icon, Fab, View, Text, Content } from "native-base";
+import { Container, Icon, Fab, View, Content } from "native-base";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -38,7 +38,7 @@ class DiscussionsScreen extends React.Component {
     userIdLogged: this.props.screenProps.userId,
     refreshing: false
   };
-  
+
   _goToDiscussion = (
     id,
     title,

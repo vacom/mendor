@@ -1,23 +1,18 @@
 import React from "react";
-import styled from "styled-components/native";
-import { Error, Loading, Placeholder } from "../../../components/index";
+import { Loading, Placeholder } from "../../../components/index";
 import { withNavigation } from "react-navigation";
 import { Thumbnail, Text } from "native-base";
-import { TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
 
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
 // Components
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
-import { SearchCard } from "../../../components/SearchComponents";
 import {
   Card,
   CardContainer,
   CardLeft,
-  CardBody,
-  CardRight
+  CardBody
 } from "../../../components/Card";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_PROJECTS_OF_USER } from "../api/Queries/User";
-import { View, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 import { Placeholder, Loading } from "./index";
 import ProjectCard from "./ProjectCard";
 
@@ -12,7 +12,6 @@ class ProjectsList extends React.Component {
   }
   _addProjectMessage(e) {
     this.props.addProjectMessage(e);
-    console.log(e);
   }
   render() {
     if (this.props.projects && this.props.projects.loading) {

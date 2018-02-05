@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components/native";
 //GraphQL
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 //Utils

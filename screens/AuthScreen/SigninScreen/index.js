@@ -1,6 +1,5 @@
 import React from "react";
 import { ActivityIndicator } from "react-native";
-import { NavigationActions } from "react-navigation";
 import {
   Text,
   Container,
@@ -45,11 +44,12 @@ class SigninScreen extends React.Component {
     this.setState(prevState => ({ loading: !prevState.loading }));
     //If it passes goes to the main screen
     if (result.status) {
-      const resetAction = NavigationActions.reset({
+      /* const resetAction = NavigationActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({ routeName: "Main" })]
       });
-      navigation.dispatch(resetAction);
+      navigation.dispatch(resetAction);*/
+      this.props.navigation.navigate("Main");
     } else {
       this.setState(prevState => ({ loading: !prevState.loading }));
       Toast.show("Erro! Verifique os campos.");
@@ -122,7 +122,7 @@ class SigninScreen extends React.Component {
           position="bottomRight"
         >
           {this.state.loading ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
+            <ActivityIndicator size="small" color="white" />
           ) : (
             <MaterialIcons name="arrow-forward" size={24} color="#ffffff" />
           )}

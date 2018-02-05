@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 import styled from "styled-components/native";
-import {TouchableWithoutFeedback} from "react-native";
+import { TouchableWithoutFeedback } from "react-native";
 
 /*
 -- Label Styles
 */
 
 const LabelWithStyles = styled.View`
-  background-color: ${props => props.active ? "#ffffff" : "#F5F5F5"};
+  background-color: ${props => (props.active ? "#ffffff" : "#F5F5F5")};
   padding: 9px;
   border-radius: 20px;
-  border: 1px solid ${props => props.active ? "#B39DDB" : "#F5F5F5"};
+  border: 1px solid ${props => (props.active ? "#B39DDB" : "#F5F5F5")};
   justify-content: center;
   align-items: center;
   align-self: flex-start;
@@ -19,17 +19,17 @@ const LabelWithStyles = styled.View`
 const Span = styled.Text`
   font-size: 14px;
   line-height: 16px;
-  color: ${props => props.active ? "#000000" : "#757575"};
+  color: ${props => (props.active ? "#000000" : "#757575")};
 `;
 
-const Label = (props) => {
-    return (
-        <TouchableWithoutFeedback onPress={props.onPress}>
-            <LabelWithStyles {...props}>
-                <Span {...props}>{props.text}</Span>
-            </LabelWithStyles>
-        </TouchableWithoutFeedback>
-    )
+const Label = props => {
+  return (
+    <TouchableWithoutFeedback onPress={props.onPress}>
+      <LabelWithStyles {...props}>
+        <Span {...props}>{props.text}</Span>
+      </LabelWithStyles>
+    </TouchableWithoutFeedback>
+  );
 };
 
 /*
@@ -41,12 +41,12 @@ const LabelContainerWithStyles = styled.View`
   margin-top: 8px;
 `;
 
-const LabelContainer = (props) => {
-    return (
-        <LabelContainerWithStyles {...props}>
-            {props.children}
-        </LabelContainerWithStyles>
-    )
+const LabelContainer = props => {
+  return (
+    <LabelContainerWithStyles {...props}>
+      {props.children}
+    </LabelContainerWithStyles>
+  );
 };
 
 /*
@@ -59,12 +59,10 @@ const LabelsContainerWithStyles = styled.View`
   flex-wrap: wrap;
 `;
 
-const LabelsContainer = (props) => {
-    return (
-        <LabelsContainerWithStyles>
-            {props.children}
-        </LabelsContainerWithStyles>
-    )
+const LabelsContainer = props => {
+  return (
+    <LabelsContainerWithStyles>{props.children}</LabelsContainerWithStyles>
+  );
 };
 
 export { Label, LabelContainer, LabelsContainer };

@@ -1,31 +1,17 @@
 import React from "react";
 import { View, Container } from "native-base";
-import {
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableOpacity,
-  ScrollView
-} from "react-native";
+import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { withNavigation } from "react-navigation";
-
 //GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
-import { BASIC_USER_QUERY } from "../../../api/Queries/User";
 import { ALL_MESSAGES_QUERY } from "../../../api/Queries/Chat";
 import { ALL_MESSAGES_SUBSCRIPTION } from "../../../api/Subscriptions/Chat";
 import { CREATE_MESSAGE_MUTATION } from "../../../api/Mutations/Chat";
 import { ALL_CHATS_QUERY } from "../../../api/Queries/Chat";
-import { ALL_PROJECTS_OF_USER } from "../../../api/Queries/User";
 import Chat from "../../../components/Chat";
-import { MaterialIcons } from "@expo/vector-icons";
-import {
-  HeaderRightContainer,
-  HeaderRightElement
-} from "../../../components/HeaderRight";
 import { Placeholder, Loading } from "../../../components/index";
 import ProjectsList from "../../../components/ProjectsList";
-
 //Utils
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 
@@ -106,7 +92,6 @@ class ChatViewScreen extends React.Component {
   _goToProfile = id => {
     if (!this.state.disabled) {
       this._setDisabled();
-      console.log(id);
       this.props.navigation.navigate("Profile", {
         id
       });
