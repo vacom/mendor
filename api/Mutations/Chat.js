@@ -49,4 +49,12 @@ const CREATE_CHAT_MUTATION = gql`
   }
 `;
 
-export { CREATE_MESSAGE_MUTATION, CREATE_CHAT_MUTATION };
+const UPDATE_CHAT_MUTATION = gql`
+  mutation updateChat($id: ID!, $usersIds: [ID!], $isGroup: Boolean) {
+    updateChat(id: $id, usersIds: $usersIds, isGroup: $isGroup) {
+      id
+    }
+  }
+`;
+
+export { CREATE_MESSAGE_MUTATION, CREATE_CHAT_MUTATION, UPDATE_CHAT_MUTATION };

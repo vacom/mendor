@@ -59,11 +59,11 @@ class Chat extends React.Component {
               return (
                 <Message
                   key={index}
-                  userId={data.author.id}
+                  userId={data.author ? data.author.id : null}
                   userIdLogged={this.props.userIdLogged}
                   message={data.content}
                   createdAt={data.createdAt}
-                  avatar={data.author.avatar}
+                  avatar={data.author ? data.author.avatar : null}
                   type={data.type}
                   project={data.project}
                   goToProfile={this.props.goToProfile}

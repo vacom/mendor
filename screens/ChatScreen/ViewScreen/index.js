@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Container } from "native-base";
+import { View, Container, ActionSheet } from "native-base";
 import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { withNavigation } from "react-navigation";
@@ -14,6 +14,11 @@ import { Placeholder, Loading } from "../../../components/index";
 import ProjectsList from "../../../components/ProjectsList";
 //Utils
 import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
+import {
+  HeaderRightContainer,
+  HeaderRightElement
+} from "../../../components/HeaderRight";
+import { MaterialIcons } from "@expo/vector-icons";
 
 class ChatViewScreen extends React.Component {
   constructor(props) {
@@ -40,6 +45,15 @@ class ChatViewScreen extends React.Component {
             </ViewNameHeader>
           </StyledHeader>
         </TouchableOpacity>
+      ),
+      headerRight: (
+        <HeaderRightContainer>
+          <HeaderRightElement>
+            <TouchableOpacity onPress={params.openActions}>
+              <MaterialIcons name="more-vert" size={24} color="#ffffff" />
+            </TouchableOpacity>
+          </HeaderRightElement>
+        </HeaderRightContainer>
       )
     };
   };
@@ -71,7 +85,32 @@ class ChatViewScreen extends React.Component {
     this.setState({
       icon: "add"
     });
+    this.props.navigation.setParams({
+      openActions: this._onOpenActions
+    });
   }
+
+  _onOpenActions = () => {
+    var BUTTONS = ["Adicionar pessoas à conversa", "Cancelar"];
+    ActionSheet.show(
+      {
+        options: BUTTONS,
+        cancelButtonIndex: 1,
+        destructiveButtonIndex: 1,
+        title: "Ações"
+      },
+      buttonIndex => {
+        switch (buttonIndex) {
+          case 0:
+            this.props.navigation.navigate("AddPerson", {
+              users: this.props.navigation.state.params.users,
+              id: this.props.navigation.state.params.id
+            });
+            break;
+        }
+      }
+    );
+  };
   _setDisabled = () => {
     this.setState({ disabled: true });
     setTimeout(() => {

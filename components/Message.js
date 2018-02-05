@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components/native";
-import { View } from "native-base";
+import { View, Text } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo";
 import moment from "moment/min/moment-with-locales";
@@ -23,70 +23,86 @@ const Message = ({
   } else {
     avatar = IMAGE_PLACEHOLDER;
   }
-  if (userId == userIdLogged) {
-    if (type != "PROJECT") {
-      message = (
-        <ViewMessageLogged>
-          <TextLogged>{message}</TextLogged>
-          <TextDate>{moment(createdAt).fromNow()}</TextDate>
-        </ViewMessageLogged>
-      );
-    } else if (type == "PROJECT") {
-      message = (
-        <ViewCardLogged>
-          <View>
-            <ProjectCard project={project} />
-          </View>
-        </ViewCardLogged>
-      );
-    }
+  if (type == "NOTIFICATION") {
+    message = (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 10
+        }}
+      >
+        <Text style={{ fontSize: 12 }}>{message}</Text>
+      </View>
+    );
   } else {
-    if (type != "PROJECT") {
-      message = (
-        <ViewMessage>
-          <ViewMessageNotLogged>
-            <ViewAvatar>
-              <TouchableOpacity onPress={() => goToProfile(userId)}>
-                <Avatar
-                  source={{
-                    uri: avatar
-                  }}
-                />
-              </TouchableOpacity>
-            </ViewAvatar>
-            <View>
-              <LinearGradient
-                colors={["#3F53AF", "#673AB7"]}
-                style={{ borderRadius: 10, padding: 10 }}
-                start={[0, 0]}
-                end={[1, 0]}
-              >
-                <TextNotLogged>{message}</TextNotLogged>
-              </LinearGradient>
-              <TextDate>{moment(createdAt).fromNow()}</TextDate>
-            </View>
-          </ViewMessageNotLogged>
-        </ViewMessage>
-      );
-    } else if (type == "PROJECT") {
-      message = (
-        <ViewMessage>
-          <ViewMessageNotLogged>
-            <ViewAvatar>
-              <TouchableOpacity onPress={() => goToProfile(userId)}>
-                <Avatar
-                  source={{
-                    uri: avatar
-                  }}
-                />
-              </TouchableOpacity>
-            </ViewAvatar>
+    if (userId == userIdLogged) {
+      if (type != "PROJECT") {
+        message = (
+          <ViewMessageLogged>
+            <TextLogged>{message}</TextLogged>
+            <TextDate>{moment(createdAt).fromNow()}</TextDate>
+          </ViewMessageLogged>
+        );
+      } else if (type == "PROJECT") {
+        message = (
+          <ViewCardLogged>
             <View>
               <ProjectCard project={project} />
             </View>
-          </ViewMessageNotLogged>
-        </ViewMessage>
-      );
+          </ViewCardLogged>
+        );
+      }
+    } else {
+      if (type != "PROJECT") {
+        message = (
+          <ViewMessage>
+            <ViewMessageNotLogged>
+              <ViewAvatar>
+                <TouchableOpacity onPress={() => goToProfile(userId)}>
+                  <Avatar
+                    source={{
+                      uri: avatar
+                    }}
+                  />
+                </TouchableOpacity>
+              </ViewAvatar>
+              <View>
+                <LinearGradient
+                  colors={["#3F53AF", "#673AB7"]}
+                  style={{ borderRadius: 10, padding: 10 }}
+                  start={[0, 0]}
+                  end={[1, 0]}
+                >
+                  <TextNotLogged>{message}</TextNotLogged>
+                </LinearGradient>
+                <TextDate>{moment(createdAt).fromNow()}</TextDate>
+              </View>
+            </ViewMessageNotLogged>
+          </ViewMessage>
+        );
+      } else if (type == "PROJECT") {
+        message = (
+          <ViewMessage>
+            <ViewMessageNotLogged>
+              <ViewAvatar>
+                <TouchableOpacity onPress={() => goToProfile(userId)}>
+                  <Avatar
+                    source={{
+                      uri: avatar
+                    }}
+                  />
+                </TouchableOpacity>
+              </ViewAvatar>
+              <View>
+                <ProjectCard project={project} />
+              </View>
+            </ViewMessageNotLogged>
+          </ViewMessage>
+        );
+      }
     }
   }
   return <View style={{ flex: 1 }}>{message}</View>;

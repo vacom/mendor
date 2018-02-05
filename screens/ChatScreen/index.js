@@ -128,8 +128,9 @@ class ChatScreen extends React.Component {
       const userlength = Object.keys(users).length;
       let name = "";
       let avatar = "";
+      let id_user = "";
       if (userlength > 1) {
-        id_user: null;
+        id_user = null;
         avatar = IMAGE_GROUP_CHAT;
         users.map((user, i) => {
           if (userlength === i + 1) {
@@ -154,7 +155,8 @@ class ChatScreen extends React.Component {
         name,
         avatar,
         id,
-        id_user
+        id_user,
+        users
       });
     }
   };
