@@ -1,7 +1,6 @@
 import React from "react";
 import { Alert, Platform } from "react-native";
 import { Notifications, Permissions } from "expo";
-import { withNavigation } from "react-navigation";
 import { ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 //Components
 import { Thumbnail, Button, Text, ActionSheet } from "native-base";
@@ -15,7 +14,7 @@ import {
   CardBody,
   CardRight
 } from "../../components/Card";
-import { Error, Loading, Placeholder } from "../../components/index";
+import { Loading, Placeholder } from "../../components/index";
 /**
  * GraphQL
  */
@@ -27,6 +26,8 @@ import { ALL_NOTIFICATIONS_SUBSCRIPTION } from "../../api/Subscriptions/User";
 import { GET_AVATAR_URL } from "../../api/Functions/Upload";
 import { CREATE_CONTACT_FUNC } from "../../api/Functions/User";
 import { IMAGE_PLACEHOLDER } from "../../api/Functions/Upload";
+//HOCs
+import withCurrentUser from "../../components/HOC/withCurrentUser";
 //contacts
 import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
 import { CREATE_CONTACT_MUTATION } from "../../api/Mutations/Contacts";
@@ -57,10 +58,10 @@ class NotificationsScreen extends React.Component {
     Notifications.cancelAllScheduledNotificationsAsync();
   }
   _subscribeToNotifications = () => {
-    const { allNotificationsQuery, screenProps } = this.props;
+    const { allNotificationsQuery, currentUserId } = this.props;
     allNotificationsQuery.subscribeToMore({
       document: ALL_NOTIFICATIONS_SUBSCRIPTION,
-      variables: { userId: screenProps.userId },
+      variables: { userId: currentUserId},
       updateQuery: (previous, { subscriptionData }) => {
         if (!subscriptionData.data) {
           return previous;
@@ -186,11 +187,11 @@ class NotificationsScreen extends React.Component {
   };
   _onCreateContact = async data => {
     const contactID = data.userRequest.id;
-    const { createContact, screenProps } = this.props;
+    const { createContact, currentUserId } = this.props;
 
     //Creates a new contact for the user
     const result = await CREATE_CONTACT_FUNC(
-      screenProps.userId,
+      currentUserId,
       contactID,
       createContact
     );
@@ -199,7 +200,7 @@ class NotificationsScreen extends React.Component {
       //saves the contact
       const request = await CREATE_CONTACT_FUNC(
         contactID,
-        screenProps.userId,
+        currentUserId,
         createContact
       );
       //Both users accounts are created and disables the notification
@@ -224,7 +225,7 @@ class NotificationsScreen extends React.Component {
       this.props.allNotificationsQuery &&
       this.props.allNotificationsQuery.error
     ) {
-      return <Error />;
+      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
   };
   render() {
@@ -366,11 +367,11 @@ class NotificationsScreen extends React.Component {
 }
 
 export default compose(
-  withNavigation,
+  withCurrentUser,
   graphql(ALL_NOTIFICATIONS_QUERY, {
     name: "allNotificationsQuery",
     options: props => ({
-      variables: { userId: props.screenProps.userId }
+      variables: { userId: props.currentUserId }
     })
   }),
   graphql(DISABLE_NOTIFICATION_MUTATION, {
@@ -382,12 +383,14 @@ export default compose(
       refetchQueries: [
         {
           query: ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY,
-          variables: { id: props.screenProps.userId }
+          variables: { id: props.currentUserId }
         }
       ]
     })
   })
 )(NotificationsScreen);
+
+//export default withCurrentUser(NotificationsScreenWithData);
 
 const Container = styled.View`
   flex: 1;

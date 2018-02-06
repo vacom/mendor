@@ -12,6 +12,8 @@ import {
 import { ActionSheet, Container, Tab, Tabs } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Loading, Placeholder } from "../../components/index";
+//HOCs
+import withCurrentUser from "../../components/HOC/withCurrentUser";
 //Graphql
 import { graphql, compose } from "react-apollo";
 import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
@@ -118,7 +120,7 @@ class ContactsScreen extends React.PureComponent {
             }}
           >
             <Tab
-              heading="Mentores"
+              heading="Empreendedores"
               style={{ backgroundColor: "transparent" }}
               tabStyle={{ backgroundColor: "#3F51B5" }}
               textStyle={{ color: "#FFF", fontWeight: "400" }}
@@ -134,7 +136,7 @@ class ContactsScreen extends React.PureComponent {
               </ScrollView>
             </Tab>
             <Tab
-              heading="Empreendedores"
+              heading="Mentores"
               style={{ backgroundColor: "transparent" }}
               tabStyle={{ backgroundColor: "#3F51B5" }}
               textStyle={{ color: "#FFF", fontWeight: "400" }}
@@ -157,10 +159,10 @@ class ContactsScreen extends React.PureComponent {
 }
 
 export default compose(
-  withNavigation,
+  withCurrentUser,
   graphql(ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY, {
     options: props => ({
-      variables: { id: props.screenProps.userId }
+      variables: { id: props.currentUserId }
     }),
     name: "allContacts"
   }),

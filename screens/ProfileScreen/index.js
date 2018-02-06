@@ -141,7 +141,7 @@ class ProfileScreen extends React.PureComponent {
     if (this.props.userProfileQuery && this.props.userProfileQuery.error) {
       <Placeholder text="Erro! Tente novamente" IconName="error" />;
     }
-    const { screenProps, navigation, userProfileQuery } = this.props;
+    const { navigation, userProfileQuery } = this.props;
     const { User } = userProfileQuery;
 
     const {
@@ -278,7 +278,7 @@ class ProfileScreen extends React.PureComponent {
                   {"tecnologias".toUpperCase()}
                 </Span>
                 {Object.keys(technologies).length <= 0 ? (
-                  screenProps.userId === navigation.state.params.id ? (
+                  navigation.state.params.currentUser ? (
                     <TouchableOpacity
                       onPress={() => this._goToAddScreen("addTechnology")}
                     >
@@ -331,7 +331,7 @@ class ProfileScreen extends React.PureComponent {
             <Row>
               {Object.keys(technologies).length <= 0 ? (
                 <PortfolioContainer>
-                  {screenProps.userId === navigation.state.params.id ? (
+                  {navigation.state.params.currentUser ? (
                     <TouchableOpacity
                       onPress={() => this._goToAddScreen("addProject")}
                     >
@@ -401,7 +401,7 @@ class ProfileScreen extends React.PureComponent {
                 {"contactos".toUpperCase()}
               </Span>
               {Object.keys(technologies).length <= 0 ? (
-                screenProps.userId === navigation.state.params.id ? (
+                navigation.state.params.currentUser ? (
                   <TouchableOpacity
                     onPress={() => this._goToAddScreen("addSocial")}
                   >
