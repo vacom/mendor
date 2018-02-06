@@ -172,6 +172,7 @@ class SignupScreen extends React.Component {
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Password</Label>
                 <Input
+                  autoCapitalize="none"
                   onChangeText={password => this.setState({ password })}
                   secureTextEntry={true}
                 />
@@ -179,6 +180,7 @@ class SignupScreen extends React.Component {
               <Item style={{ marginLeft: 0 }} floatingLabel>
                 <Label style={{ color: "#757575" }}>Repetir Password</Label>
                 <Input
+                  autoCapitalize="none"
                   onChangeText={repeatPassword =>
                     this.setState({ repeatPassword })
                   }

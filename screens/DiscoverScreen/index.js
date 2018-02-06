@@ -76,7 +76,9 @@ class DiscoverScreen extends React.Component {
     });
   };
   _goToSearch = () => {
-    this.props.navigation.navigate("SearchDiscover");
+    this.props.navigation.navigate("SearchDiscover", {
+      contactsIds: this.state.contactsIds
+    });
   };
   _onRefresh = () => {
     this.setState({ refreshing: true });
@@ -136,6 +138,7 @@ class DiscoverScreen extends React.Component {
       //Gets the user permission to access is location
       let { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status !== "granted") {
+        await Permissions.askAsync(Permissions.LOCATION);
         this.setState({
           error: true,
           msg: "Precisa ativar o serviço de localização para continuar."

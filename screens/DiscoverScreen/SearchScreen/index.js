@@ -86,6 +86,7 @@ class DiscoverSearchScreen extends React.Component {
                 typing={this.state.typing}
                 loading={this.state.loading}
                 userId={this.props.currentUserId}
+                contactsIds={this.props.contactsIds}
                 searchedDone={() => {
                   this.setState({
                     searched: true,

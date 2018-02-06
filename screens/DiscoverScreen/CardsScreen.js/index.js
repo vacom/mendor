@@ -74,6 +74,8 @@ class CardsScreen extends React.Component {
       variables: { userId, type, contactsIds, userRequestIds, competencesIds }
     });
 
+    console.log(res);
+
     //error handling
     if (res.error) {
       this.setState({
@@ -89,17 +91,18 @@ class CardsScreen extends React.Component {
   };
   _onFilterDiscovery = (distance, object) => {
     const { latitude, longitude } = this.props.userLocation;
-
     //get closer users by distance
     const data = object.allUsers.filter(user => {
-      return (
-        GET_DISTANCE_FROM_LAT_LON_IN_KM(
-          latitude,
-          longitude,
-          user.profile.coordinates.latitude,
-          user.profile.coordinates.longitude
-        ) <= distance
-      );
+      if (user.profile != null) {
+        return (
+          GET_DISTANCE_FROM_LAT_LON_IN_KM(
+            latitude,
+            longitude,
+            user.profile.coordinates.latitude,
+            user.profile.coordinates.longitude
+          ) <= distance
+        );
+      }
     });
     //updates the data
     this.setState({

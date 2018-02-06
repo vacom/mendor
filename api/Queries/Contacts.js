@@ -23,7 +23,7 @@ const ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY = gql`
   query allContacts($id: ID) {
     mentors: allContacts(
       orderBy: createdAt_DESC
-      filter: { user: { type: MENTOR, id: $id } }
+      filter: { user: { id: $id }, contactID: { type: MENTOR } }
     ) {
       id
       contactID {
@@ -32,7 +32,7 @@ const ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY = gql`
     }
     entrepeneurs: allContacts(
       orderBy: createdAt_DESC
-      filter: { user: { type: ENTREPRENEUR, id: $id } }
+      filter: { user: { id: $id }, contactID: { type: ENTREPRENEUR } }
     ) {
       id
       contactID {

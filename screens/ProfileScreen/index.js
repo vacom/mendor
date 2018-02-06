@@ -143,7 +143,6 @@ class ProfileScreen extends React.PureComponent {
     }
     const { navigation, userProfileQuery } = this.props;
     const { User } = userProfileQuery;
-
     const {
       profile,
       competences,
@@ -155,6 +154,8 @@ class ProfileScreen extends React.PureComponent {
       _projectsMeta,
       _technologiesMeta
     } = User;
+
+    console.log("user projects = ", projects);
 
     return (
       <Container>
@@ -329,7 +330,7 @@ class ProfileScreen extends React.PureComponent {
               </Span>
             </PortfolioContainer>
             <Row>
-              {Object.keys(technologies).length <= 0 ? (
+              {Object.keys(projects).length <= 0 ? (
                 <PortfolioContainer>
                   {navigation.state.params.currentUser ? (
                     <TouchableOpacity
@@ -400,7 +401,7 @@ class ProfileScreen extends React.PureComponent {
               <Span style={{ color: "#757575" }}>
                 {"contactos".toUpperCase()}
               </Span>
-              {Object.keys(technologies).length <= 0 ? (
+              {Object.keys(socials).length <= 0 ? (
                 navigation.state.params.currentUser ? (
                   <TouchableOpacity
                     onPress={() => this._goToAddScreen("addSocial")}

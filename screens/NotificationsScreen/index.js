@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Platform } from "react-native";
+import { Platform } from "react-native";
 import { Notifications, Permissions } from "expo";
 import { ScrollView, RefreshControl, TouchableOpacity } from "react-native";
 //Components
@@ -61,7 +61,7 @@ class NotificationsScreen extends React.Component {
     const { allNotificationsQuery, currentUserId } = this.props;
     allNotificationsQuery.subscribeToMore({
       document: ALL_NOTIFICATIONS_SUBSCRIPTION,
-      variables: { userId: currentUserId},
+      variables: { userId: currentUserId },
       updateQuery: (previous, { subscriptionData }) => {
         if (!subscriptionData.data) {
           return previous;
@@ -104,7 +104,7 @@ class NotificationsScreen extends React.Component {
   listenForNotifications = () => {
     Notifications.addListener(notification => {
       if (notification.origin === "received" && Platform.OS === "ios") {
-        Alert.alert(notification.title, notification.body);
+        console.log("Enviado");
       }
     });
   };
@@ -213,8 +213,11 @@ class NotificationsScreen extends React.Component {
       Toast.show("Erro! Tente Novamente.");
     }
   };
-  _onRefresh = () => {
+  _onPullToRefresh = () => {
     this.setState({ refreshing: true });
+    this._onRefresh();
+  };
+  _onRefresh = () => {
     //gets new content from the DB
     this.props.allNotificationsQuery.refetch();
     //clears the loading
@@ -259,7 +262,7 @@ class NotificationsScreen extends React.Component {
               <RefreshControl
                 tintColor="white"
                 refreshing={this.state.refreshing}
-                onRefresh={this._onRefresh}
+                onRefresh={this._onPullToRefresh}
               />
             }
           >
