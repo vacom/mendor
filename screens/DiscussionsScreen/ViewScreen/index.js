@@ -107,7 +107,7 @@ class DiscussionViewScreen extends React.Component {
 
   _createNotifications = (discussionId, userId, responses) => {
     let responses_filtered = [];
-    if (Object.keys(responses).length > 0) {
+    if (Object.keys(responses).length > 1) {
       for (x = 0; x < responses.length; x++) {
         responses_filtered.push(responses[x]);
       }
@@ -123,36 +123,45 @@ class DiscussionViewScreen extends React.Component {
           }
         }
       }
-    }
 
-    let author_notifyied = false;
-    responses_filtered.map((data, index) => {
-      if (!author_notifyied && data.author.id == userId) {
-        author_notifyied = true;
-      }
-      if (data.author.id != this.state.userId) {
-        this.props.createNotification({
-          variables: {
-            userId: data.author.id,
-            type: "DISCUSSION",
-            discussionId
-          }
-        });
-      }
-      if (
-        index == Object.keys(responses_filtered).length &&
-        !author_notifyied &&
-        data.author.id != this.state.userIdLogged
-      ) {
-        this.props.createNotification({
-          variables: {
-            userId: userId,
-            type: "DISCUSSION",
-            discussionId
-          }
-        });
-      }
-    });
+      let author_notifyied = false;
+      responses_filtered.map((data, index) => {
+        if (!author_notifyied && data.author.id == userId) {
+          // SE O AUTOR AINDA NAO FOI NOTIFICADO E FOR IGUAL AO LOGADO
+          author_notifyied = true; // AUTOR NOTIFICADO = TRUE
+        }
+        if (data.author.id != this.props.currentUserId) {
+          this.props.createNotification({
+            variables: {
+              userId: data.author.id,
+              type: "DISCUSSION",
+              discussionId
+            }
+          });
+        }
+        if (
+          index == Object.keys(responses_filtered).length &&
+          !author_notifyied &&
+          data.author.id != this.props.currentUserId
+        ) {
+          this.props.createNotification({
+            variables: {
+              userId: userId,
+              type: "DISCUSSION",
+              discussionId
+            }
+          });
+        }
+      });
+    } else {
+      this.props.createNotification({
+        variables: {
+          userId: userId,
+          type: "DISCUSSION",
+          discussionId
+        }
+      });
+    }
   };
 
   _goToProfile = id => {

@@ -125,8 +125,8 @@ const Background = styled.View`
   left: 0;
   width: 100%;
   height: 100%;
-  background: #c18a8c;
-  opacity: 0.6;
+  background: #6d3d31;
+  opacity: 0.5;
 `;
 
 const Content = styled.View`

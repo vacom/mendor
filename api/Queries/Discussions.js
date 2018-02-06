@@ -27,6 +27,7 @@ const DISCUSSION = gql`
         createdAt
         author {
           id
+          name
           avatar {
             id
             secret
@@ -57,6 +58,7 @@ const DISCUSSIONS_BY_CATEGORIES_QUERY = gql`
           id
           author {
             id
+            name
             avatar {
               id
               secret
@@ -135,6 +137,7 @@ const SEARCH_DISCUSSIONS_BY_CATEGORIES = gql`
           id
           author {
             id
+            name
             avatar {
               id
               secret
