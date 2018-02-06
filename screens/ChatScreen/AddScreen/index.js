@@ -85,7 +85,9 @@ class ChatAddScreen extends React.Component {
             avatar != null
               ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
               : IMAGE_PLACEHOLDER,
-          id: res.data.allChats[0].id
+          id: res.data.allChats[0].id,
+          users: res.data.allChats[0].users,
+          isGroup: res.data.allChats[0].isGroup
         });
       } else {
         try {
@@ -108,7 +110,9 @@ class ChatAddScreen extends React.Component {
                       res_mutation.data.createChat.users[0].avatar.name
                     )
                   : IMAGE_PLACEHOLDER,
-              id: res_mutation.data.createChat.id
+              id: res_mutation.data.createChat.id,
+              users: res_mutation.data.createChat.users,
+              isGroup: false
             });
           }
         } catch (e) {

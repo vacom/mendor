@@ -3,7 +3,7 @@ import { Text } from "react-native";
 
 const MessageContent = ({ data, userId }) => {
   let content = "";
-  if (Object.keys(data.messages).length > 0) {
+  if (data.messages && Object.keys(data.messages).length > 0) {
     if (
       data.messages[0].type == "PROJECT" &&
       Object.keys(data.messages).length > 0
@@ -19,7 +19,7 @@ const MessageContent = ({ data, userId }) => {
   }
   return (
     <Text numberOfLines={1} style={{ fontSize: 14, color: "#757575" }}>
-      {Object.keys(data.messages).length > 0 ? content : "Sem mensagens."}
+      {data.messages && Object.keys(data.messages).length > 0 ? content : "Sem mensagens."}
     </Text>
   );
 };

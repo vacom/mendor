@@ -63,7 +63,10 @@ const SearchCard = props => {
             <Text style={{ fontSize: 14, color: "#757575" }}>{props.type}</Text>
           ) : (
             <Text style={{ fontSize: 14, color: "#757575" }}>
-              <MessageContent data={props.message} userId={props.userId} />
+              <MessageContent
+                data={props.message ? props.message : null}
+                userId={props.userId ? props.userId : null}
+              />
             </Text>
           )}
         </CardBody>

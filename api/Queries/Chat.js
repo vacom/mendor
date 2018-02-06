@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import { USER_ITEMS_FRAGMENT } from "../Fragments/User";
 
 const ALL_CHATS_QUERY = gql`
   query allChats($id: ID) {
@@ -116,9 +117,30 @@ const SEARCH_CHAT_QUERY = gql`
   }
 `;
 
+const SEARCH_CONTACTS_TO_ADD = gql`
+  query SearchContacts($id_user: ID, $query: String!, $id_chat: ID) {
+    allContacts(
+      filter: {
+        AND: [
+          {
+            contactID: { name_contains: $query }
+            contactID: { chats_none: { id: $id_chat } }
+          }
+          { user: { id: $id_user } }
+        ]
+      }
+    ) {
+      contactID {
+        ...userItems
+      }
+    }
+  }
+  ${USER_ITEMS_FRAGMENT}
+`;
 export {
   ALL_CHATS_QUERY,
   ALL_MESSAGES_QUERY,
   ALL_INDIVIDUAL_CHATS_OF_USERS,
-  SEARCH_CHAT_QUERY
+  SEARCH_CHAT_QUERY,
+  SEARCH_CONTACTS_TO_ADD
 };

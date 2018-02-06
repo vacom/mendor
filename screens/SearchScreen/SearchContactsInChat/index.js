@@ -6,17 +6,19 @@ import { TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
-import { SEARCH_CONTACTS } from "../../../api/Queries/Contacts";
+import { SEARCH_CONTACTS_TO_ADD } from "../../../api/Queries/Chat";
 // Components
+import { IMAGE_PLACEHOLDER } from "../../../constants/Utils";
 import {
   Card,
   CardContainer,
   CardLeft,
   CardBody,
+  CardRight
 } from "../../../components/Card";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
 
-class SearchContacts extends React.Component {
+class SearchContactsInChat extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -41,12 +43,7 @@ class SearchContacts extends React.Component {
         // IF USER HAS CONTACTS
         return this.props.Contacts.allContacts.map((data, index) => {
           return (
-            <Card
-              key={index}
-              onPress={() => {
-                this.props.onPress(data.contactID.id);
-              }}
-            >
+            <Card key={index}>
               <CardContainer>
                 <CardLeft>
                   <Thumbnail
@@ -82,6 +79,16 @@ class SearchContacts extends React.Component {
                     }`}
                   </Text>
                 </CardBody>
+                <CardRight>
+                  <TouchableOpacity
+                    onPress={this.props.updateChat(
+                      data.contactID.id,
+                      data.contactID.name
+                    )}
+                  >
+                    <MaterialIcons name="add" size={22} color="#3F51B5" />
+                  </TouchableOpacity>
+                </CardRight>
               </CardContainer>
             </Card>
           );
@@ -96,13 +103,14 @@ class SearchContacts extends React.Component {
 export default compose(
   withApollo,
   withNavigation,
-  graphql(SEARCH_CONTACTS, {
+  graphql(SEARCH_CONTACTS_TO_ADD, {
     options: props => ({
       variables: {
-        id: props.userId,
-        query: props.search_value
+        id_user: props.userId,
+        query: props.search_value,
+        id_chat: props.id_chat
       }
     }),
     name: "Contacts"
   })
-)(SearchContacts);
+)(SearchContactsInChat);

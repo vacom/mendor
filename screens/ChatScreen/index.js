@@ -129,7 +129,9 @@ class ChatScreen extends React.Component {
       let name = "";
       let avatar = "";
       let id_user = "";
+      let isGroup = false;
       if (userlength > 1) {
+        isGroup = true;
         id_user = null;
         avatar = IMAGE_GROUP_CHAT;
         users.map((user, i) => {
@@ -140,6 +142,7 @@ class ChatScreen extends React.Component {
           }
         });
       } else {
+        isGroup = false;
         id_user = users[0].id;
         name = users[0].name;
         avatar =
@@ -156,7 +159,8 @@ class ChatScreen extends React.Component {
         avatar,
         id,
         id_user,
-        users
+        users,
+        isGroup
       });
     }
   };
@@ -212,7 +216,7 @@ class ChatScreen extends React.Component {
                             <MessageName users={data.users} />
 
                             <MessageContent
-                              data={data}
+                              data={data?data:null}
                               userId={this.props.screenProps.userId}
                             />
                           </CardBody>

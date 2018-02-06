@@ -202,10 +202,10 @@ class ChatViewScreen extends React.Component {
 
   render() {
     if (this.props.allMessages && this.props.allMessages.loading) {
-      return <Loading />;
+      return <Loading dark />;
     }
     if (this.props.allMessages && this.props.allMessages.error) {
-      return <Placeholder text="Erro! Tente novamente" IconName="error" />;
+      return <Placeholder dark text="Erro! Tente novamente" IconName="error" />;
     }
     return (
       <Container>

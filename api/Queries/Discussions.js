@@ -107,14 +107,22 @@ const SEARCH_DISCUSSIONS_BY_CATEGORIES = gql`
     allCategories(
       filter: {
         discussions_some: {
-          AND: [{ title_contains: $query }, { description_contains: $query }]
+          AND: [
+            {
+              OR: [{ title_contains: $query }, { description_contains: $query }]
+            }
+          ]
           id_not: $id
         }
       }
     ) {
       id
       title
-      discussions {
+      discussions(
+        filter: {
+          OR: [{ title_contains: $query }, { description_contains: $query }]
+        }
+      ) {
         id
         title
         cover {

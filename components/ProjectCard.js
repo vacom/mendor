@@ -49,7 +49,7 @@ export default ProjectCard;
 const ProjectContainer = styled.View`
   padding: 10px;
   border-radius: 2px;
-  width: 300px;
+  width: 250px;
 `;
 
 const ProjectControler = styled.View`

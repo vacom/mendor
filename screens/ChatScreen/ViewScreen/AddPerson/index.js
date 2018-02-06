@@ -9,7 +9,8 @@ import {
 } from "../../../../api/Mutations/Chat";
 import {
   ALL_CHATS_QUERY,
-  ALL_MESSAGES_QUERY
+  ALL_MESSAGES_QUERY,
+  SEARCH_CONTACTS_TO_ADD
 } from "../../../../api/Queries/Chat";
 import { withApollo, compose, graphql } from "react-apollo";
 // Components
@@ -18,7 +19,7 @@ import {
   SearchInput,
   SearchContent
 } from "../../../../components/SearchComponents";
-import SearchContacts from "../../../SearchScreen/SearchContacts";
+import SearchContactsInChat from "../../../SearchScreen/SearchContactsInChat";
 import {
   IMAGE_PLACEHOLDER,
   IMAGE_GROUP_CHAT
@@ -76,21 +77,8 @@ class AddPersonScreen extends React.Component {
         });
 
         if (!res_mutation.loading) {
-          this.setState({ search_value: "" });
           this._createMessage(res_mutation.data.updateChat.id, name);
           Toast.show(name + " foi adicionado/a à conversa.");
-          let id_user = null;
-          let avatar = IMAGE_GROUP_CHAT;
-          let chat_name = "";
-          let id_chat = res_mutation.data.updateChat.id;
-          users.map((user, i) => {
-            if (users.length === i + 1) {
-              chat_name += name;
-            } else {
-              chat_name += name + ", ";
-            }
-          });
-          this.props.navigation.navigate("ChatScreen");
         }
       } catch (e) {
         console.log(e);
@@ -131,10 +119,9 @@ class AddPersonScreen extends React.Component {
         />
         <SearchContent>
           <ScrollView>
-            <SearchContacts
+            <SearchContactsInChat
+              id_chat={this.props.navigation.state.params.id}
               updateChat={this._updateChat}
-              users={this.props.navigation.state.params.users}
-              type="addPersonChat"
               search_value={this.state.search_value}
               searched={this.state.searched}
               typing={this.state.typing}
@@ -162,9 +149,12 @@ export default compose(
     options: props => ({
       refetchQueries: [
         {
-          query: ALL_CHATS_QUERY,
+          query: SEARCH_CONTACTS_TO_ADD,
           variables: {
-            id: props.screenProps.userId
+            id: props.navigation.state.params.id,
+            id_user: props.screenProps.userId,
+            query: "",
+            id_chat: props.navigation.state.params.id
           }
         }
       ]
@@ -175,6 +165,10 @@ export default compose(
     options: props => ({
       refetchQueries: [
         {
+          query: ALL_CHATS_QUERY,
+          variables: {
+            id: props.screenProps.userId
+          },
           query: ALL_MESSAGES_QUERY,
           variables: {
             id: props.navigation.state.params.id
