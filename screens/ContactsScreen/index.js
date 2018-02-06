@@ -19,6 +19,7 @@ import { graphql, compose } from "react-apollo";
 import { ALL_CONTACTS_ENTREPENEURS_MENTORS_QUERY } from "../../api/Queries/Contacts";
 import { DELETE_CONTACT_MUTATION } from "../../api/Mutations/Contacts";
 import { DELETE_CONTACT_FUNC } from "../../api/Functions/User";
+import { IMAGE_PLACEHOLDER } from "../../constants/Utils";
 //Utils
 import Toast from "react-native-root-toast";
 
