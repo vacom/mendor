@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { ScrollView } from "react-native";
 import { withNavigation } from "react-navigation";
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 //GRAPHQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_INDIVIDUAL_CHATS_OF_USERS } from "../../../api/Queries/Chat";
@@ -73,7 +74,7 @@ class ChatAddScreen extends React.Component {
     const res = await this.props.client.query({
       query: ALL_INDIVIDUAL_CHATS_OF_USERS,
       variables: {
-        id1: this.props.screenProps.userId, // id1 -> Sempre o id logado!!!
+        id1: this.props.currentUserId, // id1 -> Sempre o id logado!!!
         id2: id
       }
     });
@@ -94,8 +95,8 @@ class ChatAddScreen extends React.Component {
           const res_mutation = await this.props.createChat({
             variables: {
               name: "created",
-              usersIds: [id, this.props.screenProps.userId],
-              authorId: this.props.screenProps.userId,
+              usersIds: [id, this.props.currentUserId],
+              authorId: this.props.currentUserId,
               isGroup: false
             }
           });
@@ -142,7 +143,7 @@ class ChatAddScreen extends React.Component {
               searched={this.state.searched}
               typing={this.state.typing}
               loading={this.state.loading}
-              userId={this.props.screenProps.userId}
+              userId={this.props.currentUserId}
               searchedDone={() => {
                 this.setState({
                   searched: true,
@@ -161,6 +162,7 @@ class ChatAddScreen extends React.Component {
 export default compose(
   withApollo,
   withNavigation,
+  withCurrentUser,
   graphql(CREATE_CHAT_MUTATION, {
     name: "createChat",
     options: props => ({
@@ -168,7 +170,7 @@ export default compose(
         {
           query: ALL_INDIVIDUAL_CHATS_OF_USERS,
           variables: {
-            id1: props.screenProps.userId, // id1 -> Sempre o id logado!!!
+            id1: props.currentUserId, // id1 -> Sempre o id logado!!!
             id2: props.navigation.state.params.id_user2
           }
         }

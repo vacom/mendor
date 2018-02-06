@@ -3,6 +3,7 @@ import styled from "styled-components/native";
 import { ScrollView } from "react-native";
 import { Placeholder } from "../../../components/index";
 import { withNavigation } from "react-navigation";
+import currentUserId from "../../../components/HOC/withCurrentUser";
 //GRAPHQL
 import { compose, withApollo } from "react-apollo";
 // Components
@@ -11,6 +12,7 @@ import {
   SearchInput,
   SearchContent
 } from "../../../components/SearchComponents";
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 
 class DiscoverSearchScreen extends React.Component {
   static navigationOptions = {
@@ -83,7 +85,7 @@ class DiscoverSearchScreen extends React.Component {
                 searched={this.state.searched}
                 typing={this.state.typing}
                 loading={this.state.loading}
-                userId={this.props.screenProps.userId}
+                userId={this.props.currentUserId}
                 searchedDone={() => {
                   this.setState({
                     searched: true,
@@ -104,7 +106,9 @@ class DiscoverSearchScreen extends React.Component {
   }
 }
 
-export default compose(withApollo, withNavigation)(DiscoverSearchScreen);
+export default compose(withApollo, withNavigation, withCurrentUser)(
+  DiscoverSearchScreen
+);
 
 const Container = styled.View`
   flex: 1;

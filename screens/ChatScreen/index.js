@@ -1,6 +1,7 @@
 import React from "react";
 import { ScrollView, TouchableOpacity, RefreshControl } from "react-native";
 import { withNavigation } from "react-navigation";
+import withCurrentUser from "../../components/HOC/withCurrentUser";
 //Styles
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -69,7 +70,7 @@ class ChatScreen extends React.Component {
       openSearch: this._goToSearch
     });
     this.setState({
-      userIdLogged: this.props.screenProps.userId
+      userIdLogged: this.props.currentUserId
     });
   }
 
@@ -216,8 +217,8 @@ class ChatScreen extends React.Component {
                             <MessageName users={data.users} />
 
                             <MessageContent
-                              data={data?data:null}
-                              userId={this.props.screenProps.userId}
+                              data={data ? data : null}
+                              userId={this.props.currentUserId}
                             />
                           </CardBody>
                           <CardRight>
@@ -245,10 +246,11 @@ class ChatScreen extends React.Component {
 export default compose(
   withNavigation,
   withApollo,
+  withCurrentUser,
   graphql(ALL_CHATS_QUERY, {
     options: props => ({
       variables: {
-        id: props.screenProps.userId
+        id: props.currentUserId
       },
       pollInterval: 2000
     }),

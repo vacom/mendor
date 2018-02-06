@@ -3,6 +3,7 @@ import styled from "styled-components/native";
 import { ScrollView } from "react-native";
 import { withNavigation } from "react-navigation";
 //GRAPHQL
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 import { compose } from "react-apollo";
 // Components
 import {
@@ -64,7 +65,7 @@ class SearchDiscussionScreen extends React.Component {
               searched={this.state.searched}
               typing={this.state.typing}
               loading={this.state.loading}
-              userId={this.props.screenProps.userId}
+              userId={this.props.currentUserId}
               searchedDone={() => {
                 this.setState({
                   searched: true,
@@ -79,7 +80,7 @@ class SearchDiscussionScreen extends React.Component {
   }
 }
 
-export default compose(withNavigation)(SearchDiscussionScreen);
+export default compose(withNavigation, withCurrentUser)(SearchDiscussionScreen);
 
 const Container = styled.View`
   flex: 1;

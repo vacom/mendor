@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { ScrollView } from "react-native";
 import { withNavigation } from "react-navigation";
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 //GRAPHQL
 import { compose } from "react-apollo";
 import { GET_AVATAR_URL } from "../../../api/Functions/Upload";
@@ -115,7 +116,7 @@ class SearchChatScreen extends React.Component {
               searched={this.state.searched}
               typing={this.state.typing}
               loading={this.state.loading}
-              userId={this.props.screenProps.userId}
+              userId={this.props.currentUserId}
               searchedDone={() => {
                 this.setState({
                   searched: true,
@@ -131,7 +132,7 @@ class SearchChatScreen extends React.Component {
   }
 }
 
-export default compose(withNavigation)(SearchChatScreen);
+export default compose(withNavigation, withCurrentUser)(SearchChatScreen);
 
 const Container = styled.View`
   flex: 1;

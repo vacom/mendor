@@ -5,6 +5,7 @@ import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import Accordion from "react-native-collapsible/Accordion";
 import { graphql, compose, withApollo } from "react-apollo";
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 //GraphQL
 import { DISCUSSION } from "../../../api/Queries/Discussions";
 import { CREATE_RESPONSE_MUTATION } from "../../../api/Mutations/Discussions";
@@ -31,7 +32,7 @@ class DiscussionViewScreen extends React.Component {
 
   state = {
     height: 0,
-    userIdLogged: this.props.screenProps.userId,
+    userIdLogged: this.props.currentUserId,
     avatar: "",
     scroll: false,
     disabled: false
@@ -48,7 +49,7 @@ class DiscussionViewScreen extends React.Component {
     );
     const { userIdLogged, avatar } = this.props.navigation.state.params;
     this.setState({
-      userIdLogged: this.props.screenProps.userId,
+      userIdLogged: this.props.currentUserId,
       avatar,
       arrow: "open"
     });
@@ -268,6 +269,7 @@ class DiscussionViewScreen extends React.Component {
 export default compose(
   withApollo,
   withNavigation,
+  withCurrentUser,
   graphql(DISCUSSION, {
     options: props => ({
       variables: { id: props.navigation.state.params.id }

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components/native";
 import { ScrollView } from "react-native";
 import { withNavigation } from "react-navigation";
+import withCurrentUser from "../../../../components/HOC/withCurrentUser";
 //GRAPHQL
 import {
   UPDATE_CHAT_MUTATION,
@@ -62,7 +63,7 @@ class AddPersonScreen extends React.Component {
   _updateChat = (id, name) => async () => {
     if (!this.state.disabled) {
       this.setState({ disabled: true });
-      let users = [id, this.props.screenProps.userId];
+      let users = [id, this.props.currentUserId];
       for (i = 0; i < this.state.users.length; i++) {
         users.push(this.state.users[i].id);
       }
@@ -126,7 +127,7 @@ class AddPersonScreen extends React.Component {
               searched={this.state.searched}
               typing={this.state.typing}
               loading={this.state.loading}
-              userId={this.props.screenProps.userId}
+              userId={this.props.currentUserId}
               searchedDone={() => {
                 this.setState({
                   searched: true,
@@ -144,6 +145,7 @@ class AddPersonScreen extends React.Component {
 export default compose(
   withNavigation,
   withApollo,
+  withCurrentUser,
   graphql(UPDATE_CHAT_MUTATION, {
     name: "updateChat",
     options: props => ({
@@ -152,7 +154,7 @@ export default compose(
           query: SEARCH_CONTACTS_TO_ADD,
           variables: {
             id: props.navigation.state.params.id,
-            id_user: props.screenProps.userId,
+            id_user: props.currentUserId,
             query: "",
             id_chat: props.navigation.state.params.id
           }
@@ -167,7 +169,7 @@ export default compose(
         {
           query: ALL_CHATS_QUERY,
           variables: {
-            id: props.screenProps.userId
+            id: props.currentUserId
           },
           query: ALL_MESSAGES_QUERY,
           variables: {

@@ -6,6 +6,7 @@ import {
   Alert,
   KeyboardAvoidingView
 } from "react-native";
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 import { LinearGradient } from "expo";
 import { Row } from "react-native-easy-grid";
 import { ImagePicker } from "expo";
@@ -65,7 +66,7 @@ class AddDiscussion extends React.PureComponent {
     categoryId: "0",
     description: "",
     title: "",
-    userId: this.props.screenProps.userId,
+    userId: this.props.currentUserId,
     cover: null,
     coverId: null
   };
@@ -266,6 +267,7 @@ class AddDiscussion extends React.PureComponent {
 
 export default compose(
   withApollo,
+  withCurrentUser,
   graphql(ALL_CATEGORIES_QUERY, {
     name: "Categories"
   }),

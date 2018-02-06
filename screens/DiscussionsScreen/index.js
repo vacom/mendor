@@ -3,6 +3,7 @@ import { Container, Icon, Fab, View, Content } from "native-base";
 import { RefreshControl, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { MaterialIcons } from "@expo/vector-icons";
+import withCurrentUser from "../../components/HOC/withCurrentUser";
 //GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { DISCUSSIONS_BY_CATEGORIES_QUERY } from "../../api/Queries/Discussions";
@@ -35,7 +36,7 @@ class DiscussionsScreen extends React.Component {
   };
   state = {
     avatar: IMAGE_PLACEHOLDER,
-    userIdLogged: this.props.screenProps.userId,
+    userIdLogged: this.props.currentUserId,
     refreshing: false
   };
 
@@ -150,6 +151,7 @@ class DiscussionsScreen extends React.Component {
 
 export default compose(
   withApollo,
+  withCurrentUser,
   graphql(
     DISCUSSIONS_BY_CATEGORIES_QUERY,
     { name: "DiscussionsByCategories" },

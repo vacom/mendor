@@ -3,6 +3,7 @@ import { View, Container, ActionSheet } from "native-base";
 import { KeyboardAvoidingView, Keyboard, TouchableOpacity } from "react-native";
 import styled from "styled-components/native";
 import { withNavigation } from "react-navigation";
+import withCurrentUser from "../../../components/HOC/withCurrentUser";
 //GraphQL
 import { graphql, compose, withApollo } from "react-apollo";
 import { ALL_MESSAGES_QUERY } from "../../../api/Queries/Chat";
@@ -62,7 +63,7 @@ class ChatViewScreen extends React.Component {
     height: 0,
     heightViewShareCards: 0,
     modalVisible: false,
-    userIdLogged: this.props.screenProps.userId,
+    userIdLogged: this.props.currentUserId,
     avatar: IMAGE_PLACEHOLDER,
     scrollBottomChat: false,
     icon: "add",
@@ -233,7 +234,7 @@ class ChatViewScreen extends React.Component {
           >
             <ProjectsList
               addProjectMessage={this._addProjectMessage}
-              userId={this.props.screenProps.userId}
+              userId={this.props.currentUserId}
             />
           </View>
         </KeyboardAvoidingView>
@@ -246,6 +247,7 @@ class ChatViewScreen extends React.Component {
 export default compose(
   withApollo,
   withNavigation,
+  withCurrentUser,
   graphql(ALL_MESSAGES_QUERY, {
     options: props => ({
       variables: { id: props.navigation.state.params.id }
@@ -259,7 +261,7 @@ export default compose(
         {
           query: ALL_CHATS_QUERY,
           variables: {
-            id: props.screenProps.userId
+            id: props.currentUserId
           }
         }
       ]
