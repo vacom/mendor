@@ -130,7 +130,7 @@ class ProfileEditScreen extends React.PureComponent {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onUpdateAvatar = async () => {
@@ -152,7 +152,7 @@ class ProfileEditScreen extends React.PureComponent {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onPickImage = async () => {

@@ -96,7 +96,7 @@ class SignupScreen extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onCreateUserConfig = async userId => {
@@ -118,7 +118,7 @@ class SignupScreen extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onType = value => () => {

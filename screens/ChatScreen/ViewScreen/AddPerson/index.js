@@ -67,7 +67,6 @@ class AddPersonScreen extends React.Component {
       for (i = 0; i < this.state.users.length; i++) {
         users.push(this.state.users[i].id);
       }
-      console.log(users);
       try {
         const res_mutation = await this.props.updateChat({
           variables: {

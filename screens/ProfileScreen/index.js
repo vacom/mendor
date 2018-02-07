@@ -154,9 +154,6 @@ class ProfileScreen extends React.PureComponent {
       _projectsMeta,
       _technologiesMeta
     } = User;
-
-    console.log("user projects = ", projects);
-
     return (
       <Container>
         <Content

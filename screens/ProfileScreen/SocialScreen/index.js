@@ -85,7 +85,6 @@ class SocialScreen extends React.Component {
     }
   };
   render() {
-    console.log("userId = ", this.props.navigation.state.params.userId);
     return (
       <ScreenContainer>
         <GradientHeader

@@ -73,9 +73,6 @@ class CardsScreen extends React.Component {
       query,
       variables: { userId, type, contactsIds, userRequestIds, competencesIds }
     });
-
-    console.log(res);
-
     //error handling
     if (res.error) {
       this.setState({
@@ -133,7 +130,7 @@ class CardsScreen extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onConnectByButton(userId) {
@@ -202,13 +199,15 @@ class CardsScreen extends React.Component {
   };
 
   render() {
+    if (this.state.error) {
+      return <Placeholder text="Erro! tente novamente." IconName="error" />;
+    }
+    if (this.state.loading) {
+      return <Loading text="A procurar pessoas..." />;
+    }
     return (
       <View>
-        {this.state.error ? (
-          <Placeholder text="Erro! tente novamente." IconName="error" />
-        ) : this.state.loading ? (
-          <Loading text="A procurar pessoas..." />
-        ) : Object.keys(this.state.data) <= 0 ? (
+        {Object.keys(this.state.data) <= 0 ? (
           <Placeholder IconName="people" text="Não há ninguém perto de si." />
         ) : (
           <CardsContainer style={{ height: 565 }}>

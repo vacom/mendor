@@ -32,10 +32,8 @@ class SearchDiscover extends React.Component {
     searched: this.props.searched
   };
   _onConnectUser = async userId => {
-    console.log("mandar pedido = ", userId);
     const type = "REQUEST";
     const { userId: userRequestId, createNotification } = this.props;
-    console.log("userRequestId = ", userRequestId);
     try {
       //Creates a new notification of type request
       await createNotification({
@@ -53,7 +51,7 @@ class SearchDiscover extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   render() {

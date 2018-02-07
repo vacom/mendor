@@ -177,7 +177,7 @@ class DiscoverScreen extends React.Component {
       //Updates the user location on the DB
       this._onUpdateUserCoords(profileId, location.coords);
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
 
@@ -200,7 +200,7 @@ class DiscoverScreen extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onGroupIds = (object, type) => {

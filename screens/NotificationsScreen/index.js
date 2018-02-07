@@ -182,7 +182,7 @@ class NotificationsScreen extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onCreateContact = async data => {

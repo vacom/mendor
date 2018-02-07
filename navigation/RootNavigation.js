@@ -25,7 +25,7 @@ import SearchDiscussionScreen from "../screens/DiscussionsScreen/SearchScreen/in
 import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 import ChatAddScreen from "../screens/ChatScreen/AddScreen/index";
 import SearchChatScreen from "../screens/ChatScreen/SearchScreen/index";
-import AddPersonScreen from "../screens/ChatScreen/ViewScreen/AddPerson/index"
+import AddPersonScreen from "../screens/ChatScreen/ViewScreen/AddPerson/index";
 /**
  *  ContactsScreen
  */
@@ -157,7 +157,7 @@ export default class RootNavigator extends React.Component {
     const RootStackNavigator = createRootNavigator(signedIn);
     return (
       <Root>
-        <RootStackNavigator screenProps={{ userId: this.state.userId }} />
+        <RootStackNavigator />
       </Root>
     );
   }
