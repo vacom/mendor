@@ -157,6 +157,14 @@ export default compose(
             id_user: props.currentUserId,
             query: "",
             id_chat: props.navigation.state.params.id
+          },
+          query: ALL_CHATS_QUERY,
+          variables: {
+            id: props.currentUserId
+          },
+          query: ALL_MESSAGES_QUERY,
+          variables: {
+            id: props.navigation.state.params.id
           }
         }
       ]
