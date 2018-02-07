@@ -9,8 +9,8 @@ import {
   HeaderRightContainer,
   HeaderRightElement
 } from "../../components/HeaderRight";
-
 import { Loading, Placeholder } from "../../components/index";
+import withCurrentUser from "../../components/HOC/withCurrentUser";
 //GraphQL
 import { withApollo, compose, graphql } from "react-apollo";
 import { BASIC_USER_QUERY } from "../../api/Queries/User";
@@ -71,7 +71,7 @@ class DiscoverScreen extends React.Component {
   }
   _goToProfile = () => {
     this.props.navigation.navigate("Profile", {
-      id: this.state.userId,
+      id: this.props.currentUserId,
       currentUser: true
     });
   };
@@ -86,55 +86,58 @@ class DiscoverScreen extends React.Component {
     this._getBasicUserInfo();
   };
   _getBasicUserInfo = async () => {
-    //Gets the user basic information from the DB
-    const res = await this.props.client.query({ query: BASIC_USER_QUERY });
-    if (!res.loading) {
-      const {
-        avatar,
-        profile,
-        contacts,
-        competences,
-        configuration
-      } = res.data.user;
-      const { distance, interests, type } = configuration;
-      //Sets the navigation params to navigate to profile
-      this.props.navigation.setParams({
-        goToProfile: this._goToProfile,
-        goToSearch: this._goToSearch,
-        avatar:
-          avatar != null
-            ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
-            : IMAGE_PLACEHOLDER
-      });
-      //Updates the state with the user and profile ID
-      this.setState({
-        userId: res.data.user.id,
-        profileId: profile.id,
-        distance,
-        type,
-        interests
-      });
+    try {
+      //Gets the user basic information from the DB
+      const res = await this.props.client.query({ query: BASIC_USER_QUERY });
+      if (!res.loading) {
+        const {
+          avatar,
+          profile,
+          contacts,
+          competences,
+          configuration
+        } = res.data.user;
+        const { distance, interests, type } = configuration;
+        //Sets the navigation params to navigate to profile
+        this.props.navigation.setParams({
+          goToProfile: this._goToProfile,
+          goToSearch: this._goToSearch,
+          avatar:
+            avatar != null
+              ? GET_AVATAR_URL(avatar.secret, "250x250", avatar.name)
+              : IMAGE_PLACEHOLDER
+        });
+        //Updates the state with the user and profile ID
+        this.setState({
+          userId: res.data.user.id,
+          profileId: profile.id,
+          distance,
+          type,
+          interests
+        });
 
-      //Groups all of his contacts
-      if (this._onGroupIds(contacts, "contactsIds")) {
-        //Groups all of his competences
-        if (this._onGroupIds(competences, "competencesIds")) {
-          //Gets the user current location;
-          this._getUserLocation();
+        //Groups all of his contacts
+        if (this._onGroupIds(contacts, "contactsIds")) {
+          //Groups all of his competences
+          if (this._onGroupIds(competences, "competencesIds")) {
+            //Gets the user current location;
+            this._getUserLocation(profile.id);
+          }
         }
+      } else {
+        //If a something wrong shows the error
+        this.setState({
+          loading: false,
+          error: true,
+          refreshing: false
+        });
       }
-    } else {
-      //If a something wrong shows the error
-      this.setState({
-        loading: false,
-        error: true,
-        refreshing: false
-      });
+    } catch (error) {
+      Toast.show("Erro! Tente novamente.");
     }
   };
-  _getUserLocation = async () => {
+  _getUserLocation = async profileId => {
     try {
-      const { profileId } = this.state;
       //Gets the user permission to access is location
       let { status } = await Permissions.askAsync(Permissions.LOCATION);
       if (status !== "granted") {
@@ -181,7 +184,7 @@ class DiscoverScreen extends React.Component {
     }
   };
 
-  _onUpdateUserCoords = async (profileId, coordinates, distance) => {
+  _onUpdateUserCoords = async (profileId, coordinates, distance = 100) => {
     try {
       const { updateUserCoords } = this.props;
       //updates the user location
@@ -193,7 +196,7 @@ class DiscoverScreen extends React.Component {
         },
         update: async () => {
           try {
-            console.log("Guardou localização");
+            this.setState({ profileId });
           } catch (e) {
             Toast.show("Erro! Em encontrar a sua localização.");
           }
@@ -260,6 +263,7 @@ class DiscoverScreen extends React.Component {
 }
 
 export default compose(
+  withCurrentUser,
   withApollo,
   graphql(UPDATE_USER_COORDINATES_MUTATION, { name: "updateUserCoords" })
 )(DiscoverScreen);
