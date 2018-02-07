@@ -62,7 +62,7 @@ class SkillStepScreen extends React.Component {
       });
       this.props.navigation.dispatch(resetAction);
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onCreateCompetence = async interestId => {

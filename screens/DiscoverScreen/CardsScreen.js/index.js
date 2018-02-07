@@ -73,7 +73,6 @@ class CardsScreen extends React.Component {
       query,
       variables: { userId, type, contactsIds, userRequestIds, competencesIds }
     });
-
     //error handling
     if (res.error) {
       this.setState({
@@ -89,17 +88,18 @@ class CardsScreen extends React.Component {
   };
   _onFilterDiscovery = (distance, object) => {
     const { latitude, longitude } = this.props.userLocation;
-
     //get closer users by distance
     const data = object.allUsers.filter(user => {
-      return (
-        GET_DISTANCE_FROM_LAT_LON_IN_KM(
-          latitude,
-          longitude,
-          user.profile.coordinates.latitude,
-          user.profile.coordinates.longitude
-        ) <= distance
-      );
+      if (user.profile != null) {
+        return (
+          GET_DISTANCE_FROM_LAT_LON_IN_KM(
+            latitude,
+            longitude,
+            user.profile.coordinates.latitude,
+            user.profile.coordinates.longitude
+          ) <= distance
+        );
+      }
     });
     //updates the data
     this.setState({
@@ -130,7 +130,7 @@ class CardsScreen extends React.Component {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onConnectByButton(userId) {
@@ -199,13 +199,15 @@ class CardsScreen extends React.Component {
   };
 
   render() {
+    if (this.state.error) {
+      return <Placeholder text="Erro! tente novamente." IconName="error" />;
+    }
+    if (this.state.loading) {
+      return <Loading text="A procurar pessoas..." />;
+    }
     return (
       <View>
-        {this.state.error ? (
-          <Placeholder text="Erro! tente novamente." IconName="error" />
-        ) : this.state.loading ? (
-          <Loading text="A procurar pessoas..." />
-        ) : Object.keys(this.state.data) <= 0 ? (
+        {Object.keys(this.state.data) <= 0 ? (
           <Placeholder IconName="people" text="Não há ninguém perto de si." />
         ) : (
           <CardsContainer style={{ height: 565 }}>

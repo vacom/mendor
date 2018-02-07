@@ -11,7 +11,10 @@ import {
 //GraphQL
 import { graphql, compose } from "react-apollo";
 import { CREATE_USER_TECHNOLOGY_MUTATION } from "../../../api/Mutations/User";
-import { USER_PROFILE_QUERY } from "../../../api/Queries/User";
+import {
+  USER_PROFILE_QUERY,
+  ALL_TECHNOLOGIES_OF_USER
+} from "../../../api/Queries/User";
 //Utils
 import Toast from "react-native-root-toast";
 
@@ -99,6 +102,10 @@ export default compose(
         {
           query: USER_PROFILE_QUERY,
           variables: { id: props.navigation.state.params.userId }
+        },
+        {
+          query: ALL_TECHNOLOGIES_OF_USER,
+          variables: { userId: props.navigation.state.params.userId }
         }
       ]
     })

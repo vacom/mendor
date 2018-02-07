@@ -53,6 +53,7 @@ class SocialScreen extends React.Component {
     const { content, type } = this.state;
     const { addSocial, navigation } = this.props;
     const { userId } = navigation.state.params;
+   
     //Checks if fields are empty
     if (!content) {
       Toast.show("O campo conteúdo não pode estar vazio!");

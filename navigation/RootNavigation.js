@@ -2,9 +2,6 @@ import { AsyncStorage } from "react-native";
 import React from "react";
 import { Root } from "native-base";
 import { StackNavigator } from "react-navigation";
-//GraphQL
-import { BASIC_USER_QUERY } from "../api/Queries/User";
-import { graphql, compose } from "react-apollo";
 //Main Tab Navigation
 import MainTabNavigator from "./MainTabNavigator";
 //Screen Containers
@@ -28,7 +25,7 @@ import SearchDiscussionScreen from "../screens/DiscussionsScreen/SearchScreen/in
 import ChatViewScreen from "../screens/ChatScreen/ViewScreen/index";
 import ChatAddScreen from "../screens/ChatScreen/AddScreen/index";
 import SearchChatScreen from "../screens/ChatScreen/SearchScreen/index";
-import AddPersonScreen from "../screens/ChatScreen/ViewScreen/AddPerson/index"
+import AddPersonScreen from "../screens/ChatScreen/ViewScreen/AddPerson/index";
 /**
  *  ContactsScreen
  */
@@ -51,6 +48,8 @@ import DiscoverSearchScreen from "../screens/DiscoverScreen/SearchScreen/index";
 import ConfigScreen from "../screens/ConfigScreen/index";
 //Utils
 import { isSignedIn } from "../constants/Utils";
+
+//onSignOut();
 
 export const createRootNavigator = (signedIn = false) => {
   return StackNavigator(
@@ -158,20 +157,8 @@ export default class RootNavigator extends React.Component {
     const RootStackNavigator = createRootNavigator(signedIn);
     return (
       <Root>
-        <RootStackNavigator screenProps={{ userId: this.state.userId }} />
+        <RootStackNavigator />
       </Root>
     );
   }
 }
-
-/*export default compose(
-  graphql(BASIC_USER_QUERY, {
-    // ownProps are the props that are passed into the `ProfileWithData`
-    // when it is used by a parent component
-    props: ({ ownProps, data: { loading, user, refetch } }) => ({
-      userLoading: loading,
-      currentUser: user,
-      refetchUser: refetch,
-    }),
-  }),
-)(RootNavigator);*/

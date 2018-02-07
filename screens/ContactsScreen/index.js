@@ -121,7 +121,7 @@ class ContactsScreen extends React.PureComponent {
             }}
           >
             <Tab
-              heading="Empreendedores"
+              heading="Mentores"
               style={{ backgroundColor: "transparent" }}
               tabStyle={{ backgroundColor: "#3F51B5" }}
               textStyle={{ color: "#FFF", fontWeight: "400" }}
@@ -137,7 +137,7 @@ class ContactsScreen extends React.PureComponent {
               </ScrollView>
             </Tab>
             <Tab
-              heading="Mentores"
+              heading="Empreendedores"
               style={{ backgroundColor: "transparent" }}
               tabStyle={{ backgroundColor: "#3F51B5" }}
               textStyle={{ color: "#FFF", fontWeight: "400" }}

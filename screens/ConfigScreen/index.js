@@ -79,7 +79,7 @@ class ConfigScreen extends React.PureComponent {
         }
       });
     } catch (e) {
-      Toast.show(e);
+      Toast.show("Erro! Tente novamente.");
     }
   };
   _onChangeType = type => () => {
