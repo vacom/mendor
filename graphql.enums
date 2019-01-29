@@ -1,0 +1,33 @@
+enum UserType {
+  MENTOR
+  ENTREPRENEUR
+}
+
+enum InterestType {
+  COMMON
+  ALL
+}
+
+enum SocialType {
+  FACEBOOK
+  TWITTER
+  LINKEDIN
+  PHONE
+  EMAIL
+  GITHUB
+  OTHER
+  TRELLO
+}
+
+enum NotificationType {
+  DISCUSSION
+  REQUEST
+  MESSAGE
+}
+
+enum MessageType {
+  MESSAGE
+  PROJECT
+  TECNOLOGY
+  NOTIFICATION
+}
