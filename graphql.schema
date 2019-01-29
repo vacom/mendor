@@ -1,0 +1,194 @@
+# projectId: ciz8v8u9te5130123ovajklml
+# version: 184
+
+type File @model {
+  contentType: String!
+  createdAt: DateTime!
+  id: ID! @isUnique
+  name: String!
+  secret: String! @isUnique
+  size: Int!
+  updatedAt: DateTime!
+  url: String! @isUnique
+  user: User @relation(name: "UserOnFile")
+  discussion: Discussion @relation(name: "DiscussionOnFile")
+}
+
+type Profile @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  about: String
+  birthday: DateTime
+  location: String
+  coordinates: Json
+  company: String
+  role: String
+  profession: String
+  user: User @relation(name: "ProfileOnUser")
+  distance: Float @defaultValue(value: 0.0)
+}
+
+type User @model {
+  createdAt: DateTime!
+  email: String @isUnique
+  id: ID! @isUnique
+  name: String!
+  password: String
+  updatedAt: DateTime!
+  type: UserType!
+  chats: [Chat!]! @relation(name: "ChatOnUser")
+  competences: [Competence!]! @relation(name: "CompetenceOnUser")
+  contacts: [Contact!]! @relation(name: "ContactOnUser")
+  messages: [Message!]! @relation(name: "MessageOnUser")
+  notificationsUserRequest: [Notification!]! @relation(name: "NotificationOnUserRequest")
+  notifications: [Notification!]! @relation(name: "NotificationOnUser")
+  projects: [Project!]! @relation(name: "ProjectOnUser")
+  responses: [Response!]! @relation(name: "ResponseOnUser")
+  socials: [Social!]! @relation(name: "SocialOnUser")
+  technologies: [Technology!]! @relation(name: "TechnologyOnUser")
+  profile: Profile @relation(name: "ProfileOnUser")
+  discussions: [Discussion!]! @relation(name: "DiscussionOnUser")
+  avatar: File @relation(name: "UserOnFile")
+  chatAuthor: [Chat!]! @relation(name: "ChatOnUser1")
+  configuration: Configuration @relation(name: "ConfigurationOnUser")
+  contactsID: [Contact!]! @relation(name: "ContactOnUser1")
+}
+
+type Category @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  discussions: [Discussion!]! @relation(name: "DiscussionOnCategory")
+  interests: [Interest!]! @relation(name: "InterestOnCategory")
+}
+
+type Interest @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  title: String!
+  category: Category @relation(name: "InterestOnCategory")
+  competences: [Competence!]! @relation(name: "CompetenceOnInterest")
+}
+
+type Technology @model {
+  id: ID! @isUnique
+  name: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  project: Project @relation(name: "ProjectOnTechnology")
+  user: User @relation(name: "TechnologyOnUser")
+  messages: [Message!]! @relation(name: "MessageOnTechnology")
+}
+
+type Project @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  description: String!
+  title: String!
+  technologies: [Technology!]! @relation(name: "ProjectOnTechnology")
+  user: User @relation(name: "ProjectOnUser")
+  messages: [Message!]! @relation(name: "MessageOnProject")
+}
+
+type Contact @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  user: User @relation(name: "ContactOnUser")
+  contactID: User @relation(name: "ContactOnUser1")
+}
+
+type Social @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  content: String!
+  type: SocialType!
+  user: User @relation(name: "SocialOnUser")
+}
+
+type Competence @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  interest: Interest @relation(name: "CompetenceOnInterest")
+  user: User @relation(name: "CompetenceOnUser")
+}
+
+type Notification @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  hide: Boolean! @defaultValue(value: false)
+  type: NotificationType!
+  user: User @relation(name: "NotificationOnUser")
+  userRequest: User @relation(name: "NotificationOnUserRequest")
+  discussion: Discussion @relation(name: "NotificationOnDiscussion")
+}
+
+type Discussion @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  description: String!
+  title: String!
+  category: Category @relation(name: "DiscussionOnCategory")
+  responses: [Response!]! @relation(name: "DiscussionOnResponse")
+  user: User @relation(name: "DiscussionOnUser")
+  notifications: [Notification!]! @relation(name: "NotificationOnDiscussion")
+  cover: File @relation(name: "DiscussionOnFile")
+}
+
+type Response @model {
+  content: String!
+  id: ID! @isUnique
+  author: User! @relation(name: "ResponseOnUser")
+  discussion: Discussion @relation(name: "DiscussionOnResponse")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Chat @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  name: String!
+  messages: [Message!]! @relation(name: "ChatOnMessage")
+  users: [User!]! @relation(name: "ChatOnUser")
+  author: User @relation(name: "ChatOnUser1")
+  isGroup: Boolean! @defaultValue(value: false)
+}
+
+type Message @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  author: User @relation(name: "MessageOnUser")
+  chat: Chat @relation(name: "ChatOnMessage")
+  content: String!
+  type: MessageType @defaultValue(value: MESSAGE)
+  project: Project @relation(name: "MessageOnProject")
+  technology: Technology @relation(name: "MessageOnTechnology")
+}
+
+type Discovery @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  connected: Boolean! @defaultValue(value: false)
+  hide: Boolean! @defaultValue(value: false)
+}
+
+type Configuration @model {
+  id: ID! @isUnique
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  distance: Float @defaultValue(value: 20.0)
+  type: UserType @defaultValue(value: MENTOR)
+  user: User @relation(name: "ConfigurationOnUser")
+  interests: InterestType @defaultValue(value: COMMON)
+}
